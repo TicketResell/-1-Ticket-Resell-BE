@@ -1,5 +1,9 @@
 package com.teamseven.ticketresell.api;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
 import com.teamseven.ticketresell.dto.AccountDTO;
 import com.teamseven.ticketresell.dto.JwtResponse;
 import com.teamseven.ticketresell.entity.UserEntity;
@@ -10,12 +14,21 @@ import com.teamseven.ticketresell.service.impl.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import com.teamseven.ticketresell.util.JwtUtil;
+
+import java.security.Principal;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/accounts")
 public class AccountAPI {
+    private String googleClientId = "310764216947-glor2ci0tha7scaf77cgmiqrod6c58fq.apps.googleusercontent.com";
+
 
     @Autowired
     private AccountService accountService;
@@ -88,4 +101,45 @@ public class AccountAPI {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
+
+    @PostMapping("/login-google")
+    public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> body) {
+        String idTokenString = body.get("id_token");
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+                .setAudience(Collections.singletonList(googleClientId))
+                .build();
+
+        try {
+            GoogleIdToken idToken = verifier.verify(idTokenString);
+            if (idToken != null) {
+                GoogleIdToken.Payload payload = idToken.getPayload();
+                String email = payload.getEmail();
+                String name = (String) payload.get("name");
+
+                // Check if user exists
+                UserEntity user = userRepository.findByEmailAddress(email);
+                if (user == null) {
+                    // Create a new user if not exists
+                    user = new UserEntity();
+                    user.setUsername(email+"lorem"); //đảm bảo nó khác với username, chỉ để not-null mà thôi
+                    user.setPassword(email+"notnull");
+                    user.setEmailAddress(email);
+                    user.setFullname(name);
+                    user.setCreatedDate(LocalDateTime.now());
+                    user = userRepository.save(user);
+                }
+
+                // Generate JWT token
+                String jwt = jwtUtil.generateToken(user.getEmailAddress());
+
+                // Return user info and JWT
+                return ResponseEntity.ok(new JwtResponse(jwt));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid Google token");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+
 }

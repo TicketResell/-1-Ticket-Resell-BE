@@ -14,9 +14,6 @@ public abstract class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "created_by")
-    private String createdBy;
-
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
@@ -25,13 +22,6 @@ public abstract class BaseEntity {
         return id;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
 
     public LocalDateTime getCreatedDate() {
         return createdDate;
