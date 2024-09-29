@@ -7,7 +7,7 @@ public class AccountDTO {
     private String username;
     private String password;
     private String fullname;
-    private int roleId;
+    private Long roleId;
     private String address;
     private String phoneNumber;
     private String createdBy;
@@ -48,11 +48,11 @@ public class AccountDTO {
         this.fullname = fullname;
     }
 
-    public int getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(int roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
 

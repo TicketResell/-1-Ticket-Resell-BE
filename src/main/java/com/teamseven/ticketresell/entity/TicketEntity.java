@@ -1,8 +1,7 @@
 package com.teamseven.ticketresell.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.math.BigDecimal;
 
@@ -11,7 +10,7 @@ import java.math.BigDecimal;
 public class TicketEntity extends BaseEntity {
 
     @Column(name = "userID", nullable = false)
-    private int userId;
+    private long userId;
 
     @Column(name = "price", nullable = false)
     private float price;
@@ -21,9 +20,13 @@ public class TicketEntity extends BaseEntity {
 
     @Column(name = "eventDate", nullable = false)
     private LocalDate eventDate;
-
-    @Column(name = "categoryID", nullable = false)
-    private int categoryId;
+    @Column(name = "description")
+    private String description;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryEntity category;
+//    @Column(name = "categoryID", nullable = false)
+//    private long categoryId;
 
     @Column(name = "location", length = 255)
     private String location;
@@ -38,15 +41,15 @@ public class TicketEntity extends BaseEntity {
     private String ticketDetails;
 
     @Column(name = "imageID")
-    private int imageId;
+    private long imageId;
 
     // Getters and Setters
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -65,6 +68,21 @@ public class TicketEntity extends BaseEntity {
     public void setEventTitle(String eventTitle) {
         this.eventTitle = eventTitle;
     }
+    public String getDescription() {
+        return description;
+    }
+
+    public CategoryEntity getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryEntity category) {
+        this.category = category;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public LocalDate getEventDate() {
         return eventDate;
@@ -74,13 +92,13 @@ public class TicketEntity extends BaseEntity {
         this.eventDate = eventDate;
     }
 
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
+//    public long getCategoryId() {
+//        return categoryId;
+//    }
+//
+//    public void setCategoryId(long categoryId) {
+//        this.categoryId = categoryId;
+//    }
 
     public String getLocation() {
         return location;
@@ -114,11 +132,11 @@ public class TicketEntity extends BaseEntity {
         this.ticketDetails = ticketDetails;
     }
 
-    public int getImageId() {
+    public long getImageId() {
         return imageId;
     }
 
-    public void setImageId(int imageId) {
+    public void setImageId(long imageId) {
         this.imageId = imageId;
     }
 }

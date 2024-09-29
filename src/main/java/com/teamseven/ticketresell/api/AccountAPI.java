@@ -14,12 +14,9 @@ import com.teamseven.ticketresell.service.impl.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import com.teamseven.ticketresell.util.JwtUtil;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
@@ -64,21 +61,21 @@ public class AccountAPI {
     }
 
     // Registration API with SMS confirmation
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody AccountDTO accountDTO) {
-        if (userRepository.findByUsername(accountDTO.getUsername()) != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
-        }
-
-        UserEntity newUser = accountConverter.toEntity(accountDTO);
-        UserEntity savedUser = userRepository.save(newUser);
-
-        // Send confirmation SMS
-        String message = "Thank you for registering! Your phone number is: " + accountDTO.getPhoneNumber();
-        smsService.sendSms(accountDTO.getPhoneNumber(), message);
-
-        return ResponseEntity.ok(accountConverter.toDTO(savedUser));
-    }
+//    @PostMapping("/register")
+//    public ResponseEntity<?> register(@RequestBody AccountDTO accountDTO) {
+//        if (userRepository.findByUsername(accountDTO.getUsername()) != null) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
+//        }
+//
+//        UserEntity newUser = accountConverter.toEntity(accountDTO);
+//        UserEntity savedUser = userRepository.save(newUser);
+//
+//        // Send confirmation SMS
+//        String message = "Thank you for registering! Your phone number is: " + accountDTO.getPhoneNumber();
+//        smsService.sendSms(accountDTO.getPhoneNumber(), message);
+//
+//        return ResponseEntity.ok(accountConverter.toDTO(savedUser));
+//    }
 
     // View Profile
     @GetMapping("/profile/{username}")
@@ -139,6 +136,16 @@ public class AccountAPI {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
+    }
+    @PostMapping(value = "/register")
+    public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountDTO model) {
+        try {
+            AccountDTO savedAccount = accountService.save(model);
+            return new ResponseEntity<>(savedAccount, HttpStatus.CREATED); // Trả về HTTP status 201
+        } catch (IllegalArgumentException e) {
+            // Nếu có lỗi, chẳng hạn như username đã tồn tại, trả về thông báo lỗi rõ ràng
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -18,7 +18,7 @@ public class UserEntity extends BaseEntity {
     private String fullname;
 
     @Column(name = "roleID", nullable = false)
-    private int roleId;
+    private long roleId;
 
     @Column(name = "address")
     private String address;
@@ -55,11 +55,11 @@ public class UserEntity extends BaseEntity {
         this.fullname = fullname;
     }
 
-    public int getRoleId() {
+    public long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(int roleId) {
+    public void setRoleId(long roleId) {
         this.roleId = roleId;
     }
 
