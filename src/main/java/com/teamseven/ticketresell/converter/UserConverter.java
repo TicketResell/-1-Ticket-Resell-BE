@@ -18,7 +18,7 @@ public class UserConverter {
         userEntity.setRole(userDTO.getRole());
         userEntity.setPhone(userDTO.getPhone());
         userEntity.setAddress(userDTO.getAddress());
-        userEntity.setStatus(UserStatus.valueOf(userDTO.getStatus()));
+        userEntity.setStatus(userDTO.getStatus());
         userEntity.setVerifiedEmail(userDTO.isVerifiedEmail());
 
         return userEntity;
@@ -33,7 +33,7 @@ public class UserConverter {
         userDTO.setEmail(userEntity.getEmail());
         userDTO.setPhone(userEntity.getPhone());
         userDTO.setAddress(userEntity.getAddress());
-        userDTO.setStatus(userEntity.getStatus().name());
+        userDTO.setStatus(userEntity.getStatus());
         userDTO.setVerifiedEmail(userEntity.isVerifiedEmail());
         userDTO.setRole(userEntity.getRole());
 
@@ -57,19 +57,27 @@ public class UserConverter {
         if (userDTO.getAddress() != null) {
             existingUser.setAddress(userDTO.getAddress());
         }
+
         if (userDTO.getStatus() != null) {
-            existingUser.setStatus(UserEntity.UserStatus.valueOf(userDTO.getStatus()));
+            try {
+                existingUser.setStatus("active");
+            } catch (IllegalArgumentException e) {
+                // Xử lý khi giá trị status không hợp lệ
+                throw new RuntimeException("Invalid status value: " + userDTO.getStatus());
+            }
         }
+
         existingUser.setVerifiedEmail(userDTO.isVerifiedEmail());
 
-//        // Cập nhật role nếu có
-//        if (userDTO.getRoleId() != null) {
-//            RoleEntity role = new RoleEntity();
-//            role.setRoleName(userDTO.getRoleId()); // Giả sử bạn chỉ cập nhật role bằng ID
-//            existingUser.setRole(role);
-//        }
+        // Cập nhật role nếu cần (tùy chọn)
+        // if (userDTO.getRoleId() != null) {
+        //     RoleEntity role = new RoleEntity();
+        //     role.setRoleName(userDTO.getRoleId()); // Giả sử bạn cập nhật role bằng ID
+        //     existingUser.setRole(role);
+        // }
 
         return existingUser;
     }
+
 
 }

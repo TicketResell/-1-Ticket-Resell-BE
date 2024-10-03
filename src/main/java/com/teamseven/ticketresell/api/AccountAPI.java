@@ -45,19 +45,35 @@ public class AccountAPI {
     @Autowired
     private EmailService emailService;
 
-    // Đăng nhập với JWT
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
         // Sử dụng email để xác thực
         System.out.println("Email: " + userDTO.getEmail());
         System.out.println("Password: " + userDTO.getPassword());
-        UserDTO result = userService.login(userDTO.getEmail(), userDTO.getPassword());
 
-        if (result != null) {
-            // Tạo JWT
-            String jwt = jwtUtil.generateToken(result.getEmail()); // Sử dụng email để tạo token
+        UserDTO result = userService.login(userDTO.getEmail(), userDTO.getPassword());
+        String exceptionMessage = "";
+
+        // In ra trạng thái người dùng để kiểm tra
+        if(result != null) {
+            System.out.println("User status: " + result.getStatus());
+            System.out.println("Is Verified: " + result.isVerifiedEmail());
+
+            if (result.getStatus().equals("banned")) {
+                exceptionMessage = "Your account has been banned.";
+            } else if (!result.isVerifiedEmail()) {
+                exceptionMessage = "You are not verified.";
+            }
+
+            if (!exceptionMessage.isBlank()) {
+                System.out.println(exceptionMessage);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(exceptionMessage);
+            }
+
+            // Tạo JWT nếu thông tin hợp lệ
+            String jwt = jwtUtil.generateToken(result.getEmail());
             System.out.println("DTO: " + result);
-            return ResponseEntity.ok(new JwtResponse(jwt)); // Trả về token
+            return ResponseEntity.ok(new JwtResponse(jwt));
         }
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email hoặc mật khẩu không hợp lệ");
@@ -88,10 +104,20 @@ public class AccountAPI {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already exists");
         }
 
+        System.out.println("REQUEST DTO:" + userDTO);
+
         // Chuyển đổi DTO thành Entity và lưu user
         UserEntity newUser = accountConverter.toEntity(userDTO);
         newUser.setCreatedDate(LocalDateTime.now());
+        newUser.setRole("user"); //default == user.
+        newUser.setStatus("active");
+
+        System.out.println("BỐ MÀY SET STATUS RỒI:" + newUser.getStatus());
+        newUser.setCreatedDate(LocalDateTime.now());
+        userDTO.setVerifiedEmail(false);
         UserEntity savedUser = userRepository.save(newUser);
+        System.out.println("SAVED USER:"+savedUser);
+
 
         // Gửi email xác thực
         String verificationLink = "http://localhost:8084/api/accounts/verify?email=" + userDTO.getEmail();
@@ -165,7 +191,7 @@ public class AccountAPI {
                     user.setUsername(email + "_google"); // Đảm bảo username không bị trùng
                     user.setPassword(email + "_password"); // Đặt tạm mật khẩu
                     user.setEmail(email);
-                    user.setStatus(UserEntity.UserStatus.active);
+                    user.setStatus("active");
                     user.setRole("user"); //default == user.
                     user.setCreatedDate(LocalDateTime.now());
                     user.setVerifiedEmail(true); // Giả định rằng email đã được xác thực qua Google

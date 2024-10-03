@@ -21,9 +21,9 @@ public class UserEntity extends BaseEntity {
     @Column(name = "address")
     private String address;
 
-    @Enumerated(EnumType.STRING)
+
     @Column(name = "status")
-    private UserStatus status;
+    private String status;
 
     @Column(name = "verified_email", nullable = false)
     private boolean verifiedEmail = false;
@@ -80,11 +80,12 @@ public class UserEntity extends BaseEntity {
         this.address = address;
     }
 
-    public UserStatus getStatus() {
+
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(UserStatus status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
