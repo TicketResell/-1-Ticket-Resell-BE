@@ -79,20 +79,6 @@ public class AccountAPI {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email hoặc mật khẩu không hợp lệ");
     }
 
-    // Registration API with SMS confirmation
-//    @PostMapping("/register")
-//    public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
-//        if (userRepository.findByUsername(userDTO.getUsername()) != null) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
-//        }
-//
-//        UserEntity newUser = accountConverter.toEntity(userDTO);
-//        newUser.setCreatedDate(LocalDateTime.now());
-//        UserEntity savedUser = userRepository.save(newUser);
-//
-//
-//        return ResponseEntity.ok(accountConverter.toDTO(savedUser));
-//    }
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
         if (userRepository.findByUsername(userDTO.getUsername()) != null) {
@@ -112,7 +98,7 @@ public class AccountAPI {
         newUser.setRole("user"); //default == user.
         newUser.setStatus("active");
 
-        System.out.println("BỐ MÀY SET STATUS RỒI:" + newUser.getStatus());
+
         newUser.setCreatedDate(LocalDateTime.now());
         userDTO.setVerifiedEmail(false);
         UserEntity savedUser = userRepository.save(newUser);
@@ -153,21 +139,29 @@ public class AccountAPI {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
-
     // Modify Profile
-    //Gửi micu: hàm đúng nhưng converter chưa hoàn thiện, sửa tí là đc.
     @PutMapping("/profile/{username}")
-    public ResponseEntity<?> editProfile(@PathVariable String username, @RequestBody UserDTO userDTO) {
+    public ResponseEntity<?> editProfile(@PathVariable String username, @RequestBody UserDTO userDTO, @RequestParam boolean isAdmin) {
+        // Find username
         UserEntity existingUser = userService.findByUsername(username);
+
         if (existingUser != null) {
-            UserEntity updatedUser = accountConverter.toEntity(userDTO, existingUser);
+            // Convert DTO -> Entity
+            UserEntity updatedUser = accountConverter.toEntity(userDTO, existingUser, isAdmin);
+
+            // Save to db
             userRepository.save(updatedUser);
+
+            // ìf everything runs smoothly, return DTO
             return ResponseEntity.ok(accountConverter.toDTO(updatedUser));
         }
+
+        // if user not exist, return 404
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
 
-    // Đăng nhập với Google OAuth
+
+    // Login with Google Oauth
     @PostMapping("/login-google")
     public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> body) {
         String idTokenString = body.get("id_token");

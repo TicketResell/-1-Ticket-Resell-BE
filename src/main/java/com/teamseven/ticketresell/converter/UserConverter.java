@@ -41,15 +41,12 @@ public class UserConverter {
     }
 
     // Convert DTO to Entity (update existing entity)
-    public UserEntity toEntity(UserDTO userDTO, UserEntity existingUser) {
+    public UserEntity toEntity(UserDTO userDTO, UserEntity existingUser, boolean isAdmin) {
         if (userDTO.getUsername() != null) {
             existingUser.setUsername(userDTO.getUsername());
         }
         if (userDTO.getPassword() != null) {
             existingUser.setPassword(userDTO.getPassword());
-        }
-        if (userDTO.getEmail() != null) {
-            existingUser.setEmail(userDTO.getEmail());
         }
         if (userDTO.getPhone() != null) {
             existingUser.setPhone(userDTO.getPhone());
@@ -58,26 +55,36 @@ public class UserConverter {
             existingUser.setAddress(userDTO.getAddress());
         }
 
-        if (userDTO.getStatus() != null) {
-            try {
-                existingUser.setStatus("active");
-            } catch (IllegalArgumentException e) {
-                // Xử lý khi giá trị status không hợp lệ
-                throw new RuntimeException("Invalid status value: " + userDTO.getStatus());
+        // Chỉ cho phép admin cập nhật role, status, và email
+        if (isAdmin) {
+            if (userDTO.getEmail() != null) {
+                existingUser.setEmail(userDTO.getEmail());
+            }
+
+            if (userDTO.getStatus() != null) {
+                try {
+                    existingUser.setStatus(userDTO.getStatus());
+                } catch (IllegalArgumentException e) {
+                    // Xử lý khi giá trị status không hợp lệ
+                    throw new RuntimeException("Invalid status value: " + userDTO.getStatus());
+                }
+            }
+
+            // Cập nhật role nếu người dùng có vai trò admin
+            if (userDTO.getRole() != null) {
+                try {
+                    existingUser.setRole(userDTO.getRole()); // Cập nhật vai trò trực tiếp từ DTO
+                } catch (IllegalArgumentException e) {
+                    throw new RuntimeException("Invalid role value: " + userDTO.getRole());
+                }
             }
         }
 
         existingUser.setVerifiedEmail(userDTO.isVerifiedEmail());
 
-        // Cập nhật role nếu cần (tùy chọn)
-        // if (userDTO.getRoleId() != null) {
-        //     RoleEntity role = new RoleEntity();
-        //     role.setRoleName(userDTO.getRoleId()); // Giả sử bạn cập nhật role bằng ID
-        //     existingUser.setRole(role);
-        // }
-
         return existingUser;
     }
+
 
 
 }
