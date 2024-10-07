@@ -21,6 +21,11 @@ public class UserEntity extends BaseEntity {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "fullname", nullable = false)
+    private String fullname;
+
+    @Column(name = "user_image")
+    private String userImage;
 
     @Column(name = "status")
     private String status;
@@ -31,14 +36,15 @@ public class UserEntity extends BaseEntity {
     @Column(name = "role", nullable = false)
     private String role;
 
-
-    public enum role {
+    public enum Role {
         user, staff, admin
     }
 
     public enum UserStatus {
         active, inactive, banned
     }
+
+    // Getters and Setters
 
     public String getUsername() {
         return username;
@@ -80,6 +86,21 @@ public class UserEntity extends BaseEntity {
         this.address = address;
     }
 
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
 
     public String getStatus() {
         return status;

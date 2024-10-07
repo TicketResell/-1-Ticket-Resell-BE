@@ -7,6 +7,8 @@ public class UserDTO {
     private String email;
     private String phone;
     private String address;
+    private String fullname;  // Thêm fullname
+    private String userImage; // Thêm user_image
     private String status;
     private boolean verifiedEmail;
     private String role;
@@ -60,6 +62,22 @@ public class UserDTO {
         this.address = address;
     }
 
+    public String getFullname() {
+        return fullname;
+    }
+
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -93,6 +111,8 @@ public class UserDTO {
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
                 ", address='" + address + '\'' +
+                ", fullname='" + fullname + '\'' +
+                ", userImage='" + userImage + '\'' +
                 ", status='" + status + '\'' +
                 ", verifiedEmail=" + verifiedEmail +
                 ", role='" + role + '\'' +

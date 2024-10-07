@@ -43,6 +43,7 @@ public class TicketEntity extends BaseEntity {
 
     // Thay đổi ở đây
     @ElementCollection
+    @CollectionTable(name = "ticket_image_urls", joinColumns = @JoinColumn(name = "ticket_id"))
     @Column(name = "image_url")
     private List<String> imageUrls = new ArrayList<>();
 

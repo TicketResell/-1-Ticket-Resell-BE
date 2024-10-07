@@ -71,7 +71,7 @@ public class AccountAPI {
             }
 
             // Tạo JWT nếu thông tin hợp lệ
-            String jwt = jwtUtil.generateToken(result.getEmail());
+            String jwt = jwtUtil.generateToken(result.getUsername(),result.getEmail(), result.getFullname(), result.getUserImage());
             System.out.println("DTO: " + result);
             return ResponseEntity.ok(new JwtResponse(jwt));
         }
@@ -193,7 +193,7 @@ public class AccountAPI {
                 }
 
                 // Generate JWT token
-                String jwt = jwtUtil.generateToken(user.getEmail());
+                String jwt = jwtUtil.generateToken(user.getUsername(),user.getEmail(), user.getFullname(), user.getUserImage());
 
                 // Return user info and JWT
                 return ResponseEntity.ok(new JwtResponse(jwt));
