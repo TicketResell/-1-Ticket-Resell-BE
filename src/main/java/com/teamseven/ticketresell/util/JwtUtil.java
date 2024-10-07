@@ -14,11 +14,12 @@ public class JwtUtil {
     private String secretKey = "trideptrai"; //
     private int jwtExpirationInMs = 604800000; // 1 tuần
 
-    public String generateToken(String username, String email, String fullname, String userImage) {
+    public String generateToken(String username, String email, String fullname, String userImage, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", email);
         claims.put("fullname", fullname);
         claims.put("user_image", userImage);
+        claims.put("role", role);
         return createToken(claims, username);
     }
 
@@ -64,5 +65,9 @@ public class JwtUtil {
 
     public String extractUserImage(String token) {
         return (String) extractAllClaims(token).get("user_image");
+    }
+
+    public String extractUserRole(String token) {
+        return (String) extractAllClaims(token).get("role");
     }
 }
