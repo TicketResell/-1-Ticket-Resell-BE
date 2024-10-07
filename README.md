@@ -1,6 +1,11 @@
-#NEW UPDATE 2024-19-3 @trinm
-I have fixed some bugs about Registration. Now all registration functions run smoothly now.
---------------------------------------------------------------------
+#NEW UPDATE 2024-10-7 @trinm
+1. Some update about jwt token return more information to React Server
+2. Fix some bugs about find all tickets function.
+----------------------------------------------------------------------
+NEW UPDATE 2024-10-4 @trinm
+Fix some bugs about Registration. Now it run smoothly
+
+----------------------------------------------------------------------
 #NEW UPDATE 2024-10-3! @cuong
 1. I have completed register api
 2. Verified email function by spring-boot-starter-mail.
