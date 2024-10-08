@@ -1,6 +1,7 @@
-#NEW UPDATE 2024-10-7 @cuong
+#NEW UPDATE 2024-10-8 @cuong
 1. Add some field into Ticket Entity
 2. Complete functions about ticket manage.
+3. Update category crud api
 ---------------------------------------------------------------------
 #NEW UPDATE 2024-10-7 @trinm
 1. Some update about jwt token return more information to React Server
