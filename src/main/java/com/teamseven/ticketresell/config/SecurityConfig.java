@@ -48,7 +48,9 @@ public class SecurityConfig {
                                 "/api/accounts/test-request-token",
                                 "/api/tickets/create",
                                 "/api/tickets",
-                                "/api/tickets/{id}"
+                                "/api/tickets/{id}",
+                                "/api/categories",
+                                "/api/categories/{id}"
                         ).permitAll() // Cho phép các endpoint không cần xác thực
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các yêu cầu khác
                 )

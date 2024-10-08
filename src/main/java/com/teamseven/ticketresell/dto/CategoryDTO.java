@@ -1,23 +1,23 @@
 package com.teamseven.ticketresell.dto;
 
 public class CategoryDTO {
-    private int categoryId;
-    private String categoryName;
+    private Long id;
+    private String name;
 
     // Getters and Setters
-    public int getCategoryId() {
-        return categoryId;
+    public Long getId() {
+        return id;
     }
 
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getName() {
+        return name;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setName(String name) {
+        this.name = name;
     }
 }

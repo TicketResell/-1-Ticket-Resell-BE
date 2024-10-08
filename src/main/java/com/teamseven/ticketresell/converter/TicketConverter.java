@@ -1,12 +1,14 @@
 package com.teamseven.ticketresell.converter;
 
 import com.teamseven.ticketresell.dto.TicketDTO;
+import com.teamseven.ticketresell.entity.CategoryEntity;
 import com.teamseven.ticketresell.entity.TicketEntity;
 import com.teamseven.ticketresell.repository.CategoryRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -28,7 +30,12 @@ public class TicketConverter {
         ticketEntity.setLocation(ticketDTO.getLocation());
         ticketEntity.setTicketType(ticketDTO.getTicketType());
         ticketEntity.setSalePrice(ticketDTO.getSalePrice());
-        ticketEntity.setCategory(categoryRepository.findById(ticketDTO.getCategoryId()));
+        Optional<CategoryEntity> categoryOptional = categoryRepository.findById(ticketDTO.getCategoryId());
+        if (categoryOptional.isPresent()) {
+            CategoryEntity categoryEntity = categoryOptional.get();  // Lấy CategoryEntity từ Optional
+            ticketEntity.setCategory(categoryEntity);
+        }
+//        ticketEntity.setCategory(categoryRepository.findById(ticketDTO.getCategoryId()));
         ticketEntity.setTicketDetails(ticketDTO.getTicketDetails());
         ticketEntity.setStatus(ticketDTO.getStatus());
         // Set foreign keys (seller and category) in actual application logic

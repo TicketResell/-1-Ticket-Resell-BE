@@ -76,15 +76,16 @@ public class TicketAPI {
 
     // Xóa vé theo ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
+    public ResponseEntity<String> deleteTicket(@PathVariable Long id) {
         boolean isDeleted = ticketService.deleteTicket(id);
 
         if (isDeleted) {
-            // Trả về mã 204 No Content nếu xóa thành công
-            return ResponseEntity.noContent().build();
+            // Trả về mã 200 OK cùng với thông báo nếu xóa thành công
+            return ResponseEntity.ok("Ticket with id " + id + " was deleted successfully.");
         } else {
-            // Trả về mã 404 Not Found nếu không tìm thấy vé để xóa
-            return ResponseEntity.notFound().build();
+            // Trả về mã 404 Not Found cùng với thông báo nếu không tìm thấy vé để xóa
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Ticket with id " + id + " was not found.");
         }
     }
 }
