@@ -47,7 +47,8 @@ public class SecurityConfig {
                                 "/api/accounts/login-google",
                                 "/api/accounts/test-request-token",
                                 "/api/tickets/create",
-                                "/api/tickets"
+                                "/api/tickets",
+                                "/api/tickets/{id}"
                         ).permitAll() // Cho phép các endpoint không cần xác thực
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các yêu cầu khác
                 )

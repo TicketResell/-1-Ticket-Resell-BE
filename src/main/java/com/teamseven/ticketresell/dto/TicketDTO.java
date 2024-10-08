@@ -15,6 +15,15 @@ public class TicketDTO {
     private double salePrice;
     private String ticketDetails;
     private List<String> imageUrls;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     // Getters and Setters
     public Long getId() {

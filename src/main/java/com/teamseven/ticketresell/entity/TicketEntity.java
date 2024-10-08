@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // Ticket entity
 @Entity
@@ -14,6 +15,7 @@ public class TicketEntity extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore  // Ngăn không serialize seller để tránh vòng lặp
     private UserEntity seller;
 
     @Column(name = "price", nullable = false)
@@ -46,6 +48,21 @@ public class TicketEntity extends BaseEntity {
     @CollectionTable(name = "ticket_image_urls", joinColumns = @JoinColumn(name = "ticket_id"))
     @Column(name = "image_url")
     private List<String> imageUrls = new ArrayList<>();
+
+    @Column(name = "status", nullable = false)
+    private String status;
+
+    public enum Status {
+        onsale, used, expired
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public UserEntity getSeller() {
         return seller;
