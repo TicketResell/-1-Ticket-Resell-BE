@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     TicketEntity findById(long id);
-    List<TicketEntity> findByCategoryId(Long categoryId);
-    List<TicketEntity> findByUserIdAndStatus(Long userId); // Lấy danh sách vé theo status
+    List<TicketEntity> findByCategoryId(long categoryId);
+    List<TicketEntity> findBySeller_IdAndStatus(Long sellerId, String status);
     List<TicketEntity> findBySeller_Id(long userId);
 
     List<TicketEntity> findByStatus(String status);

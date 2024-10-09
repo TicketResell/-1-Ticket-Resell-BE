@@ -48,6 +48,9 @@ public class SecurityConfig {
                                 "/api/accounts/test-request-token",
                                 "/api/tickets/create",
                                 "/api/tickets",
+                                "/api/tickets/sold/count/month/{month}/year/{year}",
+                                "api/tickets/used/{userID}",
+                                "api/tickets/category/{category}",
                                 "/api/tickets/{id}",
                                 "/api/categories",
                                 "/api/categories/{id}"

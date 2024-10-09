@@ -91,28 +91,64 @@ public class TicketAPI {
 
     //find ticket by category ID
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<TicketEntity>> getTicketsByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<?> getTicketsByCategory(@PathVariable Long categoryId) {
         List<TicketEntity> tickets = ticketRepository.findByCategoryId(categoryId);
-        return ResponseEntity.ok(tickets);
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());
+        }
+
+        // Nếu không tìm thấy vé, trả về 404
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for category ID: " + categoryId);
     }
 
+
     @GetMapping("/used/{userId}")
-    public ResponseEntity<List<TicketEntity>> getUsedTicketsByUserId(@PathVariable Long userId) {
-        List<TicketEntity> tickets = ticketRepository.findByUserIdAndStatus(userId);
-        return ResponseEntity.ok(tickets);
+    public ResponseEntity<?> getUsedTicketsByUserId(@PathVariable Long userId) {
+        List<TicketEntity> tickets = ticketRepository.findBySeller_IdAndStatus(userId, "used");
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());
+        }
+
+        // Nếu không tìm thấy vé, trả về 404
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No used tickets found for user ID: " + userId);
     }
+
 
 
     //show sold tickets by month + year
     @GetMapping("/sold/count/month/{month}/year/{year}")
-    public ResponseEntity<List<TicketEntity>> getSoldTicketsCountByMonth(@PathVariable Integer month, @PathVariable Integer year) {
+    public ResponseEntity<List<TicketDTO>> getSoldTicketsCountByMonth(@PathVariable Integer month, @PathVariable Integer year) {
         List<TicketEntity> tickets = ticketRepository.findByStatus("used");
-        List<TicketEntity> trueList = new ArrayList<>();
-        for(TicketEntity ticket: tickets){
-            if(ticket.getEventDate().getYear() == year && ticket.getEventDate().getMonthValue() == month){
-                trueList.add(ticket);
+        List<TicketDTO> responseDTOs = new ArrayList<>();
+
+        for (TicketEntity ticket : tickets) {
+            LocalDate eventDate = ticket.getEventDate();
+            if (eventDate != null && eventDate.getYear() == year && eventDate.getMonthValue() == month) {
+                TicketDTO dto = new TicketDTO();
+                dto.setId(ticket.getId());
+                dto.setUserID(ticket.getSeller() != null ? ticket.getSeller().getId() : null); // Lấy userID từ seller
+                dto.setPrice(ticket.getPrice());
+                dto.setEventTitle(ticket.getEventTitle());
+                dto.setEventDate(ticket.getEventDate());
+                dto.setCategoryId(ticket.getCategory() != null ? ticket.getCategory().getId() : null); // Lấy categoryId
+                dto.setLocation(ticket.getLocation());
+                dto.setTicketType(ticket.getTicketType());
+                dto.setSalePrice(ticket.getSalePrice());
+                dto.setTicketDetails(ticket.getTicketDetails());
+                dto.setImageUrls(ticket.getImageUrls());
+                dto.setStatus(ticket.getStatus());
+                responseDTOs.add(dto);
             }
         }
-        return ResponseEntity.ok(trueList);
+
+        if (!responseDTOs.isEmpty()) {
+            return ResponseEntity.ok(responseDTOs);
+        }
+
+        // Nếu không tìm thấy vé, trả về danh sách rỗng với mã 204 (No Content)
+        return ResponseEntity.noContent().build();
     }
+
+
+
 }
