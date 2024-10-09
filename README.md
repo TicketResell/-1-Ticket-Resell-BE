@@ -1,3 +1,8 @@
+#NEW UPDATE 2024-10-9 @trinm
+I have created about basic chat function with WebSocket, but I haven't tested it yet.
+I'll test and complete this function later in Postman or frontend React-server.
+
+---------------------------------------------------------------------
 #NEW UPDATE 2024-10-8 @cuong
 1. Add some field into Ticket Entity
 2. Complete functions about ticket manage.
