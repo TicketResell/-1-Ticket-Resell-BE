@@ -3,9 +3,10 @@ package com.teamseven.ticketresell.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 // Ticket entity
@@ -68,7 +69,7 @@ public class TicketEntity extends BaseEntity {
         return seller;
     }
 
-    public void setSeller(UserEntity seller) {
+    public void setSeller(Optional<UserEntity> seller) {
         this.seller = seller;
     }
 
