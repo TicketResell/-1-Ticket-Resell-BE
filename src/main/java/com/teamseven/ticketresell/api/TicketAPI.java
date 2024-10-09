@@ -88,4 +88,31 @@ public class TicketAPI {
                     .body("Ticket with id " + id + " was not found.");
         }
     }
+
+    //find ticket by category ID
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<TicketEntity>> getTicketsByCategory(@PathVariable Long categoryId) {
+        List<TicketEntity> tickets = ticketRepository.findByCategoryId(categoryId);
+        return ResponseEntity.ok(tickets);
+    }
+
+    @GetMapping("/used/{userId}")
+    public ResponseEntity<List<TicketEntity>> getUsedTicketsByUserId(@PathVariable Long userId) {
+        List<TicketEntity> tickets = ticketRepository.findByUserIdAndStatus(userId);
+        return ResponseEntity.ok(tickets);
+    }
+
+
+    //show sold tickets by month + year
+    @GetMapping("/sold/count/month/{month}/year/{year}")
+    public ResponseEntity<List<TicketEntity>> getSoldTicketsCountByMonth(@PathVariable Integer month, @PathVariable Integer year) {
+        List<TicketEntity> tickets = ticketRepository.findByStatus("used");
+        List<TicketEntity> trueList = new ArrayList<>();
+        for(TicketEntity ticket: tickets){
+            if(ticket.getEventDate().getYear() == year && ticket.getEventDate().getMonthValue() == month){
+                trueList.add(ticket);
+            }
+        }
+        return ResponseEntity.ok(trueList);
+    }
 }

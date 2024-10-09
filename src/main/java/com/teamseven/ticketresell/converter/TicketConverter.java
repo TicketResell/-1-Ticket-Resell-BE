@@ -24,7 +24,7 @@ public class TicketConverter {
     public TicketEntity toEntity(TicketDTO ticketDTO) {
         TicketEntity ticketEntity = new TicketEntity();
         ticketEntity.setPrice(ticketDTO.getPrice());
-        ticketEntity.setSeller(userRepository.findById(ticketDTO.getUserID()));
+            ticketEntity.setSeller(userRepository.findById(ticketDTO.getUserID()).orElse(null));
         ticketEntity.setEventTitle(ticketDTO.getEventTitle());
         ticketEntity.setEventDate(ticketDTO.getEventDate());
         ticketEntity.setLocation(ticketDTO.getLocation());

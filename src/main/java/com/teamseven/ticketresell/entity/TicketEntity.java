@@ -57,19 +57,11 @@ public class TicketEntity extends BaseEntity {
         onsale, used, expired
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public UserEntity getSeller() {
         return seller;
     }
 
-    public void setSeller(Optional<UserEntity> seller) {
+    public void setSeller(UserEntity seller) {
         this.seller = seller;
     }
 
@@ -113,14 +105,6 @@ public class TicketEntity extends BaseEntity {
         this.location = location;
     }
 
-    public double getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(double salePrice) {
-        this.salePrice = salePrice;
-    }
-
     public String getTicketType() {
         return ticketType;
     }
@@ -129,12 +113,20 @@ public class TicketEntity extends BaseEntity {
         this.ticketType = ticketType;
     }
 
-    public String getTicketDetails() {
-        return ticketDetails;
+    public double getSalePrice() {
+        return salePrice;
     }
 
-    public void setTicketDetails(String ticketDetails) {
-        this.ticketDetails = ticketDetails;
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public List<String> getImageUrls() {
@@ -143,5 +135,13 @@ public class TicketEntity extends BaseEntity {
 
     public void setImageUrls(List<String> imageUrls) {
         this.imageUrls = imageUrls;
+    }
+
+    public String getTicketDetails() {
+        return ticketDetails;
+    }
+
+    public void setTicketDetails(String ticketDetails) {
+        this.ticketDetails = ticketDetails;
     }
 }
