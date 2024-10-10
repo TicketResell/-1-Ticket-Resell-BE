@@ -51,7 +51,7 @@ public class TicketAPI {
         return ResponseEntity.ok(finalList.stream().map(ticketConverter::toDTO).toList());
     }
     // Lấy vé theo ID
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> getTicketById(@PathVariable long id) {
 
         TicketEntity existing = ticketRepository.findById(id);
@@ -104,7 +104,7 @@ public class TicketAPI {
 
     @GetMapping("/used/{userId}")
     public ResponseEntity<?> getUsedTicketsByUserId(@PathVariable Long userId) {
-        List<TicketEntity> tickets = ticketRepository.findBySeller_IdAndStatus(userId, "used");
+        List<TicketEntity> tickets = ticketRepository.findBySeller_IdAndStatus(userId, "onsale");
         if (tickets != null && !tickets.isEmpty()) {
             return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());
         }
@@ -148,7 +148,22 @@ public class TicketAPI {
         // Nếu không tìm thấy vé, trả về danh sách rỗng với mã 204 (No Content)
         return ResponseEntity.noContent().build();
     }
-
-
-
+    // API để tìm kiếm vé theo title hoặc ticket details, nhận query từ URL
+    @GetMapping("/api/tickets/search/{query}")
+    public ResponseEntity<?> searchTickets(@PathVariable("query") String query) {
+        List<TicketEntity> tickets = ticketService.searchTickets(query);
+        if (tickets.isEmpty()) {
+            return ResponseEntity.ok("empty ticket");  // Trả về message "empty ticket" nếu không tìm thấy vé
+        }
+        return ResponseEntity.ok(tickets);  // Trả về danh sách vé tìm thấy
+    }
+    // API để lấy danh sách vé sắp hết hạn
+    @GetMapping("/api/tickets/upcoming")
+    public ResponseEntity<?> getUpcomingTickets() {
+        List<TicketEntity> tickets = ticketService.getUpcomingTickets();
+        if (tickets.isEmpty()) {
+            return ResponseEntity.ok("None ticket found");  // Trả về 204 nếu không có vé nào
+        }
+        return ResponseEntity.ok(tickets);  // Trả về danh sách vé sắp xếp theo event_date
+    }
 }

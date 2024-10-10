@@ -4,6 +4,7 @@ import com.teamseven.ticketresell.entity.TicketEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
@@ -13,5 +14,7 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     List<TicketEntity> findBySeller_Id(long userId);
 
     List<TicketEntity> findByStatus(String status);
+    List<TicketEntity> findByEventTitleContainingOrTicketDetailsContaining(String eventTitle, String ticketDetails);
+    List<TicketEntity> findByEventDateAfterOrderByEventDateAsc(LocalDate today);
 
 }

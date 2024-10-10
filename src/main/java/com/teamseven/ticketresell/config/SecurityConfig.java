@@ -49,11 +49,13 @@ public class SecurityConfig {
                                 "/api/tickets/create",
                                 "/api/tickets",
                                 "/api/tickets/sold/count/month/{month}/year/{year}",
-                                "api/tickets/used/{userID}",
-                                "api/tickets/category/{category}",
-                                "/api/tickets/{id}",
+                                "/api/tickets/used/{userID}",
+                                "/api/tickets/category/{category}",
+                                "/api/tickets/id/{id}",
                                 "/api/categories",
-                                "/api/categories/{id}"
+                                "/api/categories/{id}",
+                                "/api/tickets/search/{query}",
+                                "/api/tickets/upcoming"
                         ).permitAll() // Cho phép các endpoint không cần xác thực
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các yêu cầu khác
                 )

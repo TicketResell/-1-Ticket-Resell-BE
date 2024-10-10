@@ -5,6 +5,7 @@ import com.teamseven.ticketresell.entity.TicketEntity;
 import com.teamseven.ticketresell.repository.TicketRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,4 +66,14 @@ public class TicketService {
             return false;
         }
     }
+    // search theo title va detail
+    public List<TicketEntity> searchTickets(String searchTerm) {
+        return ticketRepository.findByEventTitleContainingOrTicketDetailsContaining(searchTerm, searchTerm);
+    }
+    // Lấy danh sách vé sắp hết hạn dựa trên event_date
+    public List<TicketEntity> getUpcomingTickets() {
+        LocalDate today = LocalDate.now();  // Lấy ngày hiện tại
+        return ticketRepository.findByEventDateAfterOrderByEventDateAsc(today);  // Trả về danh sách vé sắp xếp theo ngày gần nhất
+    }
+
 }
