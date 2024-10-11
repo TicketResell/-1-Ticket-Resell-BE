@@ -1,4 +1,6 @@
 #NEW UPDATE 2024-10-8 @cuong
+I fix bug search and upcoming function and add reset password by mail api
+#NEW UPDATE 2024-10-8 @cuong
 New function search by title and detail , and upcoming event date but still bug
 #NEW UPDATE 2024-10-9 @trinm
 I have created about basic chat function with WebSocket, but I haven't tested it yet.
