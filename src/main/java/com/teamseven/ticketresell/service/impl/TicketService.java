@@ -4,7 +4,9 @@ import com.teamseven.ticketresell.dto.TicketDTO;
 import com.teamseven.ticketresell.entity.TicketEntity;
 import com.teamseven.ticketresell.repository.TicketRepository;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -78,5 +80,8 @@ public class TicketService {
     public List<TicketEntity> getUpcomingTickets(LocalDate date) {
         return ticketRepository.findByEventDateAfterOrderByEventDateAsc(date);  // Trả về danh sách vé sắp xếp theo ngày gần nhất
     }
-
+    public Page<TicketEntity> getTicketsWithPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return ticketRepository.findAll(pageable);
+    }
 }

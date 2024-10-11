@@ -114,6 +114,45 @@ public class AccountAPI {
 
         return ResponseEntity.ok("Registration successful. Please check your email to verify your account.");
     }
+    // reset password by mail
+    @PostMapping("/reset")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");  // Trích xuất giá trị email từ JSON
+
+        // Kiểm tra email đã tồn tại chưa
+        UserEntity user = userRepository.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email was not registered before!");
+        }
+
+        // Xử lý logic gửi email xác thực
+        String verificationLink = "http://localhost:8084/api/accounts/reset?email=" + email;
+        String subject = "Reset Password";
+        String body = "Please click the link below to reset your password:\n" + verificationLink;
+
+        emailService.sendEmail(email, subject, body);
+
+        return ResponseEntity.ok("Reset password link has been sent to your email!");
+    }
+    // update new password
+    @PostMapping("/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String newPassword = request.get("newPassword");
+
+        // Kiểm tra email có tồn tại trong database không
+        UserEntity user = userRepository.findByEmail(email);
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email!");
+        }
+
+        // Cập nhật mật khẩu mới (giả sử có mã hóa)
+        user.setPassword(newPassword);
+        userRepository.save(user);  // Lưu user với mật khẩu mới
+
+        return ResponseEntity.ok("Password has been updated successfully!");
+    }
+
 
     @GetMapping("/verify")
     public ResponseEntity<?> verifyEmail(@RequestParam("email") String email) {

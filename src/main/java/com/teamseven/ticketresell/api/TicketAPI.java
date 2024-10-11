@@ -9,11 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.data.domain.Page;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tickets")
@@ -166,12 +167,26 @@ public class TicketAPI {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
     }
-    @GetMapping("/upcoming/{date}")
+    @GetMapping("/upcoming/{date}")// ví dụ kiểu 2024-10-10
     public ResponseEntity<?> getDateTickets(@PathVariable("date") LocalDate date) {
         List<TicketEntity> tickets = ticketService.getUpcomingTickets(date);
         if (tickets != null && !tickets.isEmpty()) {
             return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
+    }
+    // API phân trang với RequestBody không DTO
+    @PostMapping("/pagination")
+    public ResponseEntity<?> getTicketsWithPagination(@RequestBody Map<String, Integer> request) {
+        int page = request.get("page");
+        int size = request.get("size");
+
+        Page<TicketEntity> tickets = ticketService.getTicketsWithPagination(page, size);
+
+        if (tickets.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
+        }
+
+        return ResponseEntity.ok(tickets);  // Trả về danh sách vé phân trang
     }
 }

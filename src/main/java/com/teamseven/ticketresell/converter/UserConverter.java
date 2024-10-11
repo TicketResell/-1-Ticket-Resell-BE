@@ -15,6 +15,8 @@ public class UserConverter {
         userEntity.setUsername(userDTO.getUsername());
         userEntity.setPassword(userDTO.getPassword());
         userEntity.setEmail(userDTO.getEmail());
+        userEntity.setFullname(userDTO.getFullname());
+        userEntity.setUserImage(userDTO.getUserImage());
         userEntity.setRole(userDTO.getRole());
         userEntity.setPhone(userDTO.getPhone());
         userEntity.setAddress(userDTO.getAddress());
@@ -36,7 +38,8 @@ public class UserConverter {
         userDTO.setStatus(userEntity.getStatus());
         userDTO.setVerifiedEmail(userEntity.isVerifiedEmail());
         userDTO.setRole(userEntity.getRole());
-
+        userDTO.setFullname(userEntity.getFullname());
+        userEntity.setUserImage(userDTO.getUserImage());
         return userDTO;
     }
 
