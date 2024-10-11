@@ -75,5 +75,8 @@ public class TicketService {
         LocalDate today = LocalDate.now();  // Lấy ngày hiện tại
         return ticketRepository.findByEventDateAfterOrderByEventDateAsc(today);  // Trả về danh sách vé sắp xếp theo ngày gần nhất
     }
+    public List<TicketEntity> getUpcomingTickets(LocalDate date) {
+        return ticketRepository.findByEventDateAfterOrderByEventDateAsc(date);  // Trả về danh sách vé sắp xếp theo ngày gần nhất
+    }
 
 }

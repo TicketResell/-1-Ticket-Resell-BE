@@ -149,21 +149,29 @@ public class TicketAPI {
         return ResponseEntity.noContent().build();
     }
     // API để tìm kiếm vé theo title hoặc ticket details, nhận query từ URL
-    @GetMapping("/api/tickets/search/{query}")
-    public ResponseEntity<?> searchTickets(@PathVariable("query") String query) {
-        List<TicketEntity> tickets = ticketService.searchTickets(query);
-        if (tickets.isEmpty()) {
-            return ResponseEntity.ok("empty ticket");  // Trả về message "empty ticket" nếu không tìm thấy vé
+    @GetMapping("/search/{term}")
+    public ResponseEntity<?> searchTickets(@PathVariable("term") String term) {
+        List<TicketEntity> tickets = ticketService.searchTickets(term);
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
         }
-        return ResponseEntity.ok(tickets);  // Trả về danh sách vé tìm thấy
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No ticket found for "+ term );  // Trả về danh sách vé tìm thấy
     }
     // API để lấy danh sách vé sắp hết hạn
-    @GetMapping("/api/tickets/upcoming")
+    @GetMapping("/upcoming")
     public ResponseEntity<?> getUpcomingTickets() {
         List<TicketEntity> tickets = ticketService.getUpcomingTickets();
-        if (tickets.isEmpty()) {
-            return ResponseEntity.ok("None ticket found");  // Trả về 204 nếu không có vé nào
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
         }
-        return ResponseEntity.ok(tickets);  // Trả về danh sách vé sắp xếp theo event_date
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
+    }
+    @GetMapping("/upcoming/{date}")
+    public ResponseEntity<?> getDateTickets(@PathVariable("date") LocalDate date) {
+        List<TicketEntity> tickets = ticketService.getUpcomingTickets(date);
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
     }
 }
