@@ -1,32 +1,30 @@
-//package com.teamseven.ticketresell.converter;
-//
-//import com.teamseven.ticketresell.dto.ChatMessageDTO;
-//import com.teamseven.ticketresell.entity.ChatMessageEntity;
-//import org.springframework.stereotype.Component;
-//
-//import java.time.LocalDateTime;
-//
-//@Component
-//public class ChatMessageConverter {
-//
-//    // Chuyển từ ChatMessageEntity sang ChatMessageDTO
-//    public ChatMessageDTO toDTO(ChatMessageEntity chatMessageEntity) {
-//        ChatMessageDTO dto = new ChatMessageDTO();
-//        dto.setChatId(chatMessageEntity.getChatId()); // Giả sử bạn có phương thức này trong entity
-//        dto.setSenderId(chatMessageEntity.getSenderId()); // Giả sử bạn có phương thức này trong entity
-//        dto.setMessage(chatMessageEntity.getMessage());
-//        dto.setTimestamp(chatMessageEntity.getTimestamp());
-//        return dto;
-//    }
-//
-//    // Chuyển từ ChatMessageDTO sang ChatMessageEntity
-//    public ChatMessageEntity toEntity(ChatMessageDTO dto) {
-//        ChatMessageEntity chatMessageEntity = new ChatMessageEntity();
-//        chatMessageEntity.setSenderId(dto.getSenderId());
-//        chatMessageEntity.setBuyerId(dto.getRecipientId());
-//        chatMessageEntity.setMessage(dto.getMessage());
-//        chatMessageEntity.setTimestamp(LocalDateTime.now());
-//        return chatMessageEntity;
-//    }
-//
-//}
+package com.teamseven.ticketresell.converter;
+
+import com.teamseven.ticketresell.dto.ChatMessageDTO;
+import com.teamseven.ticketresell.entity.ChatMessageEntity;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ChatMessageConverter {
+
+    // Chuyển đổi từ DTO sang Entity
+    public ChatMessageEntity toEntity(ChatMessageDTO dto) {
+        ChatMessageEntity entity = new ChatMessageEntity();
+        entity.setSenderId(dto.getSenderId());
+        entity.setReceiverId(dto.getReceiverId());
+        entity.setMessageContent(dto.getMessageContent());
+        entity.setTimestamp(dto.getTimestamp());
+        return entity;
+    }
+
+    // Chuyển đổi từ Entity sang DTO
+    public ChatMessageDTO toDTO(ChatMessageEntity entity) {
+        ChatMessageDTO dto = new ChatMessageDTO();
+        dto.setChatId(entity.getChatId());
+        dto.setSenderId(entity.getSenderId());
+        dto.setReceiverId(entity.getReceiverId());
+        dto.setMessageContent(entity.getMessageContent());
+        dto.setTimestamp(entity.getTimestamp());
+        return dto;
+    }
+}

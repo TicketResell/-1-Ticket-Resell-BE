@@ -59,7 +59,12 @@ public class SecurityConfig {
                                 "/api/categories/{id}",
                                 "/api/tickets/search/{query}",
                                 "/api/tickets/upcoming",
-                                "/api/tickets/upcoming/{date}"
+                                "/api/tickets/upcoming/{date}",
+                                "/sendMessage",
+                                "chat/history",
+                                "chat/search",
+                                "chat/sendMessage",
+                                "chat"
                         ).permitAll() // Cho phép các endpoint không cần xác thực
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các yêu cầu khác
                 )

@@ -1,11 +1,14 @@
-//package com.teamseven.ticketresell.repository;
-//
-//import com.teamseven.ticketresell.entity.ChatMessageEntity;
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import java.util.List;
-//
-//
-//public interface ChatMessageRepository extends JpaRepository<ChatMessageEntity, Long> {
-//    List<ChatMessageEntity> findByBuyerIdAndSellerIdOrderByTimestampAsc(Long buyerId, Long sellerId);
-//    List<ChatMessageEntity> findByChatId(Long chatId);
-//}
+package com.teamseven.ticketresell.repository;
+
+import com.teamseven.ticketresell.entity.ChatMessageEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+
+public interface ChatMessageRepository extends JpaRepository<ChatMessageEntity, Long> {
+    List<ChatMessageEntity> findBySenderIdAndReceiverId(Long senderID, Long receiverID);
+    ChatMessageEntity findById(long id);
+    List<ChatMessageEntity> findBySenderIdAndReceiverIdAndTimestampBetween(Long senderID, Long receiverID, LocalDateTime from, LocalDateTime to);
+}
