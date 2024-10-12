@@ -117,7 +117,36 @@ public class TicketAPI {
         // Nếu không tìm thấy vé, trả về 404
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for this category search: " + eventTitle);
     }
+    @PostMapping("/category-search-date")
+    public ResponseEntity<?> getTicketsByCategorySearchDate(@RequestBody Map<String, Object> request) {
+        // Lấy categoryId và eventTitle từ request body dưới dạng Map
+        Long categoryId = Long.parseLong(request.get("categoryId").toString());
+        String eventTitle = request.get("eventTitle").toString();
 
+        // Tìm kiếm vé dựa trên categoryId và eventTitle
+        List<TicketEntity> tickets = ticketRepository.findByCategoryIdAndEventTitleContainingIgnoreCase(categoryId, eventTitle);
+
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());
+        }
+
+        // Nếu không tìm thấy vé, trả về 404
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for this category search: " + eventTitle);
+    }
+    @PostMapping("/search-date")
+    public ResponseEntity<?> getTicketsBySearchDate(@RequestBody Map<String, Object> request) {
+        // Lấy categoryId và eventTitle từ request body dưới dạng Map
+        // Lấy dữ liệu từ request body JSON
+        LocalDate date = LocalDate.parse(request.get("date").toString());
+        String eventTitle = request.get("eventTitle").toString();
+
+        // Tìm kiếm vé dựa trên ngày và tiêu đề sự kiện
+        List<TicketEntity> tickets = ticketService.searchDateAndTitle(date, eventTitle);
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for this date search: " + eventTitle);
+    }
 
     @GetMapping("/used/{userId}")
     public ResponseEntity<?> getUsedTicketsByUserId(@PathVariable Long userId) {

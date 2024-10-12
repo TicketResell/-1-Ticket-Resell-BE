@@ -19,5 +19,5 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     List<TicketEntity> findByEventTitleContainingOrTicketDetailsContaining(String eventTitle, String ticketDetails);
     List<TicketEntity> findByEventDateAfterOrderByEventDateAsc(LocalDate today);
     List<TicketEntity> findByCategoryIdAndEventTitleContainingIgnoreCase(Long categoryId, String eventTitle);
-
+    List<TicketEntity> findByEventDateAfterAndEventTitleContainingIgnoreCaseOrderByEventDateAsc(LocalDate date, String eventTitle);
 }

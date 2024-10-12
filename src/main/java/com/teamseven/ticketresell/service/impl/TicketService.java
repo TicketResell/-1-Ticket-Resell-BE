@@ -88,4 +88,7 @@ public class TicketService {
     public List<TicketEntity> searchTicketsByCategoryAndTitle(Long categoryId, String eventTitle) {
         return ticketRepository.findByCategoryIdAndEventTitleContainingIgnoreCase(categoryId, eventTitle);
     }
+    public List<TicketEntity> searchDateAndTitle(LocalDate date, String eventTitle) {
+        return ticketRepository.findByEventDateAfterAndEventTitleContainingIgnoreCaseOrderByEventDateAsc(date, eventTitle);
+    }
 }
