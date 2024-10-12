@@ -3,6 +3,7 @@ package com.teamseven.ticketresell.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -21,6 +22,14 @@ public class JwtUtil {
         claims.put("user_image", userImage);
         claims.put("role", role);
         return createToken(claims, username);
+    }
+
+    public String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null; // Trả về null nếu không có token hợp lệ
     }
 
     private String createToken(Map<String, Object> claims, String subject) {

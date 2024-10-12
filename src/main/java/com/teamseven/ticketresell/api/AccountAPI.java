@@ -12,6 +12,8 @@ import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.EmailService;
 import com.teamseven.ticketresell.service.impl.UserService;
 import com.teamseven.ticketresell.service.impl.SmsService;
+import com.teamseven.ticketresell.util.TokenProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +46,8 @@ public class AccountAPI {
 
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
@@ -169,15 +173,45 @@ public class AccountAPI {
     }
 
 
-    // View Profile
     @GetMapping("/profile/{username}")
-    public ResponseEntity<?> viewProfile(@PathVariable String username) {
-        UserEntity user = userService.findByUsername(username);
-        if (user != null) {
-            return ResponseEntity.ok(accountConverter.toDTO(user));
+    public ResponseEntity<?> viewProfile(@PathVariable String username, HttpServletRequest request) {
+
+        // Lấy JWT từ request
+        String jwt = jwtUtil.getJwtFromRequest(request);
+
+        // Kiểm tra JWT có hợp lệ hay không
+        if (jwt == null || !tokenProvider.validateToken(jwt)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or missing JWT token");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+
+        // Giải mã JWT để lấy thông tin người dùng (username và roles)
+        String currentUser = tokenProvider.getUsernameFromJWT(jwt);
+        String role = jwtUtil.extractUserRole(jwt);
+
+        // Nếu user có vai trò là admin hoặc staff, cho phép họ xem bất kỳ profile nào
+        if (role.equals("ADMIN") || role.equals("STAFF")) {
+            // Tìm user theo username
+            UserEntity user = userService.findByUsername(username);
+            if (user != null) {
+                return ResponseEntity.ok(accountConverter.toDTO(user));
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        // Nếu là user thường, chỉ cho phép họ xem profile của chính họ
+        if (currentUser.equals(username)) {
+            UserEntity user = userService.findByUsername(username);
+            if (user != null) {
+                return ResponseEntity.ok(accountConverter.toDTO(user));
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        // Nếu không phải admin/staff và cũng không phải chủ tài khoản, trả về lỗi 403 Forbidden
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view this profile");
     }
+
+
     // Modify Profile
     @PutMapping("/profile/{username}")
     public ResponseEntity<?> editProfile(@PathVariable String username, @RequestBody UserDTO userDTO, @RequestParam boolean isAdmin) {
