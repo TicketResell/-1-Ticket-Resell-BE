@@ -50,16 +50,21 @@ public class AccountAPI {
     private TokenProvider tokenProvider;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
-        // Sử dụng email để xác thực
-        System.out.println("Email: " + userDTO.getEmail());
-        System.out.println("Password: " + userDTO.getPassword());
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
+        // Lấy giá trị từ request body
+        String identifier = loginRequest.get("identifier");
+        String password = loginRequest.get("password");
 
-        UserDTO result = userService.login(userDTO.getEmail(), userDTO.getPassword());
+        // In thông tin ra để kiểm tra
+        System.out.println("Identifier: " + identifier);
+        System.out.println("Password: " + password);
+
+        // Xác thực người dùng dựa trên email hoặc username và mật khẩu
+        UserDTO result = userService.login(identifier, password);
         String exceptionMessage = "";
 
-        // In ra trạng thái người dùng để kiểm tra
-        if(result != null) {
+        // Kiểm tra trạng thái người dùng
+        if (result != null) {
             System.out.println("User status: " + result.getStatus());
             System.out.println("Is Verified: " + result.isVerifiedEmail());
 
@@ -75,7 +80,7 @@ public class AccountAPI {
             }
 
             // Tạo JWT nếu thông tin hợp lệ
-            String jwt = jwtUtil.generateToken(result.getUsername(),result.getEmail(), result.getFullname(), result.getUserImage(), result.getRole());
+            String jwt = jwtUtil.generateToken(result.getUsername(), result.getEmail(), result.getFullname(), result.getUserImage(), result.getRole());
             System.out.println("DTO: " + result);
             return ResponseEntity.ok(new JwtResponse(jwt));
         }

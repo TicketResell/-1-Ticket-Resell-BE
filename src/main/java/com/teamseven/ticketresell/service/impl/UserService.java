@@ -19,15 +19,13 @@ public class UserService implements IAccountService {
     private UserConverter accountConverter;
 
     @Override
-    public UserDTO login(String emailAddress, String password) {
-        UserEntity user = userRepository.findByEmail(emailAddress);
+    public UserDTO login(String identifer, String password) {
+        UserEntity user = userRepository.findByEmailOrUsername(identifer, password);
         if (user != null && password.equals(user.getPassword())) {
             return accountConverter.toDTO(user);
         }
         return null;
     }
-
-
     @Override
     public UserEntity findByUsername(String username) {
         return userRepository.findByUsername(username);
