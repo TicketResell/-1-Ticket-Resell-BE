@@ -84,4 +84,8 @@ public class TicketService {
         Pageable pageable = PageRequest.of(page, size);
         return ticketRepository.findAll(pageable);
     }
+    // Tìm vé theo categoryId và eventTitle
+    public List<TicketEntity> searchTicketsByCategoryAndTitle(Long categoryId, String eventTitle) {
+        return ticketRepository.findByCategoryIdAndEventTitleContainingIgnoreCase(categoryId, eventTitle);
+    }
 }

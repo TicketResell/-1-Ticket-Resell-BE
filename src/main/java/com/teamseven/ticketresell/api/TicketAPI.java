@@ -101,6 +101,22 @@ public class TicketAPI {
         // Nếu không tìm thấy vé, trả về 404
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for category ID: " + categoryId);
     }
+    @PostMapping("/category-search")
+    public ResponseEntity<?> getTicketsByCategorySearch(@RequestBody Map<String, Object> request) {
+        // Lấy categoryId và eventTitle từ request body dưới dạng Map
+        Long categoryId = Long.parseLong(request.get("categoryId").toString());
+        String eventTitle = request.get("eventTitle").toString();
+
+        // Tìm kiếm vé dựa trên categoryId và eventTitle
+        List<TicketEntity> tickets = ticketRepository.findByCategoryIdAndEventTitleContainingIgnoreCase(categoryId, eventTitle);
+
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());
+        }
+
+        // Nếu không tìm thấy vé, trả về 404
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for this category search: " + eventTitle);
+    }
 
 
     @GetMapping("/used/{userId}")
