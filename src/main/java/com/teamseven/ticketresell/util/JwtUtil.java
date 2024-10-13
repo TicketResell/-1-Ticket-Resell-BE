@@ -12,11 +12,12 @@ import java.util.Map;
 
 @Component
 public class JwtUtil {
-    private String secretKey = "trideptrai"; //
+    private String secretKey = "trideptrai";
     private int jwtExpirationInMs = 604800000; // 1 tuần
 
-    public String generateToken(String username, String email, String fullname, String userImage, String role) {
+    public String generateToken(Long id, String username, String email, String fullname, String userImage, String role) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("id", id);
         claims.put("email", email);
         claims.put("fullname", fullname);
         claims.put("user_image", userImage);
@@ -29,7 +30,7 @@ public class JwtUtil {
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-        return null; // Trả về null nếu không có token hợp lệ
+        return null;
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
@@ -63,7 +64,10 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    // Các phương thức mới để trích xuất thông tin
+    public Long extractId(String token) {
+        return ((Number) extractAllClaims(token).get("id")).longValue();
+    }
+
     public String extractEmail(String token) {
         return (String) extractAllClaims(token).get("email");
     }
