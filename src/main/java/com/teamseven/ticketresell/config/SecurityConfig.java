@@ -41,6 +41,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS không cần xác thực
                         .requestMatchers(
                                 "/api/accounts/login",
+                                "/api/accounts/staff",
+                                "/api/accounts/staff/{id}",
                                 "/api/accounts/register",
                                 "/api/accounts/verify",
                                 "/api/accounts/reset",

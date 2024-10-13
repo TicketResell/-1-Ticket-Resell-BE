@@ -38,6 +38,7 @@ public class TicketConverter {
 //        ticketEntity.setCategory(categoryRepository.findById(ticketDTO.getCategoryId()));
         ticketEntity.setTicketDetails(ticketDTO.getTicketDetails());
         ticketEntity.setStatus(ticketDTO.getStatus());
+        ticketEntity.setQuantity(ticketDTO.getQuantity());
         // Set foreign keys (seller and category) in actual application logic
         return ticketEntity;
     }
@@ -57,6 +58,7 @@ public class TicketConverter {
         ticketDTO.setTicketDetails(ticketEntity.getTicketDetails());
         ticketDTO.setImageUrls(ticketEntity.getImageUrls());
         ticketDTO.setStatus(ticketEntity.getStatus());
+        ticketDTO.setQuantity(ticketEntity.getQuantity());
         return ticketDTO;
     }
 }

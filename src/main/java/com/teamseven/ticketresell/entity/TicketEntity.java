@@ -56,6 +56,16 @@ public class TicketEntity extends BaseEntity {
     public enum Status {
         onsale, used, expired
     }
+    @Column(name = "quantity")
+    private int quantity;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public UserEntity getSeller() {
         return seller;

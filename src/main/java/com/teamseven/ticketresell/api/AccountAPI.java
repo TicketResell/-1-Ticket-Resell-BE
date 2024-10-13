@@ -7,6 +7,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.teamseven.ticketresell.converter.UserConverter;
 import com.teamseven.ticketresell.dto.UserDTO;
 import com.teamseven.ticketresell.dto.JwtResponse;
+import com.teamseven.ticketresell.entity.TicketEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
 import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.EmailService;
@@ -22,6 +23,7 @@ import com.teamseven.ticketresell.util.JwtUtil;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -122,6 +124,78 @@ public class AccountAPI {
         emailService.sendEmail(userDTO.getEmail(), subject, body);
 
         return ResponseEntity.ok("Registration successful. Please check your email to verify your account.");
+    }
+    // create account
+    @PostMapping("/staff")
+    public ResponseEntity<?> createAccount(@RequestBody UserDTO userDTO) {
+        if (userRepository.findByUsername(userDTO.getUsername()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username already exists");
+        }
+
+        // Kiểm tra email đã tồn tại chưa
+        if (userRepository.findByEmail(userDTO.getEmail()) != null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already exists");
+        }
+
+        System.out.println("REQUEST DTO:" + userDTO);
+
+        // Chuyển đổi DTO thành Entity và lưu user
+        UserEntity newUser = accountConverter.toEntity(userDTO);
+        newUser.setCreatedDate(LocalDateTime.now());
+//        newUser.setRole("user"); //default == user.
+        newUser.setStatus("active");
+
+        newUser.setCreatedDate(LocalDateTime.now());
+        userDTO.setVerifiedEmail(true);
+        UserEntity savedUser = userRepository.save(newUser);
+        System.out.println("SAVED USER:"+savedUser);
+
+        return ResponseEntity.ok("Create account successful");
+    }
+    // get all accounts
+    @GetMapping("/staff")
+    public ResponseEntity<?> getAccounts() {
+        List<UserEntity> accounts = userRepository.findAll();
+        return ResponseEntity.ok(accounts.stream().map(accountConverter::toDTO).toList());
+    }
+    // update account
+    @PutMapping("/staff/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody UserDTO userDTO) {
+        // Kiểm tra xem user có tồn tại không
+        UserEntity existingUser = userService.findById(id);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        // Cập nhật thông tin người dùng
+        existingUser.setUsername(userDTO.getUsername());
+        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setPhone(userDTO.getPhone());
+        existingUser.setAddress(userDTO.getAddress());
+        existingUser.setFullname(userDTO.getFullname());
+        existingUser.setUserImage(userDTO.getUserImage());
+        existingUser.setStatus(userDTO.getStatus());
+        existingUser.setVerifiedEmail(userDTO.isVerifiedEmail());
+        existingUser.setRole(userDTO.getRole());
+
+        // Lưu lại user đã cập nhật
+        UserEntity updatedUser = userService.save(existingUser);
+
+        return ResponseEntity.ok("User updated successfully");
+    }
+    // delete account by id
+    @DeleteMapping("/staff/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
+        // Kiểm tra xem user có tồn tại không
+        UserEntity existingUser = userService.findById(id);
+        if (existingUser == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+
+        // Xóa tài khoản người dùng
+        userService.delete(id);
+
+        return ResponseEntity.ok("User deleted successfully");
     }
     // reset password by mail
     @PostMapping("/reset")

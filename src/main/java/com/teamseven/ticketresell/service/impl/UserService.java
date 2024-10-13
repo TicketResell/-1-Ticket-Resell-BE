@@ -37,4 +37,17 @@ public class UserService implements IAccountService {
         newUser.setPassword(password);
         return userRepository.save(newUser);
     }
+    public UserEntity findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    // Cập nhật hoặc lưu người dùng
+    public UserEntity save(UserEntity user) {
+        return userRepository.save(user);
+    }
+
+    // Xóa người dùng theo ID
+    public void delete(Long id) {
+        userRepository.deleteById(id);
+    }
 }
