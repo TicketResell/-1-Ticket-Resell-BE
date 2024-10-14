@@ -1,4 +1,4 @@
-package com.teamseven.ticketresell.api;
+package com.teamseven.ticketresell.controller;
 
 import com.teamseven.ticketresell.dto.TicketDTO;
 import com.teamseven.ticketresell.entity.TicketEntity;

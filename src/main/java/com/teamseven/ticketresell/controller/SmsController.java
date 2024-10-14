@@ -1,4 +1,4 @@
-package com.teamseven.ticketresell.api;
+package com.teamseven.ticketresell.controller;
 
 import com.twilio.Twilio;
 import com.twilio.rest.verify.v2.service.Verification;

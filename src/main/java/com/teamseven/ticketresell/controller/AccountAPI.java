@@ -1,4 +1,4 @@
-package com.teamseven.ticketresell.api;
+package com.teamseven.ticketresell.controller;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
@@ -7,7 +7,6 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.teamseven.ticketresell.converter.UserConverter;
 import com.teamseven.ticketresell.dto.UserDTO;
 import com.teamseven.ticketresell.dto.JwtResponse;
-import com.teamseven.ticketresell.entity.TicketEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
 import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.EmailService;

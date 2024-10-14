@@ -1,4 +1,4 @@
-package com.teamseven.ticketresell.api;
+package com.teamseven.ticketresell.controller;
 
 import com.teamseven.ticketresell.dto.CategoryDTO;
 import com.teamseven.ticketresell.service.impl.CategoryService;
