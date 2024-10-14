@@ -66,7 +66,8 @@ public class SecurityConfig {
                                 "/api/tickets/upcoming/{date}",
                                 "/sendMessage",
                                 "/chat/**",
-                                "/ws/**"
+                                "/ws/**",
+                                "/chat-websocket/info"
                         ).permitAll() // Cho phép các endpoint không cần xác thực
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các yêu cầu khác
                 )

@@ -13,7 +13,7 @@ public class ChatMessageConverter {
         entity.setSenderId(dto.getSenderId());
         entity.setReceiverId(dto.getReceiverId());
         entity.setMessageContent(dto.getMessageContent());
-        entity.setTimestamp(dto.getTimestamp());
+//        entity.setTimestamp(dto.getTimestamp());
         return entity;
     }
 
@@ -24,7 +24,7 @@ public class ChatMessageConverter {
         dto.setSenderId(entity.getSenderId());
         dto.setReceiverId(entity.getReceiverId());
         dto.setMessageContent(entity.getMessageContent());
-        dto.setTimestamp(entity.getTimestamp());
+//        dto.setTimestamp(entity.getTimestamp());
         return dto;
     }
 }

@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface IChatService {
     ChatMessageDTO sendMessage(ChatMessageDTO message);
-    ChatMessageDTO getChatHistory(Long chatId);
+    List<ChatMessageDTO> getChatHistory(Long chatId);
     List<ChatMessageDTO> getChatHistory(Long buyerId, Long sellerId);
 }

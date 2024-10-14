@@ -16,8 +16,6 @@ public class ChatMessageEntity extends BaseEntity {
     @Column(name = "message_content", nullable = false, length = 1000) // Tăng chiều dài nội dung
     private String messageContent;
 
-    @Column(name = "timestamp", nullable = false)
-    private LocalDateTime timestamp;
 
     // Getters và Setters
     public Long getChatId() {
@@ -48,11 +46,4 @@ public class ChatMessageEntity extends BaseEntity {
         this.messageContent = messageContent;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
 }

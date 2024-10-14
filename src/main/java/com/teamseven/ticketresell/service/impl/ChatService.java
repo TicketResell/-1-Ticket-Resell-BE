@@ -41,17 +41,18 @@ public class ChatService implements IChatService {
         return chatMessageConverter.toDTO(savedMessage);
     }
 
-    // Caching chat history by chatId
     @Override
-    @Cacheable(value = "chatHistory", key = "#chatId")
-    public ChatMessageDTO getChatHistory(Long chatId) {
-        ChatMessageEntity chatMessageEntity = chatMessageRepository.findById(chatId)
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Chat message with ID %d not found", chatId)
-                ));
+    @Cacheable(value = "chatHistory", key = "#userId")
+    public List<ChatMessageDTO> getChatHistory(Long userId) {
 
-        return chatMessageConverter.toDTO(chatMessageEntity);
+        List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findBySenderId(userId);
+
+        // Chuyển đổi danh sách ChatMessageEntity thành danh sách ChatMessageDTO
+        return chatMessageEntities.stream()
+                .map(chatMessageConverter::toDTO)
+                .collect(Collectors.toList());
     }
+
 //
 //    // Sử dụng Optional để trả về DTO nếu có
 //    @Override
@@ -69,12 +70,12 @@ public class ChatService implements IChatService {
                 .collect(Collectors.toList());
     }
 
-    // Lấy lịch sử chat giữa 2 người dùng trong một khoảng thời gian
-    public List<ChatMessageDTO> getChatHistory(Long senderID, Long receiverID, LocalDateTime from, LocalDateTime to) {
-        List<ChatMessageEntity> chats = chatMessageRepository
-                .findBySenderIdAndReceiverIdAndTimestampBetween(senderID, receiverID, from, to);
-        return chats.stream()
-                .map(chatMessageConverter::toDTO)
-                .collect(Collectors.toList());
-    }
+//    // Lấy lịch sử chat giữa 2 người dùng trong một khoảng thời gian
+//    public List<ChatMessageDTO> getChatHistory(Long senderID, Long receiverID, LocalDateTime from, LocalDateTime to) {
+//        List<ChatMessageEntity> chats = chatMessageRepository
+//                .findBySenderIdAndReceiverIdAndTimestampBetween(senderID, receiverID, from, to);
+//        return chats.stream()
+//                .map(chatMessageConverter::toDTO)
+//                .collect(Collectors.toList());
+//    }
 }
