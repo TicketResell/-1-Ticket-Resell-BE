@@ -18,6 +18,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat-websocket").setAllowedOrigins("localhost:3000").withSockJS();
+        registry.addEndpoint("/chat-websocket")
+                .setAllowedOriginPatterns("*");// Cho phép tất cả origin (thay thế bằng domain của bạn nếu cần);
     }
 }

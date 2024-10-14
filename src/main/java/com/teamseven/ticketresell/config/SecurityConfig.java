@@ -70,7 +70,8 @@ public class SecurityConfig {
                                 "/sendMessage",
                                 "/chat/**",
                                 "/ws/**",
-                                "/chat-websocket/info"
+                                "/chat-websocket/**",
+                                "/health"
                         ).permitAll() // Cho phép các endpoint không cần xác thực
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các yêu cầu khác
                 )
