@@ -52,7 +52,7 @@ public class TicketEntity extends BaseEntity {
 
     @Column(name = "status", nullable = false)
     private String status;
-
+    //onsale, used, expired
     public enum Status {
         onsale, used, expired
     }

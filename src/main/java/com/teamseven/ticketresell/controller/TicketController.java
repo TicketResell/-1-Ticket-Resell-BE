@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tickets")
-public class TicketAPI {
+public class TicketController {
 
     @Autowired
     private TicketRepository ticketRepository;
@@ -207,6 +207,22 @@ public class TicketAPI {
     @GetMapping("/upcoming")
     public ResponseEntity<?> getUpcomingTickets() {
         List<TicketEntity> tickets = ticketService.getUpcomingTickets();
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
+    }
+    @GetMapping("/saleprice-asc")
+    public ResponseEntity<?> getAscPriceTickets() {
+        List<TicketEntity> tickets = ticketService.getTicketsSortedBySalePriceAsc();
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
+    }
+    @GetMapping("/saleprice-desc")
+    public ResponseEntity<?> getDescPriceTickets() {
+        List<TicketEntity> tickets = ticketService.getTicketsSortedBySalePriceDesc();
         if (tickets != null && !tickets.isEmpty()) {
             return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
         }

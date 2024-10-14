@@ -1,46 +1,66 @@
 package com.teamseven.ticketresell.entity;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
-// Order entity
 @Entity
 @Table(name = "orders")
 public class OrderEntity extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "buyerID", nullable = false)
-    private UserEntity buyer;
+    @JoinColumn(name = "buyer_id", nullable = false)
+    private UserEntity buyer; // Người mua
 
     @ManyToOne
-    @JoinColumn(name = "sellerID", nullable = false)
-    private UserEntity seller;
+    @JoinColumn(name = "seller_id", nullable = false)
+    private UserEntity seller; // Người bán
 
     @ManyToOne
-    @JoinColumn(name = "ticketID", nullable = false)
-    private TicketEntity ticket;
+    @JoinColumn(name = "ticket_id", nullable = false)
+    private TicketEntity ticket; // Vé đã mua
 
-    @Column(name = "order_date", nullable = false)
-    private LocalDateTime orderDate;
+
+
+    @Column(name = "quantity", nullable = false)
+    private int quantity; // Số lượng vé mua
+
+    @Column(name = "total_amount", precision = 10, scale = 2, nullable = false)
+    private double totalAmount; // Tổng tiền của đơn hàng
+
+    @Column(name = "service_fee", precision = 10, scale = 2)
+    private double serviceFee; // Phí dịch vụ
+
+    @Column(name = "payment_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus; // Trạng thái thanh toán
+
+    @Column(name = "order_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus; // Trạng thái đơn hàng
 
     @Column(name = "order_method", nullable = false)
     @Enumerated(EnumType.STRING)
-    private OrderMethod orderMethod;
-
-    @Column(name = "total_amount", precision = 10, scale = 2)
-    private double totalAmount;
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private OrderStatus status;
-
-    public enum OrderMethod {
-        COD, PAYPAL, VNPAY
-    }
+    private OrderMethod orderMethod; // Phương thức thanh toán
 
     public enum OrderStatus {
-        PENDING, COMPLETED, CANCELLED
+        pending, completed, cancelled
+    }
+
+    public enum PaymentStatus {
+        pending, completed, cancelled
+    }
+
+    public enum OrderMethod {
+        COD, paypal, vnpay
+    }
+
+    // Getters và Setters
+    public UserEntity getBuyer() {
+        return buyer;
+    }
+
+    public void setBuyer(UserEntity buyer) {
+        this.buyer = buyer;
     }
 
     public UserEntity getSeller() {
@@ -59,28 +79,14 @@ public class OrderEntity extends BaseEntity {
         this.ticket = ticket;
     }
 
-    public UserEntity getBuyer() {
-        return buyer;
+
+
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setBuyer(UserEntity buyer) {
-        this.buyer = buyer;
-    }
-
-    public LocalDateTime getOrderDate() {
-        return orderDate;
-    }
-
-    public void setOrderDate(LocalDateTime orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public OrderStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(OrderStatus status) {
-        this.status = status;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public double getTotalAmount() {
@@ -89,6 +95,30 @@ public class OrderEntity extends BaseEntity {
 
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public double getServiceFee() {
+        return serviceFee;
+    }
+
+    public void setServiceFee(double serviceFee) {
+        this.serviceFee = serviceFee;
+    }
+
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public OrderMethod getOrderMethod() {

@@ -91,4 +91,13 @@ public class TicketService {
     public List<TicketEntity> searchDateAndTitle(LocalDate date, String eventTitle) {
         return ticketRepository.findByEventDateAfterAndEventTitleContainingIgnoreCaseOrderByEventDateAsc(date, eventTitle);
     }
+    // Lấy danh sách vé theo salePrice tăng dần
+    public List<TicketEntity> getTicketsSortedBySalePriceAsc() {
+        return ticketRepository.findAllByOrderBySalePriceAsc();
+    }
+
+    // Lấy danh sách vé theo salePrice giảm dần
+    public List<TicketEntity> getTicketsSortedBySalePriceDesc() {
+        return ticketRepository.findAllByOrderBySalePriceDesc();
+    }
 }
