@@ -1,14 +1,18 @@
+
+#NEW UPDATE 2024-10-14 @trinm
+1. I have written most of the chat functionality. Everything will be completed tomorrow!
+2. I added TestNG for the Software Testing SWT301 course, but I'm only testing the Login part for fun :)
+___________________________________________________________________________
 #NEW UPDATE 2024-10-8 @cuong
 I fix bug search and upcoming function and add reset password by mail api
-
+____________________________________________________________________________
 #NEW UPDATE 2024-10-8 @cuong
 New function search by title and detail , and upcoming event date but still bug
-
+______________________________________________________________________________
 #NEW UPDATE 2024-10-9 @trinm
 I have created about basic chat function with WebSocket, but I haven't tested it yet.
 I'll test and complete this function later in Postman or frontend React-server.
-
----------------------------------------------------------------------
+_______________________________________________________________________________
 #NEW UPDATE 2024-10-8 @cuong
 1. Add some field into Ticket Entity
 2. Complete functions about ticket manage.
