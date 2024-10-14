@@ -54,6 +54,8 @@ public class SecurityConfig {
                                 "/api/accounts/test-request-token",
                                 "/api/tickets/create",
                                 "/api/tickets",
+                                "/api/tickets/saleprice-desc",
+                                "/api/tickets/saleprice-asc",
                                 "/api/tickets/search-date",
                                 "/api/tickets/category-search",
                                 "/api/tickets/sold/count/month/{month}/year/{year}",
