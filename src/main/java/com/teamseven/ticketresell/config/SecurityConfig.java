@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/accounts/login",
                                 "/api/accounts/staff",
+                                "/api/orders/create",
                                 "/api/accounts/staff/{id}",
                                 "/api/accounts/register",
                                 "/api/accounts/verify",

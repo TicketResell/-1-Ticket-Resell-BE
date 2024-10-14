@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/tickets")
-public class TicketAPI {
+public class TicketController {
 
     @Autowired
     private TicketRepository ticketRepository;
