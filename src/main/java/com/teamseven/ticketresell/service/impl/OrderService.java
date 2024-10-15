@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -69,6 +70,18 @@ public class OrderService {
 
         // Trả về OrderDTO sau khi lưu
         return orderConverter.toDTO(savedOrder);
+    }
+    public List<OrderDTO> getOrdersBySeller(Long sellerId) {
+        List<OrderEntity> orders = orderRepository.findBySeller_Id(sellerId);
+        return orders.stream()
+                .map(orderConverter::toDTO)
+                .collect(Collectors.toList());
+    }
+    public List<OrderDTO> getOrdersByBuyer(Long buyerId) {
+        List<OrderEntity> orders = orderRepository.findByBuyer_Id(buyerId);
+        return orders.stream()
+                .map(orderConverter::toDTO)
+                .collect(Collectors.toList());
     }
 }
 
