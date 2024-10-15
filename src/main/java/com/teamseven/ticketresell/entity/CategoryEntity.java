@@ -14,11 +14,22 @@ public class CategoryEntity extends BaseEntity {
     @Column(name = "category_name", nullable = false)
     private String categoryName;
 
+    @Column(name = "category_image")
+    private String categoryImage;
+
     @OneToMany(mappedBy = "category")
     private List<TicketEntity> tickets;
 
     public String getCategoryName() {
         return categoryName;
+    }
+
+    public String getCategoryImage() {
+        return categoryImage;
+    }
+
+    public void setCategoryImage(String categoryImage) {
+        this.categoryImage = categoryImage;
     }
 
     public void setCategoryName(String categoryName) {
