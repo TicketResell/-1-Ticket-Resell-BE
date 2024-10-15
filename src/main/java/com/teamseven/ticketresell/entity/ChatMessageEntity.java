@@ -13,9 +13,15 @@ public class ChatMessageEntity extends BaseEntity {
     @Column(name = "receiver_id", nullable = false)
     private Long receiverId;
 
-    @Column(name = "message_content", nullable = false, length = 1000) // Tăng chiều dài nội dung
+    @Column(name = "message_content", nullable = false, length = 1000)
     private String messageContent;
 
+    @Column(name = "chat_type",nullable = false)
+    private String chatType;
+
+    public enum ChatType{
+        text, image, bid
+    }
 
     // Getters và Setters
     public Long getChatId() {
@@ -38,6 +44,15 @@ public class ChatMessageEntity extends BaseEntity {
         this.receiverId = receiverId;
     }
 
+
+    public String getChatType() {
+        return chatType;
+    }
+
+    public void setChatType(String chatType) {
+        this.chatType = chatType;
+    }
+
     public String getMessageContent() {
         return messageContent;
     }
@@ -45,5 +60,7 @@ public class ChatMessageEntity extends BaseEntity {
     public void setMessageContent(String messageContent) {
         this.messageContent = messageContent;
     }
+
+    public LocalDateTime getTimestamp(){ return  super.getCreatedDate();}
 
 }

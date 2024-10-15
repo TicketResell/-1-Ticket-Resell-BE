@@ -15,6 +15,7 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessageEntity, 
 
     @Query("SELECT c FROM ChatMessageEntity c WHERE c.senderId = :senderId")
     List<ChatMessageEntity> findBySenderId(@Param("senderId") Long senderId);
-
+    @Query("SELECT c FROM ChatMessageEntity c WHERE c.senderId = :senderId OR c.receiverId = :receiverId")
+    List<ChatMessageEntity> findBySenderIdOrReceiverId(@Param("senderId") Long senderId, @Param("receiverId") Long receiverId);
 //    List<ChatMessageEntity> findBySenderIdAndReceiverIdAndTimestampBetween(Long senderID, Long receiverID, LocalDateTime from, LocalDateTime to);
 }

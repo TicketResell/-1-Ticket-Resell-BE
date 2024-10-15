@@ -54,5 +54,6 @@ public class LoginTest {
             System.err.println("Assertion failed: " + e.getMessage());
             throw e; // Ném lại để TestNG có thể ghi nhận
         }
-    }
 }
+
+    }
