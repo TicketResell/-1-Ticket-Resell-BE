@@ -1,9 +1,13 @@
 package com.teamseven.ticketresell.util;
 
+import com.teamseven.ticketresell.config.security.MyUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -12,8 +16,13 @@ import java.util.Map;
 
 @Component
 public class JwtUtil {
+    private final MyUserDetailsService myUserDetailsService;
     private String secretKey = "trideptrai";
     private int jwtExpirationInMs = 604800000; // 1 tuần
+
+    public JwtUtil(MyUserDetailsService myUserDetailsService) {
+        this.myUserDetailsService = myUserDetailsService;
+    }
 
     public String generateToken(Long id, String username, String email, String fullname, String userImage, String role) {
         Map<String, Object> claims = new HashMap<>();
@@ -43,9 +52,28 @@ public class JwtUtil {
                 .compact();
     }
 
+    public Authentication getAuthentication(String token) {
+        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        String username = claims.getSubject();
+
+        // Load user details
+        UserDetails userDetails = myUserDetailsService.loadUserByUsername(username);
+
+        if (userDetails != null) {
+            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        }
+        return null; // Nếu không tìm thấy user, trả về null
+    }
+
     public Boolean validateToken(String token, String username) {
         final String extractedUsername = extractUsername(token);
         return (extractedUsername.equals(username) && !isTokenExpired(token));
+    }
+
+    public Boolean validateToken(String token) {
+        final String extractedUsername = extractUsername(token);
+        // Giả sử bạn muốn trả về true nếu token không hết hạn
+        return !isTokenExpired(token);
     }
 
     public String extractUsername(String token) {

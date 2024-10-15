@@ -68,4 +68,9 @@ public class UserService implements IAccountService {
     public void delete(Long id) {
         userRepository.deleteById(id);
     }
+
+    public String getUserRoleByUsername(String username) {
+        UserEntity user = userRepository.findByUsername(username);
+        return user != null ? user.getRole() : null;
+    }
 }
