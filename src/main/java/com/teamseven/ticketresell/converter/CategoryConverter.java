@@ -10,6 +10,7 @@ public class CategoryConverter {
     public CategoryEntity toEntity(CategoryDTO dto) {
         CategoryEntity entity = new CategoryEntity();
         entity.setCategoryName(dto.getName());
+        entity.setCategoryImage(dto.getImage());
         return entity;
     }
 
@@ -17,6 +18,7 @@ public class CategoryConverter {
         CategoryDTO dto = new CategoryDTO();
         dto.setId(entity.getId());
         dto.setName(entity.getCategoryName());
+        dto.setImage(entity.getCategoryImage());
         return dto;
     }
 }
