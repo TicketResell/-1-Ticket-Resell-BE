@@ -31,6 +31,7 @@ public class TicketController {
     // Create a new ticket
     @PostMapping("/create")
     public ResponseEntity<?> createTicket(@RequestBody TicketDTO ticketDTO) {
+        ticketDTO.setStatus("onsale");
         TicketEntity ticketEntity = ticketConverter.toEntity(ticketDTO);
         TicketEntity savedTicket = ticketRepository.save(ticketEntity);
         return ResponseEntity.ok(ticketConverter.toDTO(savedTicket));
