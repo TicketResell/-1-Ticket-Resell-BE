@@ -115,7 +115,7 @@ public class AccountController {
 
 
         // Gửi email xác thực
-        String verificationLink = "http://localhost:8084/api/accounts/verify?email=" + userDTO.getEmail();
+        String verificationLink = "http://localhost:3000/forgot-password?email=" + userDTO.getEmail();
         String subject = "Email Verification";
         String body = "Thank you for registering. Please click the link below to verify your email:\n" + verificationLink;
 

@@ -67,5 +67,16 @@ public class OrderController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Have not any buy order yet!");
     }
+    @DeleteMapping("/{orderId}")
+    public ResponseEntity<?> deleteOrder(@PathVariable Long orderId) {
+        try {
+            orderService.deleteOrder(orderId);
+            return ResponseEntity.ok("Order with ID " + orderId + " has been deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
+        }
+    }
 }
 

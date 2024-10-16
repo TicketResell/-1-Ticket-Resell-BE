@@ -83,5 +83,11 @@ public class OrderService {
                 .map(orderConverter::toDTO)
                 .collect(Collectors.toList());
     }
+    public void deleteOrder(Long orderId) {
+        if (!orderRepository.existsById(orderId)) {
+            throw new IllegalArgumentException("Order with ID " + orderId + " does not exist.");
+        }
+        orderRepository.deleteById(orderId);
+    }
 }
 
