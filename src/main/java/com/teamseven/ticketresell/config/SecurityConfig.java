@@ -1,5 +1,6 @@
 package com.teamseven.ticketresell.config;
 
+import com.teamseven.ticketresell.filter.JwtRequestFilter;
 import com.teamseven.ticketresell.service.impl.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -8,27 +9,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Tắt CSRF vì bạn có thể đang sử dụng API
+                .csrf(csrf -> csrf.disable()) // Tắt CSRF vì đang sử dụng API
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowCredentials(true);
@@ -84,14 +87,10 @@ public class SecurityConfig {
                             logger.error("Unauthorized error: {}", authException.getMessage());
                             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                         })
-                )
-//                .oauth2Login(oauth2 -> oauth2
-//                        .loginPage("/login") // Cấu hình trang đăng nhập cho OAuth2
-//                        .defaultSuccessUrl("/home", true) // Điều hướng khi đăng nhập thành công
-//                        .failureUrl("/login?error=true") // Điều hướng khi đăng nhập thất bại
-//                );
-                .oauth2Login(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults());
+                );
+
+        // Thêm filter JWT vào chuỗi bảo mật
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

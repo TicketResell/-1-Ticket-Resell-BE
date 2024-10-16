@@ -1,4 +1,11 @@
-
+#NEW UPDATE 2024-10-16 1:55 AM :)) @trinm
+1. Totally finished Chat Function
+2. Fix some bugs about JWT Authorization.
+_______________________________________________________________________________
+#NEW UPDATE 2024-10-15 @cuong
+1. I added some image for category
+2. I coded some api view order all by seller by buyer but response is just id not dto and I will fix later
+____________________________________________________________________________
 #NEW UPDATE 2024-10-14 @trinm
 1. I have written most of the chat functionality. Everything will be completed tomorrow!
 2. I added TestNG for the Software Testing SWT301 course, but I'm only testing the Login part for fun :)

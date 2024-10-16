@@ -12,11 +12,12 @@ import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.EmailService;
 import com.teamseven.ticketresell.service.impl.UserService;
 import com.teamseven.ticketresell.service.impl.SmsService;
-import com.teamseven.ticketresell.util.TokenProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.teamseven.ticketresell.util.JwtUtil;
 
@@ -47,14 +48,12 @@ public class AccountController {
 
     @Autowired
     private EmailService emailService;
-    @Autowired
-    private TokenProvider tokenProvider;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         // Lấy giá trị từ request body
         String identifier = loginRequest.get("identifier");
-        String password = loginRequest.get("password");
+        String password = loginRequest.get( "password");
 
         // In thông tin ra để kiểm tra
         System.out.println("Identifier: " + identifier);
@@ -228,7 +227,7 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid email!");
         }
 
-        // Cập nhật mật khẩu mới (giả sử có mã hóa)
+        // Cập nhật mật khẩu mới=
         user.setPassword(newPassword);
         userRepository.save(user);  // Lưu user với mật khẩu mới
 
@@ -252,42 +251,37 @@ public class AccountController {
 
 
     @GetMapping("/profile/{username}")
-    public ResponseEntity<?> viewProfile(@PathVariable String username, HttpServletRequest request) {
+    public ResponseEntity<?> viewProfile(@PathVariable String username) {
+        // Lấy đối tượng Authentication từ SecurityContext
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // Lấy JWT từ request
-        String jwt = jwtUtil.getJwtFromRequest(request);
-
-        // Kiểm tra JWT có hợp lệ hay không
-        if (jwt == null || !tokenProvider.validateToken(jwt)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or missing JWT token");
+        // Kiểm tra xác thực
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
 
-        // Giải mã JWT để lấy thông tin người dùng (username và roles)
-        String currentUser = tokenProvider.getUsernameFromJWT(jwt);
-        String role = jwtUtil.extractUserRole(jwt);
+        // Lấy tên người dùng hiện tại từ Authentication
+        String currentUser = authentication.getName();
 
-        // Nếu user có vai trò là admin hoặc staff, cho phép họ xem bất kỳ profile nào
-        if (role.equals("ADMIN") || role.equals("STAFF")) {
-            // Tìm user theo username
-            UserEntity user = userService.findByUsername(username);
-            if (user != null) {
-                return ResponseEntity.ok(accountConverter.toDTO(user));
-            }
+        // Tìm người dùng theo username
+        UserEntity user = userService.findByUsername(username);
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
-        // Nếu là user thường, chỉ cho phép họ xem profile của chính họ
-        if (currentUser.equals(username)) {
-            UserEntity user = userService.findByUsername(username);
-            if (user != null) {
-                return ResponseEntity.ok(accountConverter.toDTO(user));
-            }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        // Lấy vai trò từ username
+        String role = userService.getUserRoleByUsername(user.getUsername());
+
+        // Kiểm tra quyền truy cập dựa trên vai trò và tên người dùng hiện tại
+        if (role.equals("ADMIN") || role.equals("STAFF") || currentUser.equals(user.getUsername())) {
+            // Trả về thông tin người dùng nếu đủ quyền
+            return ResponseEntity.ok(accountConverter.toDTO(user));
         }
 
-        // Nếu không phải admin/staff và cũng không phải chủ tài khoản, trả về lỗi 403 Forbidden
+        // Nếu không đủ quyền, trả về lỗi 403
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not allowed to view this profile");
     }
+
 
 
     // Modify Profile
@@ -339,7 +333,7 @@ public class AccountController {
                     user.setStatus("active");
                     user.setRole("user"); //default == user.
                     user.setCreatedDate(LocalDateTime.now());
-                    user.setVerifiedEmail(true); // Giả định rằng email đã được xác thực qua Google
+                    user.setVerifiedEmail(true);
                     user = userRepository.save(user);
                 }
 
