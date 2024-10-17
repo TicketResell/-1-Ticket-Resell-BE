@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -74,6 +75,19 @@ public class OrderController {
             return ResponseEntity.ok("Order with ID " + orderId + " has been deleted successfully.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
+        }
+    }
+    // API để cập nhật payment status
+    @PutMapping("/update-payment-status/{orderId}")
+    public ResponseEntity<?> updatePaymentStatus(@PathVariable Long orderId, @RequestBody Map<String, String> request) {
+        try {
+            String paymentStatus = request.get("payment_status");
+            OrderEntity updatedOrder = orderService.updatePaymentStatus(orderId, paymentStatus);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
         }

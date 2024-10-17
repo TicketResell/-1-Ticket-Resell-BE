@@ -47,11 +47,11 @@ public class OrderEntity extends BaseEntity {
     }
 
     public enum PaymentStatus {
-        pending, completed, cancelled
+        pending, paid, failed
     }
 
     public enum OrderMethod {
-        COD, paypal, vnpay
+        COD, vnpay
     }
 
     // Getters và Setters

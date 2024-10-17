@@ -31,6 +31,10 @@ public class OrderService {
 
     @Autowired
     private OrderConverter orderConverter;
+
+    @Autowired
+    private TransactionService transactionService;
+
     @Transactional
     public OrderDTO createOrder(OrderDTO orderDTO) {
         // Tìm Buyer
@@ -88,6 +92,26 @@ public class OrderService {
             throw new IllegalArgumentException("Order with ID " + orderId + " does not exist.");
         }
         orderRepository.deleteById(orderId);
+    }
+    @Transactional
+    public OrderEntity updatePaymentStatus(Long orderId, String paymentStatus) {
+        // Tìm order theo orderId
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found!"));
+        // Kiểm tra nếu trạng thái payment được cập nhật thành paid
+        if ("Paid".equalsIgnoreCase(paymentStatus)) {
+            // Cập nhật trạng thái payment_status của order
+            order.setPaymentStatus(OrderEntity.PaymentStatus.paid);
+            // Tạo một transaction cho buyer (buyer đã trả tiền)
+            transactionService.createBuyerTransaction(order);
+        } else if ("Failed".equalsIgnoreCase(paymentStatus)) {
+            // Nếu payment failed
+            order.setPaymentStatus(OrderEntity.PaymentStatus.failed);
+        } else {
+            throw new IllegalArgumentException("Invalid payment status");
+        }
+        // Lưu order sau khi cập nhật payment status
+        return orderRepository.save(order);
     }
 }
 

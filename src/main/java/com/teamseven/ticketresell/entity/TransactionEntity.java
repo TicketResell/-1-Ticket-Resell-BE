@@ -31,7 +31,9 @@ public class TransactionEntity extends BaseEntity{
     public enum TransactionType {
         Income, Expense, Refund
     }
-
+    // Income : buyer to system
+    // Expense: system to seller
+    // Refund: buyer cancel
     // Getters và Setters
 
     public OrderEntity getOrder() {

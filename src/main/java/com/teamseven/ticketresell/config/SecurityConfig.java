@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 "/api/accounts/staff",
                                 "/api/orders/create",
                                 "/api/orders",
+                                "/api/orders/update-payment-status/{orderId}",
                                 "/api/orders/{orderId}",
                                 "/api/orders/seller/{sellerid}",
                                 "/api/orders/buyer/{buyerId}",
