@@ -79,12 +79,38 @@ public class OrderController {
             return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
         }
     }
-    // API để cập nhật payment status
+    // API để cập nhật payment status là paid thì tạo transaction income từ buyer đến sàn
     @PutMapping("/update-payment-status/{orderId}")
     public ResponseEntity<?> updatePaymentStatus(@PathVariable Long orderId, @RequestBody Map<String, String> request) {
         try {
             String paymentStatus = request.get("payment_status");
-            OrderEntity updatedOrder = orderService.updatePaymentStatus(orderId, paymentStatus);
+            OrderDTO updatedOrder = orderService.updatePaymentStatus(orderId, paymentStatus);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
+        }
+    }
+    // API để cập nhật order status thành complete và tạo transaction expense từ sàn cho seller
+    @PutMapping("/update-order-status/{orderId}")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable Long orderId, @RequestBody Map<String, String> request) {
+        try {
+            String orderStatus = request.get("order_status");
+            OrderDTO updatedOrder = orderService.updateOrderStatus(orderId, orderStatus);
+            return ResponseEntity.ok(updatedOrder);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
+        }
+    }
+    // API để cập nhật order status thành cancelled và tạo transaction refund cho buyer
+    @PutMapping("/update-order-status-refund/{orderId}")
+    public ResponseEntity<?> updateOrderStatusForRefund(@PathVariable Long orderId, @RequestBody Map<String, String> request) {
+        try {
+            String orderStatus = request.get("order_status");
+            OrderDTO updatedOrder = orderService.updateOrderStatusForRefund(orderId, orderStatus);
             return ResponseEntity.ok(updatedOrder);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,25 +54,23 @@ public class OrderService {
         if (!"onsale".equalsIgnoreCase(ticket.getStatus())) {
             throw new IllegalArgumentException("Ticket is not available for sale.");
         }
-
         // Kiểm tra số lượng vé có đủ không
         if (ticket.getQuantity() < orderDTO.getQuantity()) {
             throw new IllegalArgumentException("Not enough tickets available.");
         }
-
         // Trừ số lượng vé và cập nhật trạng thái vé nếu hết vé
         ticket.setQuantity(ticket.getQuantity() - orderDTO.getQuantity());
         if (ticket.getQuantity() == 0) {
             ticket.setStatus("used");
         }
         ticketRepository.save(ticket); // Cập nhật vé sau khi trừ số lượng
-
         // Chuyển từ OrderDTO sang OrderEntity
+
         OrderEntity orderEntity = orderConverter.toEntity(orderDTO);
-
         // Lưu vào cơ sở dữ liệu
+        orderEntity.setCreatedDate(LocalDateTime.now());
+        orderEntity.setServiceFee(0.05);
         OrderEntity savedOrder = orderRepository.save(orderEntity);
-
         // Trả về OrderDTO sau khi lưu
         return orderConverter.toDTO(savedOrder);
     }
@@ -94,7 +93,7 @@ public class OrderService {
         orderRepository.deleteById(orderId);
     }
     @Transactional
-    public OrderEntity updatePaymentStatus(Long orderId, String paymentStatus) {
+    public OrderDTO updatePaymentStatus(Long orderId, String paymentStatus) {
         // Tìm order theo orderId
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found!"));
@@ -102,6 +101,7 @@ public class OrderService {
         if ("Paid".equalsIgnoreCase(paymentStatus)) {
             // Cập nhật trạng thái payment_status của order
             order.setPaymentStatus(OrderEntity.PaymentStatus.paid);
+
             // Tạo một transaction cho buyer (buyer đã trả tiền)
             transactionService.createBuyerTransaction(order);
         } else if ("Failed".equalsIgnoreCase(paymentStatus)) {
@@ -111,7 +111,58 @@ public class OrderService {
             throw new IllegalArgumentException("Invalid payment status");
         }
         // Lưu order sau khi cập nhật payment status
-        return orderRepository.save(order);
+        OrderEntity updatedOrder = orderRepository.save(order);
+        // Chuyển đổi từ OrderEntity sang OrderDTO
+        return orderConverter.toDTO(updatedOrder);
+    }
+    @Transactional
+    public OrderDTO updateOrderStatus(Long orderId, String orderStatus) {
+        // Tìm order theo orderId
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found!"));
+        // Kiểm tra nếu trạng thái đơn hàng được cập nhật thành "complete"
+        if ("Complete".equalsIgnoreCase(orderStatus)) {
+            // Cập nhật trạng thái order_status của order
+            order.setOrderStatus(OrderEntity.OrderStatus.completed);
+
+            // Tạo một transaction expense cho seller và tính phí dịch vụ
+            transactionService.createSellerTransaction(order);
+        } else {
+            throw new IllegalArgumentException("Invalid order status");
+        }
+        // Lưu order sau khi cập nhật order status
+        OrderEntity updatedOrder = orderRepository.save(order);
+
+        // Trả về OrderDTO sau khi cập nhật
+        return orderConverter.toDTO(updatedOrder);
+    }
+    @Transactional
+    public OrderDTO updateOrderStatusForRefund(Long orderId, String orderStatus) {
+        // Tìm order theo orderId
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found!"));
+
+        // Kiểm tra nếu trạng thái đơn hàng được cập nhật thành "cancelled"
+        if ("cancelled".equalsIgnoreCase(orderStatus)) {
+            // Kiểm tra nếu payment_status của order là "paid"
+            if (OrderEntity.PaymentStatus.paid.equals(order.getPaymentStatus())) {
+                // Cập nhật trạng thái order_status thành "cancelled"
+                order.setOrderStatus(OrderEntity.OrderStatus.cancelled);
+
+                // Tạo transaction refund trả lại tiền cho buyer
+                transactionService.createRefundTransaction(order);
+            } else {
+                throw new IllegalArgumentException("Payment has not been completed. No refund necessary.");
+            }
+        } else {
+            throw new IllegalArgumentException("Invalid order status for refund");
+        }
+
+        // Lưu order sau khi cập nhật order status
+        OrderEntity updatedOrder = orderRepository.save(order);
+
+        // Trả về OrderDTO sau khi cập nhật
+        return orderConverter.toDTO(updatedOrder);
     }
 }
 

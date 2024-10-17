@@ -60,7 +60,14 @@ public class SecurityConfig {
                                 "/api/tickets/search/{query}",
                                 "/api/categories",
                                 "/api/categories/{id}",
-                                "/health"
+                                "/health",
+                                "/api/orders",
+                                "/api/orders/create",
+                                "/api/orders/buyer/{buyerId}",
+                                "/api/orders/seller/{sellerId}",
+                                "/api/orders/update-payment-status/{orderId}",
+                                "/api/orders/update-order-status/{orderId}",
+                                "/api/orders/update-order-status-refund/{orderId}"
                         ).permitAll() // Cho phép các endpoint không cần xác thực
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các yêu cầu khác
                 )
