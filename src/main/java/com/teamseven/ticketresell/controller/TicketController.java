@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,9 @@ public class TicketController {
     // Create a new ticket
     @PostMapping("/create")
     public ResponseEntity<?> createTicket(@RequestBody TicketDTO ticketDTO) {
+        ticketDTO.setStatus("onsale");
         TicketEntity ticketEntity = ticketConverter.toEntity(ticketDTO);
+        ticketEntity.setCreatedDate(LocalDateTime.now());
         TicketEntity savedTicket = ticketRepository.save(ticketEntity);
         return ResponseEntity.ok(ticketConverter.toDTO(savedTicket));
     }

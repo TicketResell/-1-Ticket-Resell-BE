@@ -1,3 +1,11 @@
+#NEW UPDATE 2024-10-17 @cuong
+1. Update order payment-status api
+2. Create a new transaction but not enough fields
+______________________________________________________________________________
+#NEW UPDATE 2024-10-16 1:55 AM :)) @trinm
+1. Totally finished Chat Function
+2. Fix some bugs about JWT Authorization.
+_______________________________________________________________________________
 #NEW UPDATE 2024-10-15 @cuong
 1. I added some image for category
 2. I coded some api view order all by seller by buyer but response is just id not dto and I will fix later
