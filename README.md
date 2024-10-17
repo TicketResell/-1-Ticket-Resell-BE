@@ -1,3 +1,7 @@
+#NEW UPDATE 2024-10-17 @cuong
+1. Update order payment-status api
+2. Create a new transaction but not enough fields
+______________________________________________________________________________
 #NEW UPDATE 2024-10-16 1:55 AM :)) @trinm
 1. Totally finished Chat Function
 2. Fix some bugs about JWT Authorization.
