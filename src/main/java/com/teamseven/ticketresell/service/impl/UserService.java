@@ -180,16 +180,11 @@ public class UserService implements IUserService {
         }
 
         // Cập nhật thông tin cho existingUser
-        existingUser.setUsername(userDTO.getUsername());
         existingUser.setEmail(userDTO.getEmail());
         existingUser.setPhone(userDTO.getPhone());
         existingUser.setAddress(userDTO.getAddress());
         existingUser.setFullname(userDTO.getFullname());
         existingUser.setUserImage(userDTO.getUserImage());
-        existingUser.setStatus(userDTO.getStatus());
-        existingUser.setVerifiedEmail(userDTO.isVerifiedEmail());
-        existingUser.setRole(userDTO.getRole());
-
         // Lưu cập nhật vào cơ sở dữ liệu
         userRepository.save(existingUser);
 
