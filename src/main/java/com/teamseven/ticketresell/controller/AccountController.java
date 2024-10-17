@@ -264,7 +264,7 @@ public class AccountController {
         String currentUser = authentication.getName();
 
         // Tìm người dùng theo username
-        UserEntity user = userService.findByUsername(username);
+        UserEntity user = userRepository.findByUsername(username);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
@@ -288,7 +288,7 @@ public class AccountController {
     @PutMapping("/profile/{username}")
     public ResponseEntity<?> editProfile(@PathVariable String username, @RequestBody UserDTO userDTO, @RequestParam boolean isAdmin) {
         // Find username
-        UserEntity existingUser = userService.findByUsername(username);
+        UserEntity existingUser = userRepository.findByUsername(username);
 
         if (existingUser != null) {
             // Convert DTO -> Entity
