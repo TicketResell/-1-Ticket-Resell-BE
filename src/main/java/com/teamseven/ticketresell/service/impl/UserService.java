@@ -173,17 +173,30 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO editProfile(String username, UserDTO userDTO, boolean isAdmin) {
+    public UserDTO editProfile(String username, UserDTO userDTO) {
         UserEntity existingUser = userRepository.findByUsername(username);
         if (existingUser == null) {
             throw new RuntimeException("User not found");
         }
 
-        UserEntity updatedUser = accountConverter.toEntity(userDTO, existingUser, isAdmin);
-        userRepository.save(updatedUser);
+        // Cập nhật thông tin cho existingUser
+        existingUser.setUsername(userDTO.getUsername());
+        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setPhone(userDTO.getPhone());
+        existingUser.setAddress(userDTO.getAddress());
+        existingUser.setFullname(userDTO.getFullname());
+        existingUser.setUserImage(userDTO.getUserImage());
+        existingUser.setStatus(userDTO.getStatus());
+        existingUser.setVerifiedEmail(userDTO.isVerifiedEmail());
+        existingUser.setRole(userDTO.getRole());
 
-        return accountConverter.toDTO(updatedUser);
+        // Lưu cập nhật vào cơ sở dữ liệu
+        userRepository.save(existingUser);
+
+        // Chuyển đổi và trả về DTO của người dùng đã cập nhật
+        return accountConverter.toDTO(existingUser);
     }
+
 
     @Override
     public JwtResponse loginWithGoogle(String idTokenString) {

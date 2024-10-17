@@ -18,6 +18,6 @@ public interface IUserService {
     void updatePassword(String email, String newPassword);
     void verifyEmail(String email);
     UserDTO viewProfile(String username, String currentUser);
-    UserDTO editProfile(String username, UserDTO userDTO, boolean isAdmin);
+    UserDTO editProfile(String username, UserDTO userDTO);
     JwtResponse loginWithGoogle(String idTokenString);
 }

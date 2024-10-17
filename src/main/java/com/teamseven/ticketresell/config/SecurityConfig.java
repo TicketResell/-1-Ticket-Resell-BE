@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
                     config.setAllowCredentials(true);
-                    config.setAllowedOrigins(List.of("http://localhost:3000")); // Địa chỉ frontend
+                    config.setAllowedOrigins(List.of("http://localhost:3000","http://ticketresell-swp.click","http://react.ticketresell-swp.click")); // Địa chỉ frontend
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     return config;

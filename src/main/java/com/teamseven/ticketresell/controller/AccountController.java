@@ -190,10 +190,9 @@ public class AccountController {
     // Modify Profile
     @PutMapping("/profile/{username}")
     public ResponseEntity<?> editProfile(@PathVariable String username,
-                                         @RequestBody UserDTO userDTO,
-                                         @RequestParam boolean isAdmin) {
+                                         @RequestBody UserDTO userDTO) {
         try {
-            UserDTO updatedUserDTO = userService.editProfile(username, userDTO, isAdmin);
+            UserDTO updatedUserDTO = userService.editProfile(username, userDTO);
             return ResponseEntity.ok(updatedUserDTO);
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
