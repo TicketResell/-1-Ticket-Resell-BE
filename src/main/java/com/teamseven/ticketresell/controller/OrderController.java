@@ -92,26 +92,22 @@ public class OrderController {
             return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
         }
     }
-    // API để cập nhật order status thành complete và tạo transaction expense từ sàn cho seller
     @PutMapping("/update-order-status/{orderId}")
     public ResponseEntity<?> updateOrderStatus(@PathVariable Long orderId, @RequestBody Map<String, String> request) {
         try {
             String orderStatus = request.get("order_status");
-            OrderDTO updatedOrder = orderService.updateOrderStatus(orderId, orderStatus);
-            return ResponseEntity.ok(updatedOrder);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
-        }
-    }
-    // API để cập nhật order status thành cancelled và tạo transaction refund cho buyer
-    @PutMapping("/update-order-status-refund/{orderId}")
-    public ResponseEntity<?> updateOrderStatusForRefund(@PathVariable Long orderId, @RequestBody Map<String, String> request) {
-        try {
-            String orderStatus = request.get("order_status");
-            OrderDTO updatedOrder = orderService.updateOrderStatusForRefund(orderId, orderStatus);
-            return ResponseEntity.ok(updatedOrder);
+            // Nếu order_status là "cancelled", xử lý refund
+            if ("cancelled".equalsIgnoreCase(orderStatus)) {
+                OrderDTO updatedOrder = orderService.updateOrderStatusForRefund(orderId, orderStatus);
+                return ResponseEntity.ok(updatedOrder);
+                // Nếu order_status là "complete", xử lý giao dịch cho seller
+            } else if ("complete".equalsIgnoreCase(orderStatus)) {
+                OrderDTO updatedOrder = orderService.updateOrderStatus(orderId, orderStatus);
+                return ResponseEntity.ok(updatedOrder);
+                // Nếu order_status là giá trị khác không hợp lệ
+            } else {
+                throw new IllegalArgumentException("Invalid order status");
+            }
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
