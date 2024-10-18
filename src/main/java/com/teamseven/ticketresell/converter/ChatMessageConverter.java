@@ -32,8 +32,8 @@ public class ChatMessageConverter {
         dto.setSenderId(entity.getSenderId());
         dto.setReceiverId(entity.getReceiverId());
         dto.setMessageContent(entity.getMessageContent());
-        //
-        dto.setReceiverName(userService.getUserNameByID(entity.getSenderId()));
+//        //
+//        dto.setReceiverName(userService.getUserNameByID(entity.getSenderId()));
         dto.setTimestamp(entity.getTimestamp());
         dto.setChatType(entity.getChatType());
         return dto;

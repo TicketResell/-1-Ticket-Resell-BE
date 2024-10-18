@@ -223,5 +223,13 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
         }
     }
-
+    @PostMapping("/hidden-search-profile")
+    public ResponseEntity<String> getUserNameByID(@RequestBody Long id) {
+        UserEntity user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            return ResponseEntity.ok(user.getFullname());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
 }
