@@ -4,7 +4,6 @@ import com.teamseven.ticketresell.dto.ChatMessageDTO;
 import com.teamseven.ticketresell.entity.ChatMessageEntity;
 import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,7 +33,7 @@ public class ChatMessageConverter {
         dto.setReceiverId(entity.getReceiverId());
         dto.setMessageContent(entity.getMessageContent());
         //
-        dto.setSenderName(userService.getUserNameByID(entity.getSenderId()));
+        dto.setReceiverName(userService.getUserNameByID(entity.getSenderId()));
         dto.setTimestamp(entity.getTimestamp());
         dto.setChatType(entity.getChatType());
         return dto;
