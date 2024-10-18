@@ -234,4 +234,10 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public String getUserNameByID(Long id) {
+       UserEntity user = userRepository.findById(id).orElse(null);
+       return user.getFullname();
+    }
+
 }

@@ -5,14 +5,11 @@ import com.teamseven.ticketresell.dto.ChatMessageDTO;
 import com.teamseven.ticketresell.entity.ChatMessageEntity;
 import com.teamseven.ticketresell.repository.ChatMessageRepository;
 import com.teamseven.ticketresell.service.IChatService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,18 +40,6 @@ public class ChatService implements IChatService {
         return chatMessageConverter.toDTO(savedMessage);
     }
 
-//    @Override
-//    @Cacheable(value = "chatHistory", key = "#userId")
-//    public List<ChatMessageDTO> getChatHistory(Long userId) {
-//
-//        List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findBySenderId(userId);
-//
-//        // Chuyển đổi danh sách ChatMessageEntity thành danh sách ChatMessageDTO
-//        return chatMessageEntities.stream()
-//                .map(chatMessageConverter::toDTO)
-//                .collect(Collectors.toList());
-//    }
-
     @Override
     @Cacheable(value = "chatHistory", key = "#userId")
     public List<ChatMessageDTO> getChatHistory(Long userId) {
@@ -73,15 +58,6 @@ public class ChatService implements IChatService {
     }
 
 
-
-//
-//    // Sử dụng Optional để trả về DTO nếu có
-//    @Override
-//    public Optional<ChatMessageDTO> getChatHistoryOptional(Long chatId) {
-//        return chatMessageRepository.findById(chatId)
-//                .map(chatMessageConverter::toDTO);
-//    }
-
     // Lấy lịch sử chat giữa 2 người dùng (sender và receiver)
     @Override
     public List<ChatMessageDTO> getChatHistory(Long senderID, Long receiverID) {
@@ -90,13 +66,5 @@ public class ChatService implements IChatService {
                 .map(chatMessageConverter::toDTO)
                 .collect(Collectors.toList());
     }
-
-//    // Lấy lịch sử chat giữa 2 người dùng trong một khoảng thời gian
-//    public List<ChatMessageDTO> getChatHistory(Long senderID, Long receiverID, LocalDateTime from, LocalDateTime to) {
-//        List<ChatMessageEntity> chats = chatMessageRepository
-//                .findBySenderIdAndReceiverIdAndTimestampBetween(senderID, receiverID, from, to);
-//        return chats.stream()
-//                .map(chatMessageConverter::toDTO)
-//                .collect(Collectors.toList());
-//    }
+    
 }

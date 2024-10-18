@@ -2,10 +2,18 @@ package com.teamseven.ticketresell.converter;
 
 import com.teamseven.ticketresell.dto.ChatMessageDTO;
 import com.teamseven.ticketresell.entity.ChatMessageEntity;
+import com.teamseven.ticketresell.repository.UserRepository;
+import com.teamseven.ticketresell.service.impl.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ChatMessageConverter {
+
+    UserService userService;
+
+    public ChatMessageConverter(UserRepository userRepository) {
+    }
 
     // Chuyển đổi từ DTO sang Entity
     public ChatMessageEntity toEntity(ChatMessageDTO dto) {
@@ -25,6 +33,8 @@ public class ChatMessageConverter {
         dto.setSenderId(entity.getSenderId());
         dto.setReceiverId(entity.getReceiverId());
         dto.setMessageContent(entity.getMessageContent());
+        //
+        dto.setSenderName(userService.getUserNameByID(entity.getSenderId()));
         dto.setTimestamp(entity.getTimestamp());
         dto.setChatType(entity.getChatType());
         return dto;

@@ -8,6 +8,7 @@ public class ChatMessageDTO {
     private Long receiverId;
     private String messageContent;
     private String chatType;
+    private String senderName;
     private LocalDateTime timestamp;
 
     // Getters và Setters
@@ -57,5 +58,13 @@ public class ChatMessageDTO {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getSenderName() {
+        return senderName;
+    }
+
+    public void setSenderName(String senderName) {
+        this.senderName = senderName;
     }
 }
