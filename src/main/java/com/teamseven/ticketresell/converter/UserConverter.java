@@ -39,7 +39,7 @@ public class UserConverter {
         userDTO.setVerifiedEmail(userEntity.isVerifiedEmail());
         userDTO.setRole(userEntity.getRole());
         userDTO.setFullname(userEntity.getFullname());
-        userEntity.setUserImage(userDTO.getUserImage());
+        userDTO.setUserImage(userEntity.getUserImage());
         return userDTO;
     }
 

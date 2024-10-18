@@ -48,6 +48,8 @@ public class AccountController {
 
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private UserConverter userConverter;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
@@ -174,7 +176,17 @@ public class AccountController {
             // Lấy tên người dùng hiện tại từ Authentication
             String currentUser = authentication.getName();
 
-            UserDTO userDTO = userService.viewProfile(username, currentUser);
+            String role = userService.getUserRoleByUsername(currentUser);
+
+            UserDTO userDTO;
+
+            if(!role.toLowerCase().equals("user")) {
+                userDTO = userService.viewProfile(username, currentUser);
+            } else {;
+                userDTO = userConverter.toDTO(userRepository.findByUsername(currentUser));
+            }
+            System.out.println(userRepository.findByUsername(currentUser).getUserImage());
+            System.out.println(userDTO);
             return ResponseEntity.ok(userDTO);
 
         } catch (RuntimeException ex) {
