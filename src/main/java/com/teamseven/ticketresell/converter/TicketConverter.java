@@ -34,6 +34,7 @@ public class TicketConverter {
         ticketEntity.setTicketDetails(ticketDTO.getTicketDetails());
         ticketEntity.setStatus(ticketDTO.getStatus());
         ticketEntity.setQuantity(ticketDTO.getQuantity());
+        ticketEntity.setImageUrls(ticketDTO.getImageUrls());
         // Set foreign keys (seller and category) in actual application logic
         return ticketEntity;
     }

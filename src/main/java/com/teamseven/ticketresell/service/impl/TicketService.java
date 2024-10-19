@@ -49,6 +49,7 @@ public class TicketService {
             ticket.setLocation(ticketDetails.getLocation());
             ticket.setTicketType(ticketDetails.getTicketType());
             ticket.setSalePrice(ticketDetails.getSalePrice());
+            ticket.setImageUrls(ticketDetails.getImageUrls());
             ticket.setStatus(ticket.getStatus());
             // Lưu lại thay đổi
             return Optional.of(ticketRepository.save(ticket));

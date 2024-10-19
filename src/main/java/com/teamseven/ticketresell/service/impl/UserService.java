@@ -240,4 +240,11 @@ public class UserService implements IUserService {
        return user.getFullname();
     }
 
+    @Override
+    public String getFullNameByID(Long id) {
+        UserEntity user = new UserEntity();
+        userRepository.findById(id).orElse(null);
+        return user.getFullname();
+    }
+
 }

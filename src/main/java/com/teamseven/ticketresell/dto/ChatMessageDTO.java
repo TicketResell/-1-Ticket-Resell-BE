@@ -4,14 +4,13 @@ import java.time.LocalDateTime;
 
 public class ChatMessageDTO {
     private Long chatId;
-    private Long senderId;
-    private Long receiverId;
+    private Long user1_id;
+    private Long user2_id;
     private String messageContent;
-    private String chatType;
-    private String receiverName;
+    private String messageType;
+    private String user2Name;
     private LocalDateTime timestamp;
 
-    // Getters và Setters
     public Long getChatId() {
         return chatId;
     }
@@ -20,20 +19,20 @@ public class ChatMessageDTO {
         this.chatId = chatId;
     }
 
-    public Long getSenderId() {
-        return senderId;
+    public Long getUser1_id() {
+        return user1_id;
     }
 
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
+    public void setUser1_id(Long user1_id) {
+        this.user1_id = user1_id;
     }
 
-    public Long getReceiverId() {
-        return receiverId;
+    public Long getUser2_id() {
+        return user2_id;
     }
 
-    public void setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
+    public void setUser2_id(Long user2_id) {
+        this.user2_id = user2_id;
     }
 
     public String getMessageContent() {
@@ -44,12 +43,20 @@ public class ChatMessageDTO {
         this.messageContent = messageContent;
     }
 
-    public String getChatType() {
-        return chatType;
+    public String getMessageType() {
+        return messageType;
     }
 
-    public void setChatType(String chatType) {
-        this.chatType = chatType;
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
+    }
+
+    public String getUser2Name() {
+        return user2Name;
+    }
+
+    public void setUser2Name(String user2Name) {
+        this.user2Name = user2Name;
     }
 
     public LocalDateTime getTimestamp() {
@@ -58,13 +65,5 @@ public class ChatMessageDTO {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public String getReceiverName() {
-        return receiverName;
-    }
-
-    public void setReceiverName(String receiverName) {
-        this.receiverName = receiverName;
     }
 }

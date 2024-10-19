@@ -17,11 +17,13 @@ public class ChatService implements IChatService {
 
     private final ChatMessageConverter chatMessageConverter;
     private final ChatMessageRepository chatMessageRepository;
+    private final UserService userService;
 
     // Constructor injection
-    public ChatService(ChatMessageConverter chatMessageConverter, ChatMessageRepository chatMessageRepository) {
+    public ChatService(ChatMessageConverter chatMessageConverter, ChatMessageRepository chatMessageRepository, UserService userService) {
         this.chatMessageConverter = chatMessageConverter;
         this.chatMessageRepository = chatMessageRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -48,6 +50,7 @@ public class ChatService implements IChatService {
         List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findBySenderIdOrReceiverId(userId, userId);
         System.out.println("Found " + chatMessageEntities.size() + " messages for userId: " + userId); // Log số lượng tin nhắn tìm thấy
 
+
         // Chuyển đổi danh sách ChatMessageEntity thành danh sách ChatMessageDTO
         List<ChatMessageDTO> chatMessageDTOs = chatMessageEntities.stream()
                 .map(chatMessageConverter::toDTO)
@@ -66,5 +69,10 @@ public class ChatService implements IChatService {
                 .map(chatMessageConverter::toDTO)
                 .collect(Collectors.toList());
     }
-    
+
+    @Override
+    public String getUser2FullName(Long userId) {
+       return userService.getFullNameByID(userId);
+    }
+
 }

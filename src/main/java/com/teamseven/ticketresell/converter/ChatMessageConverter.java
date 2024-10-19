@@ -3,24 +3,24 @@ package com.teamseven.ticketresell.converter;
 import com.teamseven.ticketresell.dto.ChatMessageDTO;
 import com.teamseven.ticketresell.entity.ChatMessageEntity;
 import com.teamseven.ticketresell.repository.UserRepository;
+import com.teamseven.ticketresell.service.impl.ChatService;
 import com.teamseven.ticketresell.service.impl.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ChatMessageConverter {
 
-    UserService userService;
-
-    public ChatMessageConverter(UserRepository userRepository) {
-    }
+    @Autowired
+    ChatService chatService;
 
     // Chuyển đổi từ DTO sang Entity
     public ChatMessageEntity toEntity(ChatMessageDTO dto) {
         ChatMessageEntity entity = new ChatMessageEntity();
-        entity.setSenderId(dto.getSenderId());
-        entity.setReceiverId(dto.getReceiverId());
+        entity.setUser1_id(dto.getUser1_id());
+        entity.setUser2_id(dto.getUser2_id());
         entity.setMessageContent(dto.getMessageContent());
-        entity.setChatType(dto.getChatType());
+        entity.setMessageType(dto.getMessageType());
        entity.setCreatedDate(dto.getTimestamp());
         return entity;
     }
@@ -28,14 +28,13 @@ public class ChatMessageConverter {
     // Chuyển đổi từ Entity sang DTO
     public ChatMessageDTO toDTO(ChatMessageEntity entity) {
         ChatMessageDTO dto = new ChatMessageDTO();
-        dto.setChatId(entity.getChatId());
-        dto.setSenderId(entity.getSenderId());
-        dto.setReceiverId(entity.getReceiverId());
+        dto.setChatId(entity.getId());
+        dto.setUser1_id(entity.getUser1_id());
+        dto.setUser2_id(entity.getUser2_id());
         dto.setMessageContent(entity.getMessageContent());
-//        //
-//        dto.setReceiverName(userService.getUserNameByID(entity.getSenderId()));
+        dto.setUser2Name(chatService.getUser2FullName(entity.getUser2_id()));
         dto.setTimestamp(entity.getTimestamp());
-        dto.setChatType(entity.getChatType());
+        dto.setMessageType(entity.getMessageType());
         return dto;
     }
 }

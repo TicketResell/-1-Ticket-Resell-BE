@@ -8,4 +8,5 @@ public interface IChatService {
     ChatMessageDTO sendMessage(ChatMessageDTO message);
     List<ChatMessageDTO> getChatHistory(Long chatId);
     List<ChatMessageDTO> getChatHistory(Long buyerId, Long sellerId);
+    String getUser2FullName(Long userId);
 }

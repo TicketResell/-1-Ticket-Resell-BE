@@ -7,50 +7,47 @@ import java.time.LocalDateTime;
 @Table(name = "chat_message")
 public class ChatMessageEntity extends BaseEntity {
 
-    @Column(name = "sender_id", nullable = false)
-    private Long senderId;
+    @Column(name = "user1_id", nullable = false)
+    private Long user1_id;
 
-    @Column(name = "receiver_id", nullable = false)
-    private Long receiverId;
+    @Column(name = "user2_id", nullable = false)
+    private Long user2_id;
 
     @Column(name = "message_content", nullable = false, length = 1000)
     private String messageContent;
 
-    @Column(name = "chat_type",nullable = false)
-    private String chatType;
+    @Column(name = "message_type",nullable = false)
+    private String messageType;
 
     public enum ChatType{
         text, image, bid
     }
 
     // Getters và Setters
-    public Long getChatId() {
-        return getId();
+
+
+    public Long getUser1_id() {
+        return user1_id;
     }
 
-    public Long getSenderId() {
-        return senderId;
+    public void setUser1_id(Long user1_id) {
+        this.user1_id = user1_id;
     }
 
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
+    public Long getUser2_id() {
+        return user2_id;
     }
 
-    public Long getReceiverId() {
-        return receiverId;
+    public void setUser2_id(Long user2_id) {
+        this.user2_id = user2_id;
     }
 
-    public void setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
+    public String getMessageType() {
+        return messageType;
     }
 
-
-    public String getChatType() {
-        return chatType;
-    }
-
-    public void setChatType(String chatType) {
-        this.chatType = chatType;
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
     }
 
     public String getMessageContent() {
