@@ -23,4 +23,5 @@ public interface IUserService {
     String getUserNameByID(Long id);
     String getFullNameByID(Long id);
     String getUser2FullName(Long userId);
+    Boolean isFullData(Long id);
 }
