@@ -27,7 +27,27 @@ public class TransactionEntity extends BaseEntity{
     @Enumerated(EnumType.STRING)
     @Column(name = "transaction_type", nullable = false)
     private TransactionType transactionType;
+    @Column(name = "vnp_response_code")  // Mã phản hồi từ VNPay
+    private String vnpResponseCode;
 
+    public String getVnpResponseCode() {
+        return vnpResponseCode;
+    }
+
+    public void setVnpResponseCode(String vnpResponseCode) {
+        this.vnpResponseCode = vnpResponseCode;
+    }
+
+    public String getVnpTransactionNo() {
+        return vnpTransactionNo;
+    }
+
+    public void setVnpTransactionNo(String vnpTransactionNo) {
+        this.vnpTransactionNo = vnpTransactionNo;
+    }
+
+    @Column(name = "vnp_transaction_no")  // Số giao dịch từ VNPay
+    private String vnpTransactionNo;
     public enum TransactionType {
         Income, Expense, Refund
     }

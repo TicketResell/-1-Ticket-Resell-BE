@@ -84,7 +84,9 @@ public class OrderController {
     public ResponseEntity<?> updatePaymentStatus(@PathVariable Long orderId, @RequestBody Map<String, String> request) {
         try {
             String paymentStatus = request.get("payment_status");
-            OrderDTO updatedOrder = orderService.updatePaymentStatus(orderId, paymentStatus);
+            String vnpResponseCode = request.get("vnpResponseCode");
+            String vnpTransactionNo = request.get("vnpTransactionNo");
+            OrderDTO updatedOrder = orderService.updatePaymentStatus(orderId, paymentStatus,vnpResponseCode,vnpTransactionNo);
             return ResponseEntity.ok(updatedOrder);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -93,28 +93,39 @@ public class OrderService {
         orderRepository.deleteById(orderId);
     }
     @Transactional
-    public OrderDTO updatePaymentStatus(Long orderId, String paymentStatus) {
+    public OrderDTO updatePaymentStatus(Long orderId, String paymentStatus, String vnpResponseCode, String vnpTransactionNo) {
         // Tìm order theo orderId
         OrderEntity order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found!"));
-        // Kiểm tra nếu trạng thái payment được cập nhật thành paid
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy đơn hàng!"));
+
+        // Kiểm tra nếu trạng thái payment được cập nhật thành "paid"
         if ("Paid".equalsIgnoreCase(paymentStatus)) {
             // Cập nhật trạng thái payment_status của order
             order.setPaymentStatus(OrderEntity.PaymentStatus.paid);
 
-            // Tạo một transaction cho buyer (buyer đã trả tiền)
-            transactionService.createBuyerTransaction(order);
+            // Kiểm tra phương thức thanh toán có phải VNPay không
+            if (OrderEntity.OrderMethod.vnpay.equals(order.getOrderMethod())) {
+                // Tạo transaction VNPay cho buyer
+                transactionService.createBuyerTransactionWithVnpay(order, vnpResponseCode, vnpTransactionNo);
+            } else {
+                // Xử lý trường hợp không phải VNPay (các phương thức khác không cần tạo transaction VNPay)
+                transactionService.createBuyerTransaction(order);
+            }
+
         } else if ("Failed".equalsIgnoreCase(paymentStatus)) {
             // Nếu payment failed
             order.setPaymentStatus(OrderEntity.PaymentStatus.failed);
         } else {
-            throw new IllegalArgumentException("Invalid payment status");
+            throw new IllegalArgumentException("Trạng thái thanh toán không hợp lệ.");
         }
+
         // Lưu order sau khi cập nhật payment status
         OrderEntity updatedOrder = orderRepository.save(order);
-        // Chuyển đổi từ OrderEntity sang OrderDTO
+
+        // Trả về OrderDTO sau khi cập nhật
         return orderConverter.toDTO(updatedOrder);
     }
+
     @Transactional
     public OrderDTO updateOrderStatus(Long orderId, String orderStatus) {
         // Tìm order theo orderId

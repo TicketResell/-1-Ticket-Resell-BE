@@ -25,6 +25,19 @@ public class TransactionService {
 
     @Autowired
     private TicketRepository ticketRepository;
+    // Tạo transaction INCOME cho buyer qua VNPay (tiền từ buyer tới sàn)
+    public void createBuyerTransactionWithVnpay(OrderEntity order, String vnpResponseCode, String vnpTransactionNo) {
+        TransactionEntity transaction = new TransactionEntity();
+        transaction.setBuyer(order.getBuyer());
+        transaction.setTransactionAmount(order.getTotalAmount());  // Số tiền buyer đã thanh toán
+        transaction.setTransactionType(TransactionEntity.TransactionType.Income);
+        transaction.setVnpResponseCode(vnpResponseCode);  // Mã phản hồi từ VNPay
+        transaction.setVnpTransactionNo(vnpTransactionNo);  // Số giao dịch từ VNPay
+        transaction.setCreatedDate(LocalDateTime.now());
+        transaction.setSeller(order.getSeller());
+        transaction.setOrder(order);
+        transactionRepository.save(transaction);
+    }
     // Tạo giao dịch cho buyer và seller
     public TransactionEntity createTransaction(OrderEntity order, double amount, TransactionEntity.TransactionType type) {
         TransactionEntity transaction = new TransactionEntity();

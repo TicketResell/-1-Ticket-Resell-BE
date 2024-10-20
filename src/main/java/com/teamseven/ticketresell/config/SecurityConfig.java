@@ -71,7 +71,9 @@ public class SecurityConfig {
                                 "/api/orders/seller/{sellerId}",
                                 "/api/orders/update-payment-status/{orderId}",
                                 "/api/orders/update-order-status/{orderId}",
-                                "/api/orders/update-order-status-refund/{orderId}"
+                                "/api/orders/update-order-status-refund/{orderId}",
+                                "/api/vnpay/create-payment",
+                                "/api/vnpay/callback"
                         ).permitAll() // Cho phép các endpoint không cần xác thực
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các yêu cầu khác
                 )
