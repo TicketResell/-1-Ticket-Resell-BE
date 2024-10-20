@@ -247,4 +247,9 @@ public class UserService implements IUserService {
         return user.getFullname();
     }
 
+    @Override
+    public String getUser2FullName(Long userId) {
+        return userRepository.findFullNameById(userId);
+    }
+
 }

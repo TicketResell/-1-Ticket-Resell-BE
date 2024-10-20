@@ -5,6 +5,7 @@ import com.teamseven.ticketresell.dto.ChatMessageDTO;
 import com.teamseven.ticketresell.entity.ChatMessageEntity;
 import com.teamseven.ticketresell.repository.ChatMessageRepository;
 import com.teamseven.ticketresell.service.IChatService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +16,12 @@ import java.util.stream.Collectors;
 @Service
 public class ChatService implements IChatService {
 
-    private final ChatMessageConverter chatMessageConverter;
-    private final ChatMessageRepository chatMessageRepository;
-    private final UserService userService;
+    @Autowired
+    private ChatMessageRepository chatMessageRepository;
 
-    // Constructor injection
-    public ChatService(ChatMessageConverter chatMessageConverter, ChatMessageRepository chatMessageRepository, UserService userService) {
-        this.chatMessageConverter = chatMessageConverter;
-        this.chatMessageRepository = chatMessageRepository;
-        this.userService = userService;
-    }
+    @Autowired
+    private ChatMessageConverter chatMessageConverter;
+
 
     @Override
     public ChatMessageDTO sendMessage(ChatMessageDTO message) {
@@ -47,7 +44,7 @@ public class ChatService implements IChatService {
     public List<ChatMessageDTO> getChatHistory(Long userId) {
         System.out.println("Fetching chat history for userId: " + userId); // Log userId
 
-        List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findBySenderIdOrReceiverId(userId, userId);
+        List<ChatMessageEntity> chatMessageEntities = chatMessageRepository. findByUser1OrUser2(userId, userId);
         System.out.println("Found " + chatMessageEntities.size() + " messages for userId: " + userId); // Log số lượng tin nhắn tìm thấy
 
 
@@ -64,15 +61,11 @@ public class ChatService implements IChatService {
     // Lấy lịch sử chat giữa 2 người dùng (sender và receiver)
     @Override
     public List<ChatMessageDTO> getChatHistory(Long senderID, Long receiverID) {
-        List<ChatMessageEntity> chats = chatMessageRepository.findBySenderIdAndReceiverId(senderID, receiverID);
+        List<ChatMessageEntity> chats = chatMessageRepository.findByUser1OrUser2(senderID, receiverID);
         return chats.stream()
                 .map(chatMessageConverter::toDTO)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public String getUser2FullName(Long userId) {
-       return userService.getFullNameByID(userId);
-    }
 
 }

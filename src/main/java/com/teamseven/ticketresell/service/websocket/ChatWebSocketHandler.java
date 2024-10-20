@@ -35,8 +35,8 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             chatMessage = objectMapper.readValue(payload, ChatMessageDTO.class);
 
             // In ra các giá trị từ JSON để kiểm tra
-            System.out.println("Sender ID: " + chatMessage.getSenderId());
-            System.out.println("Receiver ID: " + chatMessage.getReceiverId());
+            System.out.println("Sender ID: " + chatMessage.getUser1_id());
+            System.out.println("Receiver ID: " + chatMessage.getUser2_id());
             System.out.println("Message Content: " + chatMessage.getMessageContent());
 
             // Tạo tin nhắn JSON mới để phát lại

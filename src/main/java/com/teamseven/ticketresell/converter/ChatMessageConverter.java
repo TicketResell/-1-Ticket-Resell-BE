@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 public class ChatMessageConverter {
 
     @Autowired
-    ChatService chatService;
+    UserService userService;
 
     // Chuyển đổi từ DTO sang Entity
     public ChatMessageEntity toEntity(ChatMessageDTO dto) {
         ChatMessageEntity entity = new ChatMessageEntity();
-        entity.setUser1_id(dto.getUser1_id());
-        entity.setUser2_id(dto.getUser2_id());
+        entity.setUser1(dto.getUser1_id());
+        entity.setUser2(dto.getUser2_id());
         entity.setMessageContent(dto.getMessageContent());
         entity.setMessageType(dto.getMessageType());
        entity.setCreatedDate(dto.getTimestamp());
@@ -29,10 +29,10 @@ public class ChatMessageConverter {
     public ChatMessageDTO toDTO(ChatMessageEntity entity) {
         ChatMessageDTO dto = new ChatMessageDTO();
         dto.setChatId(entity.getId());
-        dto.setUser1_id(entity.getUser1_id());
-        dto.setUser2_id(entity.getUser2_id());
+        dto.setUser1_id(entity.getUser1());
+        dto.setUser2_id(entity.getUser2());
         dto.setMessageContent(entity.getMessageContent());
-        dto.setUser2Name(chatService.getUser2FullName(entity.getUser2_id()));
+        dto.setUser2Name(userService.getUser2FullName(entity.getUser2()));
         dto.setTimestamp(entity.getTimestamp());
         dto.setMessageType(entity.getMessageType());
         return dto;

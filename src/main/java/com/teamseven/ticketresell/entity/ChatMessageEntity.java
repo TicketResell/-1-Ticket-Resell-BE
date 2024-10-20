@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 public class ChatMessageEntity extends BaseEntity {
 
     @Column(name = "user1_id", nullable = false)
-    private Long user1_id;
+    private Long user1;
 
     @Column(name = "user2_id", nullable = false)
-    private Long user2_id;
+    private Long user2;
 
     @Column(name = "message_content", nullable = false, length = 1000)
     private String messageContent;
@@ -26,20 +26,20 @@ public class ChatMessageEntity extends BaseEntity {
     // Getters và Setters
 
 
-    public Long getUser1_id() {
-        return user1_id;
+    public Long getUser1() {
+        return user1;
     }
 
-    public void setUser1_id(Long user1_id) {
-        this.user1_id = user1_id;
+    public void setUser1(Long user1) {
+        this.user1 = user1;
     }
 
-    public Long getUser2_id() {
-        return user2_id;
+    public Long getUser2() {
+        return user2;
     }
 
-    public void setUser2_id(Long user2_id) {
-        this.user2_id = user2_id;
+    public void setUser2(Long user2) {
+        this.user2 = user2;
     }
 
     public String getMessageType() {

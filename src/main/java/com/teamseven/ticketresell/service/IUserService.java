@@ -22,4 +22,5 @@ public interface IUserService {
     JwtResponse loginWithGoogle(String idTokenString);
     String getUserNameByID(Long id);
     String getFullNameByID(Long id);
+    String getUser2FullName(Long userId);
 }
