@@ -142,14 +142,71 @@ public class AccountController {
 
     // verify
     @GetMapping("/verify")
-    public ResponseEntity<?> verifyEmail(@RequestParam("email") String email) {
+    public ResponseEntity<String> verifyEmail(@RequestParam("email") String email) {
         try {
             userService.verifyEmail(email);
-            return ResponseEntity.ok("Email verified successfully.");
+            // Tạo biến string để chứa HTML
+            String htmlResponse = String.format(
+                    "<!DOCTYPE html>\n"
+                            + "<html lang=\"en\">\n"
+                            + "<head>\n"
+                            + "    <meta charset=\"UTF-8\">\n"
+                            + "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n"
+                            + "    <title>Email Verified</title>\n"
+                            + "    <style>\n"
+                            + "        body {\n"
+                            + "            font-family: Arial, sans-serif;\n"
+                            + "            background-color: #f4f6f9;\n"
+                            + "            margin: 0;\n"
+                            + "            padding: 0;\n"
+                            + "            display: flex;\n"
+                            + "            justify-content: center;\n"
+                            + "            align-items: center;\n"
+                            + "            height: 100vh;\n"
+                            + "        }\n"
+                            + "        .container {\n"
+                            + "            background-color: #fff;\n"
+                            + "            border-radius: 10px;\n"
+                            + "            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);\n"
+                            + "            padding: 20px 40px;\n"
+                            + "            text-align: center;\n"
+                            + "        }\n"
+                            + "        h1 {\n"
+                            + "            color: #4CAF50;\n"
+                            + "            font-size: 24px;\n"
+                            + "        }\n"
+                            + "        p {\n"
+                            + "            font-size: 18px;\n"
+                            + "            color: #555;\n"
+                            + "        }\n"
+                            + "        a {\n"
+                            + "            text-decoration: none;\n"
+                            + "            color: #fff;\n"
+                            + "            background-color: #4CAF50;\n"
+                            + "            padding: 10px 20px;\n"
+                            + "            border-radius: 5px;\n"
+                            + "            display: inline-block;\n"
+                            + "            margin-top: 20px;\n"
+                            + "        }\n"
+                            + "        a:hover {\n"
+                            + "            background-color: #45a049;\n"
+                            + "        }\n"
+                            + "    </style>\n"
+                            + "</head>\n"
+                            + "<body>\n"
+                            + "    <div class=\"container\">\n"
+                            + "        <h1>Email Verified Successfully!</h1>\n"
+                            + "        <p><strong>%s</strong> has been successfully verified. You can now log in to your account.</p>\n"
+                            + "        <a href=\"/login\">Go to Login</a>\n"
+                            + "    </div>\n"
+                            + "</body>\n"
+                            + "</html>", email);
+            return ResponseEntity.ok().body(htmlResponse);
         } catch (RuntimeException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: " + ex.getMessage());
         }
     }
+
 
     @GetMapping("/profile/{username}")
     public ResponseEntity<?> viewProfile(@PathVariable String username) {
