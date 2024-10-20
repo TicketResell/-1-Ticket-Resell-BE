@@ -1,9 +1,5 @@
 package com.teamseven.ticketresell.controller;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
 import com.teamseven.ticketresell.converter.UserConverter;
 import com.teamseven.ticketresell.dto.UserDTO;
 import com.teamseven.ticketresell.dto.JwtResponse;
@@ -11,8 +7,6 @@ import com.teamseven.ticketresell.entity.UserEntity;
 import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.EmailService;
 import com.teamseven.ticketresell.service.impl.UserService;
-import com.teamseven.ticketresell.service.impl.SmsService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.teamseven.ticketresell.util.JwtUtil;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -39,9 +31,6 @@ public class AccountController {
 
     @Autowired
     private UserConverter accountConverter;
-
-    @Autowired
-    private SmsService smsService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -223,13 +212,18 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
         }
     }
-    @PostMapping("/hidden-search-profile")
-    public ResponseEntity<String> getUserNameByID(@RequestBody Long id) {
+    @PostMapping("/hidden-search-profile/{id}")
+    public ResponseEntity<String> getUserNameByID(@PathVariable Long id) {
         UserEntity user = userRepository.findById(id).orElse(null);
         if (user != null) {
             return ResponseEntity.ok(user.getFullname());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
+    }
+
+    @PostMapping("is-full-data/{id}")
+    public ResponseEntity<Boolean> isFullData(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.isFullData(id));
     }
 }

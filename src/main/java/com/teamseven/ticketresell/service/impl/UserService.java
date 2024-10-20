@@ -5,6 +5,8 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.gson.GsonFactory;
 import com.teamseven.ticketresell.converter.UserConverter;
+
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.regex.Pattern;
@@ -251,5 +253,22 @@ public class UserService implements IUserService {
     public String getUser2FullName(Long userId) {
         return userRepository.findFullNameById(userId);
     }
+
+    @Override
+    public Boolean isFullData(Long id) {
+        UserEntity user = findById(id);
+        try {
+            for (Field field : user.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                if (field.get(user) == null)
+                    return false;
+            }
+        } catch (IllegalAccessException e) {
+            System.out.println(e);
+            return false;
+        }
+        return false;
+    }
+
 
 }
