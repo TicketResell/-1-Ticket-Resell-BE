@@ -2,7 +2,6 @@ package com.teamseven.ticketresell.entity;
 
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.Order;
 
 import java.time.LocalDateTime;
 

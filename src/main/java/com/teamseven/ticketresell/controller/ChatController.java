@@ -29,10 +29,17 @@ public class ChatController {
         return chatService.getChatHistory(userId);
     }
 
-    // Tìm các tin nhắn giữa hai người dùng qua WebSocket
-    @MessageMapping("/chat/history/user")
-    @SendTo("/topic/history/user")
-    public List<ChatMessageDTO> findChats(Long userId, Long senderId) {
-        return chatService.getChatHistory(userId, senderId);
-    }
+//    // Tìm các tin nhắn giữa hai người dùng qua WebSocket
+//    @MessageMapping("/chat/history/user")
+//    @SendTo("/topic/history/user")
+//    public List<ChatMessageDTO> findChats(Long userId, Long senderId) {
+//        return chatService.getChatHistory(userId, senderId);
+//    }
+
+//    @MessageMapping("/chat/conversations")
+//    @SendTo("/topic/conversations")
+//    public List<ConversationDTO> getConversations(@RequestParam Long userId) {
+//        List<ConversationDTO> conversations = chatService.getConversationsByUserId(userId);
+//        return ResponseEntity.ok(conversations);
+//    }
 }

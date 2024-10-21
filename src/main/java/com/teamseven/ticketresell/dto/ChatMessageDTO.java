@@ -1,78 +1,107 @@
-package com.teamseven.ticketresell.dto;
+    package com.teamseven.ticketresell.dto;
 
-import java.time.LocalDateTime;
+    import java.time.LocalDateTime;
 
-public class ChatMessageDTO {
-    private Long chatId;
-    private Long user1_id;
-    private String user1_avatar;
-    private Long user2_id;
-    private String messageContent;
-    private String messageType;
-    private String user2Name;
-    private LocalDateTime timestamp;
+    public class ChatMessageDTO {
+        private Long chatId;
+        private Long user1_id;
+        private String user1_avatar;
+        private Long user2_id;
+        private String messageContent;
+        private String messageType;
+        private String user2Name;
+        private LocalDateTime timestamp;
 
-    public Long getChatId() {
-        return chatId;
+        //new
+        private int unreadCount;
+        private String lastMessage;
+        private LocalDateTime lastMessageTimestamp;
+
+        public Long getChatId() {
+            return chatId;
+        }
+
+        public void setChatId(Long chatId) {
+            this.chatId = chatId;
+        }
+
+        public Long getUser1_id() {
+            return user1_id;
+        }
+
+        public void setUser1_id(Long user1_id) {
+            this.user1_id = user1_id;
+        }
+
+        public String getUser1_avatar() {
+            return user1_avatar;
+        }
+
+        public void setUser1_avatar(String user1_avatar) {
+            this.user1_avatar = user1_avatar;
+        }
+
+        public Long getUser2_id() {
+            return user2_id;
+        }
+
+        public void setUser2_id(Long user2_id) {
+            this.user2_id = user2_id;
+        }
+
+        public String getMessageContent() {
+            return messageContent;
+        }
+
+        public void setMessageContent(String messageContent) {
+            this.messageContent = messageContent;
+        }
+
+        public String getMessageType() {
+            return messageType;
+        }
+
+        public void setMessageType(String messageType) {
+            this.messageType = messageType;
+        }
+
+        public String getUser2Name() {
+            return user2Name;
+        }
+
+        public void setUser2Name(String user2Name) {
+            this.user2Name = user2Name;
+        }
+
+        public LocalDateTime getTimestamp() {
+            return timestamp;
+        }
+
+        public void setTimestamp(LocalDateTime timestamp) {
+            this.timestamp = timestamp;
+        }
+
+        public int getUnreadCount() {
+            return unreadCount;
+        }
+
+        public void setUnreadCount(int unreadCount) {
+            this.unreadCount = unreadCount;
+        }
+
+        public String getLastMessage() {
+            return lastMessage;
+        }
+
+        public void setLastMessage(String lastMessage) {
+            this.lastMessage = lastMessage;
+        }
+
+        public LocalDateTime getLastMessageTimestamp() {
+            return lastMessageTimestamp;
+        }
+
+        public void setLastMessageTimestamp(LocalDateTime lastMessageTimestamp) {
+            this.lastMessageTimestamp = lastMessageTimestamp;
+        }
     }
-
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
-    }
-
-    public Long getUser1_id() {
-        return user1_id;
-    }
-
-    public void setUser1_id(Long user1_id) {
-        this.user1_id = user1_id;
-    }
-
-    public String getUser1_avatar() {
-        return user1_avatar;
-    }
-
-    public void setUser1_avatar(String user1_avatar) {
-        this.user1_avatar = user1_avatar;
-    }
-
-    public Long getUser2_id() {
-        return user2_id;
-    }
-
-    public void setUser2_id(Long user2_id) {
-        this.user2_id = user2_id;
-    }
-
-    public String getMessageContent() {
-        return messageContent;
-    }
-
-    public void setMessageContent(String messageContent) {
-        this.messageContent = messageContent;
-    }
-
-    public String getMessageType() {
-        return messageType;
-    }
-
-    public void setMessageType(String messageType) {
-        this.messageType = messageType;
-    }
-
-    public String getUser2Name() {
-        return user2Name;
-    }
-
-    public void setUser2Name(String user2Name) {
-        this.user2Name = user2Name;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-}
