@@ -33,6 +33,7 @@ public class ChatMessageConverter {
         dto.setUser2_id(entity.getUser2());
         dto.setMessageContent(entity.getMessageContent());
         dto.setUser2Name(userService.getFullNameByID(entity.getUser2()));
+        dto.setUser1_avatar(userService.getAvatarByID(entity.getUser1()));
         dto.setTimestamp(entity.getTimestamp());
         dto.setMessageType(entity.getMessageType());
         return dto;

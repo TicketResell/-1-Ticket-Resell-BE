@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class ChatMessageDTO {
     private Long chatId;
     private Long user1_id;
+    private String user1_avatar;
     private Long user2_id;
     private String messageContent;
     private String messageType;
@@ -25,6 +26,14 @@ public class ChatMessageDTO {
 
     public void setUser1_id(Long user1_id) {
         this.user1_id = user1_id;
+    }
+
+    public String getUser1_avatar() {
+        return user1_avatar;
+    }
+
+    public void setUser1_avatar(String user1_avatar) {
+        this.user1_avatar = user1_avatar;
     }
 
     public Long getUser2_id() {

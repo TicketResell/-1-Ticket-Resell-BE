@@ -252,19 +252,10 @@ public class UserService implements IUserService {
     @Override
     public Boolean isFullData(Long id) {
         UserEntity user = findById(id);
-        try {
-            for (Field field : user.getClass().getDeclaredFields()) {
-                field.setAccessible(true);
-                if (field.get(user) == null)
-                    return false;
-            }
-        } catch (IllegalAccessException e) {
-            System.out.println(e);
-            return false;
-        }
-        return false;
+        if(user.getPhone() == null || user.getAddress() == null
+                || user.getFullname() == null) return false;
+        return true;
     }
-
     @Override
     public String getAvatarByID(Long id) {
         UserEntity user = userRepository.findById(id).orElse(null);
