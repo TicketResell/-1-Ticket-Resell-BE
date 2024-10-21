@@ -250,11 +250,6 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public String getUser2FullName(Long userId) {
-        return userRepository.findFullNameById(userId);
-    }
-
-    @Override
     public Boolean isFullData(Long id) {
         UserEntity user = findById(id);
         try {
@@ -268,6 +263,12 @@ public class UserService implements IUserService {
             return false;
         }
         return false;
+    }
+
+    @Override
+    public String getAvatarByID(Long id) {
+        UserEntity user = userRepository.findById(id).orElse(null);
+        return user.getUserImage();
     }
 
 

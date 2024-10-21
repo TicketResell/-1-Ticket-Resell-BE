@@ -279,8 +279,24 @@ public class AccountController {
         }
     }
 
-    @PostMapping("is-full-data/{id}")
-    public ResponseEntity<Boolean> isFullData(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.isFullData(id));
+    @PostMapping("/is-full-data/{id}")
+    public ResponseEntity<Boolean> isFullData(@PathVariable("id") String id) {
+        try {
+            Long longId = Long.parseLong(id);
+            return ResponseEntity.ok(userService.isFullData(longId));
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(false);
+        }
     }
+
+    @PostMapping("/get-avatar/{id}")
+    public ResponseEntity<String> getAvatar(@PathVariable("id") String id) {
+        try {
+            Long longId = Long.parseLong(id);
+            return ResponseEntity.ok(userService.getAvatarByID(longId));
+        } catch (NumberFormatException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
 }
