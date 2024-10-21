@@ -253,4 +253,19 @@ public class TicketController {
 
         return ResponseEntity.ok(tickets);  // Trả về danh sách vé phân trang
     }
+    @PostMapping("/checkValidTicket/{id}")
+    public ResponseEntity<?> checkValidTicket(@PathVariable String id) {
+        Long tickID;
+        try {
+            tickID = Long.parseLong(id);
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ticket ID is not a number");
+        }
+        String status = ticketService.isReadyTicket(tickID);
+        if(status == null){
+            return ResponseEntity.ok("Ticket is ok");
+        }
+        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(status);
+
+    }
 }

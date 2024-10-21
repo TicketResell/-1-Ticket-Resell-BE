@@ -101,4 +101,20 @@ public class TicketService {
     public List<TicketEntity> getTicketsSortedBySalePriceDesc() {
         return ticketRepository.findAllByOrderBySalePriceDesc();
     }
+
+    public String isReadyTicket(long id){
+        TicketEntity ticket= findTicketById(id).orElse(null);
+        if(ticket.getEventDate().isBefore(LocalDate.now())){
+            ticket.setStatus("expired");
+            return "Ticket is expired";
+        }
+        if(ticket.getQuantity() < 1){
+            ticket.setStatus("used");
+            return "Ticket is empty";
+        }
+        if(ticket == null)
+            return "Ticket is null maybe it was deleted by seller";
+
+        return null;
+    }
 }
