@@ -24,6 +24,9 @@ public class TransactionService {
     private UserRepository userRepository;
 
     @Autowired
+    private BalanceService balanceService;
+
+    @Autowired
     private TicketRepository ticketRepository;
     // Tạo transaction INCOME cho buyer qua VNPay (tiền từ buyer tới sàn)
     public void createBuyerTransactionWithVnpay(OrderEntity order, String vnpResponseCode, String vnpTransactionNo) {
@@ -47,7 +50,13 @@ public class TransactionService {
         transaction.setTransactionAmount(amount);
         transaction.setTransactionType(type);
         transaction.setCreatedDate(LocalDateTime.now());
-
+        if (TransactionEntity.TransactionType.Expense.equals(type)) {
+            // Expense: System pays to seller
+            balanceService.updateBalanceForUser(order.getSeller(), amount); // Add to seller's balance
+        } else if (TransactionEntity.TransactionType.Refund.equals(type)) {
+            // Refund: Return money to buyer in case of cancellation
+            balanceService.updateBalanceForUser(order.getBuyer(), amount); // Add back to buyer's balance
+        }
         return transactionRepository.save(transaction);
     }
     // Tạo giao dịch expense sàn trả tiền cho seller có tính serviefee -expense
