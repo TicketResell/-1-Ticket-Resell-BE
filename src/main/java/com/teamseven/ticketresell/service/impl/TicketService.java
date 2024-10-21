@@ -114,7 +114,7 @@ public class TicketService {
         }
         if(ticket == null)
             return "Ticket is null maybe it was deleted by seller";
-
+        ticketRepository.save(ticket);
         return null;
     }
 }
