@@ -31,6 +31,17 @@ public class TicketService {
         return ticketRepository.findById(id);
     }
 
+    public int totalTicketsSold(){
+        List<TicketEntity> tickets = ticketRepository.findAll();
+        int count = 0;
+        for (TicketEntity ticket : tickets) {
+            if(ticket.getStatus().equals("used")){
+                count++;
+            }
+        }
+        return count;
+    }
+
     public Optional<TicketEntity> updateTicket(Long id, TicketDTO ticketDetails) {
         Optional<TicketEntity> ticketOpt = findTicketById(id);
 

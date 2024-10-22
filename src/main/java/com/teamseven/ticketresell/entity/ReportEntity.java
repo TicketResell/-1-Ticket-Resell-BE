@@ -6,9 +6,13 @@ import java.time.LocalDateTime;
 @Table(name = "reports")
 public class ReportEntity extends BaseEntity {
 
+    @Column(name = "reported_id")
     private Long reportedUserId;
+    @Column(name = "reporter_id")
     private Long reporterUserId;
+    @Column(name = "reason")
     private String reason;
+    @Column(name = "status")
     private String status;
 
     // Getter và Setter
