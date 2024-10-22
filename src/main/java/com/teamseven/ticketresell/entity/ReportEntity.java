@@ -6,9 +6,9 @@ import java.time.LocalDateTime;
 @Table(name = "reports")
 public class ReportEntity extends BaseEntity {
 
-    @Column(name = "reported_UserId")
+    @Column(name = "reported_id")
     private Long reportedUserId;
-    @Column(name = "reporter_UserId")
+    @Column(name = "reporter_id")
     private Long reporterUserId;
     @Column(name = "reason")
     private String reason;

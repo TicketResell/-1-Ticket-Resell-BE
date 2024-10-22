@@ -1,24 +1,27 @@
 package com.teamseven.ticketresell.controller;
 
 
+import com.teamseven.ticketresell.converter.ReportConverter;
 import com.teamseven.ticketresell.converter.UserConverter;
+import com.teamseven.ticketresell.dto.ChatMessageDTO;
+import com.teamseven.ticketresell.dto.ReportDTO;
+import com.teamseven.ticketresell.entity.ChatMessageEntity;
+import com.teamseven.ticketresell.entity.RatingEntity;
+import com.teamseven.ticketresell.entity.ReportEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
+import com.teamseven.ticketresell.repository.RatingRepository;
+import com.teamseven.ticketresell.repository.ReportRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
-import com.teamseven.ticketresell.service.impl.OrderService;
-import com.teamseven.ticketresell.service.impl.RatingService;
-import com.teamseven.ticketresell.service.impl.TicketService;
-import com.teamseven.ticketresell.service.impl.UserService;
+import com.teamseven.ticketresell.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +47,15 @@ public class StaffController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private ChatService chatService;
+
+    @Autowired
+    private ReportRepository rrepository;
+
+    @Autowired
+    private ReportConverter reportConverter;
 
     // Lấy đánh giá theo order
     @GetMapping("/get-all-report")
@@ -131,5 +143,41 @@ public class StaffController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/view-chat-by-username")
+    public ResponseEntity<?> viewChat2Users(@RequestParam Long user1, @RequestParam Long user2) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Kiểm tra xác thực
+        if (authentication == null || !authentication.isAuthenticated() || userService.getUserRoleByUsername(authentication.getName()).equals("user")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        List<ChatMessageDTO> chatMessages = chatService.getChatHistory(user1, user2);
+
+        return ResponseEntity.ok(chatMessages);
+    }
+
+
+    @GetMapping("/view-all-report")
+    public ResponseEntity<?> viewReport() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Kiểm tra xác thực
+        if (authentication == null || !authentication.isAuthenticated() || userService.getUserRoleByUsername(authentication.getName()).equals("user")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        List<ReportEntity> reportEntities = rrepository.findAll();
+        List<ReportEntity> finale = new ArrayList<>();
+        for (ReportEntity reportEntity : reportEntities) {
+            if(reportEntity.getStatus().equals("pending")){
+                finale.add(reportEntity);
+            }
+        }
+
+        return ResponseEntity.ok(finale.stream().map(reportConverter::toDTO).toList());
+    }
+
 
 }
