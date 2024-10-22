@@ -184,7 +184,7 @@ public class StaffController {
         return ResponseEntity.ok(finale.stream().map(reportConverter::toDTO).toList());
     }
 
-    @GetMapping("/get-all-orders")
+        @GetMapping("/get-all-orders")
     public ResponseEntity<?> getAllOrders() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
