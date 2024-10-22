@@ -16,27 +16,21 @@ public class TicketService {
 
     private final TicketRepository ticketRepository;
 
-    // Constructor injection
     public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
-
-    // Tạo mới vé
     public TicketEntity createTicket(TicketEntity ticket) {
         return ticketRepository.save(ticket);
     }
 
-    // Lấy tất cả các vé
     public List<TicketEntity> findAllTickets() {
         return ticketRepository.findAll();
     }
 
-    // Tìm vé theo ID, trả về Optional<TicketEntity>
     public Optional<TicketEntity> findTicketById(Long id) {
         return ticketRepository.findById(id);
     }
 
-    // Cập nhật thông tin vé
     public Optional<TicketEntity> updateTicket(Long id, TicketDTO ticketDetails) {
         Optional<TicketEntity> ticketOpt = findTicketById(id);
 
@@ -58,7 +52,6 @@ public class TicketService {
         }
     }
 
-    // Xóa vé
     public boolean deleteTicket(Long id) {
         Optional<TicketEntity> ticketOpt = findTicketById(id);
 

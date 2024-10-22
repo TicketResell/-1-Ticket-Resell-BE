@@ -1,6 +1,7 @@
 package com.teamseven.ticketresell.service.impl;
 
 import com.teamseven.ticketresell.entity.RatingEntity;
+import com.teamseven.ticketresell.entity.TicketEntity;
 import com.teamseven.ticketresell.repository.RatingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,12 @@ public class RatingService {
         return ratingRepository.findAll();
     }
 
+    public RatingEntity createRating(RatingEntity rating) {
+        return ratingRepository.save(rating);
+    }
 
     public List<RatingEntity> getRatingsByOrderId(Long orderId) {
         return ratingRepository.findByOrder_Id(orderId);
-    }
-
-    public RatingEntity createRating(RatingEntity rating) {
-        rating.setCreatedDate(LocalDateTime.now());
-        return ratingRepository.save(rating);
     }
 
     public RatingEntity updateRating(Long rateId, RatingEntity newRating) {
