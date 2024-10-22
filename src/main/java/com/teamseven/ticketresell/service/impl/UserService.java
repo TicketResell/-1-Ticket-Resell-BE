@@ -275,9 +275,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void getBanUser(Long id) {
+    public void banUser(Long id) {
         UserEntity user = userRepository.findById(id).orElse(null);
         user.setStatus("banned");
+        userRepository.save(user);
     }
 
 

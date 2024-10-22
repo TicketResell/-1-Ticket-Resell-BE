@@ -28,5 +28,5 @@ public interface IUserService {
     String getAvatarByID(Long id);
     Boolean isOnline(Long id);
     LocalDateTime lastSeen(Long id);
-    void getBanUser(Long id);
+    void banUser(Long id);
 }

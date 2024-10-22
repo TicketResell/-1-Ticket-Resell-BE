@@ -29,9 +29,9 @@ public class StaffControler {
         return ResponseEntity.ok(ratingService.getRatingsByOrderId(orderId));
     }
 
-    @GetMapping("/get-ban-user")
-    public ResponseEntity<Boolean> getBan(@PathVariable Long orderId) {
-        userService.getBanUser(orderId);
+    @GetMapping("/get-ban-user/{id}")
+    public ResponseEntity<Boolean> getBan(@PathVariable Long id) {
+        userService.banUser(id);
         return ResponseEntity.ok(true);
     }
 
