@@ -1,14 +1,13 @@
 package com.teamseven.ticketresell.controller;
 
 
+import com.teamseven.ticketresell.converter.OrderConverter;
 import com.teamseven.ticketresell.converter.ReportConverter;
 import com.teamseven.ticketresell.converter.UserConverter;
 import com.teamseven.ticketresell.dto.ChatMessageDTO;
 import com.teamseven.ticketresell.dto.ReportDTO;
-import com.teamseven.ticketresell.entity.ChatMessageEntity;
-import com.teamseven.ticketresell.entity.RatingEntity;
-import com.teamseven.ticketresell.entity.ReportEntity;
-import com.teamseven.ticketresell.entity.UserEntity;
+import com.teamseven.ticketresell.entity.*;
+import com.teamseven.ticketresell.repository.OrderRepository;
 import com.teamseven.ticketresell.repository.RatingRepository;
 import com.teamseven.ticketresell.repository.ReportRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
@@ -47,6 +46,12 @@ public class StaffController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderConverter orderConverter;
 
     @Autowired
     private ChatService chatService;
@@ -179,5 +184,15 @@ public class StaffController {
         return ResponseEntity.ok(finale.stream().map(reportConverter::toDTO).toList());
     }
 
+    @GetMapping("/get-all-orders")
+    public ResponseEntity<?> getAllOrders() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        // Kiểm tra xác thực
+        if (authentication == null || !authentication.isAuthenticated() || userService.getUserRoleByUsername(authentication.getName()).equals("user")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+        List< OrderEntity>  orderEntities = orderRepository.findAll();
+        return ResponseEntity.ok(orderEntities.stream().map(orderConverter::toDTO).toList());
+    }
 }
