@@ -21,7 +21,8 @@ public class ChatMessageConverter {
         entity.setUser2(dto.getUser2_id());
         entity.setMessageContent(dto.getMessageContent());
         entity.setMessageType(dto.getMessageType());
-       entity.setCreatedDate(dto.getTimestamp());
+        entity.setCreatedDate(dto.getTimestamp());
+        entity.setRead(dto.isIsread());
         return entity;
     }
 
@@ -36,6 +37,7 @@ public class ChatMessageConverter {
         dto.setUser1_avatar(userService.getAvatarByID(entity.getUser1()));
         dto.setTimestamp(entity.getTimestamp());
         dto.setMessageType(entity.getMessageType());
+        dto.setIsread(entity.getRead());
         return dto;
     }
 }

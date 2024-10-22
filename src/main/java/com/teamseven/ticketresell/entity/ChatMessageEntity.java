@@ -19,11 +19,8 @@ public class ChatMessageEntity extends BaseEntity {
     @Column(name = "message_type",nullable = false)
     private String messageType;
 
-    public enum ChatType{
-        text, image, bid
-    }
-
-    // Getters và Setters
+    @Column(name = "is_read")
+    private Boolean isRead;
 
 
     public Long getUser1() {
@@ -60,4 +57,11 @@ public class ChatMessageEntity extends BaseEntity {
 
     public LocalDateTime getTimestamp(){ return  super.getCreatedDate();}
 
+    public Boolean getRead() {
+        return isRead;
+    }
+
+    public void setRead(Boolean read) {
+        isRead = read;
+    }
 }

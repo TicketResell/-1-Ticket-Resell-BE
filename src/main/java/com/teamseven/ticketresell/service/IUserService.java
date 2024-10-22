@@ -5,6 +5,8 @@ import com.teamseven.ticketresell.dto.JwtResponse;
 import com.teamseven.ticketresell.dto.UserDTO;
 import com.teamseven.ticketresell.entity.UserEntity;
 
+import java.time.LocalDateTime;
+
 public interface IUserService {
     UserDTO login(String identifier, String password);
     UserDTO register(UserDTO userDTO);
@@ -24,4 +26,7 @@ public interface IUserService {
     String getFullNameByID(Long id);
     Boolean isFullData(Long id);
     String getAvatarByID(Long id);
+    Boolean isOnline(Long id);
+    LocalDateTime lastSeen(Long id);
+    void getBanUser(Long id);
 }

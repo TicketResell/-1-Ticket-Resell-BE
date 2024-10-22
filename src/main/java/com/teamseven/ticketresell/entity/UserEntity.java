@@ -2,6 +2,8 @@ package com.teamseven.ticketresell.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
@@ -35,6 +37,12 @@ public class UserEntity extends BaseEntity {
 
     @Column(name = "role", nullable = false)
     private String role;
+
+    @Column(name = "is_online")
+    private boolean isOnline;
+
+    @Column(name = "last_seen")
+    private LocalDateTime lastSeen;
 
     public enum Role {
         user, staff, admin
@@ -124,5 +132,21 @@ public class UserEntity extends BaseEntity {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public LocalDateTime getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(LocalDateTime lastSeen) {
+        this.lastSeen = lastSeen;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
     }
 }

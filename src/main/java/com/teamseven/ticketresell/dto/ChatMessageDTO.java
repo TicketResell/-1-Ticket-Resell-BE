@@ -13,9 +13,7 @@
         private LocalDateTime timestamp;
 
         //new
-        private int unreadCount;
-        private String lastMessage;
-        private LocalDateTime lastMessageTimestamp;
+        private boolean isread;
 
         public Long getChatId() {
             return chatId;
@@ -81,27 +79,11 @@
             this.timestamp = timestamp;
         }
 
-        public int getUnreadCount() {
-            return unreadCount;
+        public boolean isIsread() {
+            return isread;
         }
 
-        public void setUnreadCount(int unreadCount) {
-            this.unreadCount = unreadCount;
-        }
-
-        public String getLastMessage() {
-            return lastMessage;
-        }
-
-        public void setLastMessage(String lastMessage) {
-            this.lastMessage = lastMessage;
-        }
-
-        public LocalDateTime getLastMessageTimestamp() {
-            return lastMessageTimestamp;
-        }
-
-        public void setLastMessageTimestamp(LocalDateTime lastMessageTimestamp) {
-            this.lastMessageTimestamp = lastMessageTimestamp;
+        public void setIsread(boolean isread) {
+            this.isread = isread;
         }
     }

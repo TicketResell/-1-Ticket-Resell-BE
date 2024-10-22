@@ -16,4 +16,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     // Tìm người dùng bằng email hoặc username
     UserEntity findByEmailOrUsername(String email, String username);
     String findFullNameById(long userID);
+    void getBanUser(long userID);
 }

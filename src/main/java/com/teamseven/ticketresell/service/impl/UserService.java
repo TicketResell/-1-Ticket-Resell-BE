@@ -262,5 +262,23 @@ public class UserService implements IUserService {
         return user.getUserImage();
     }
 
+    @Override
+    public Boolean isOnline(Long id) {
+        UserEntity user = userRepository.findById(id).orElse(null);
+        return user.isOnline();
+    }
+
+    @Override
+    public LocalDateTime lastSeen(Long id) {
+        UserEntity user = userRepository.findById(id).orElse(null);
+        return user.getLastSeen();
+    }
+
+    @Override
+    public void getBanUser(Long id) {
+        UserEntity user = userRepository.findById(id).orElse(null);
+        user.setStatus("banned");
+    }
+
 
 }
