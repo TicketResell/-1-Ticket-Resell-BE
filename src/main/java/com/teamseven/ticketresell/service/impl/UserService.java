@@ -19,6 +19,7 @@ import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.IUserService;
 import com.teamseven.ticketresell.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -283,10 +284,17 @@ public class UserService implements IUserService {
 
     @Override
     public void banUser(Long id) {
-        UserEntity user = userRepository.findById(id).orElse(null);
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User with ID " + id + " not found"));
+
+        if (!user.getRole().equalsIgnoreCase("user")) {
+            throw new IllegalArgumentException("Cannot ban an admin/staff user.");
+        }
+
         user.setStatus("banned");
         userRepository.save(user);
     }
+
 
     @Override
     public int countUser() {

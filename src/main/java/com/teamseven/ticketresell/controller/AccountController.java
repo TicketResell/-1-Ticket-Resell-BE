@@ -67,33 +67,8 @@ public class AccountController {
         }
     }
 
-    // create account
-    @PostMapping("/staff")
-    public ResponseEntity<?> createAccount(@RequestBody UserDTO userDTO) {
-        try {
-            UserEntity savedUser = userService.createNewAccount(userDTO.getUsername(),userDTO.getPassword());
-            return ResponseEntity.ok("Create account successful");
-        } catch (RuntimeException ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
-        }
-    }
 
-    // get all accounts
-    @GetMapping("/staff")
-    public ResponseEntity<?> getAccounts() {
-        List<UserEntity> accounts = userRepository.findAll();
-        return ResponseEntity.ok(accounts.stream().map(accountConverter::toDTO).toList());
-    }
 
-    @PutMapping("/staff/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody UserDTO userDTO) {
-        try {
-            UserEntity updatedUser = userService.updateUser(id, userDTO);
-            return ResponseEntity.ok("User updated successfully");
-        } catch (RuntimeException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        }
-    }
 
     @DeleteMapping("/staff/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {

@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -175,6 +174,29 @@ public class OrderService {
 
         // Trả về OrderDTO sau khi cập nhật
         return orderConverter.toDTO(updatedOrder);
+    }
+
+    public double getAllRevenue(){
+       List<OrderEntity> orders = orderRepository.findAll();
+       double revenue = 0;
+       for (OrderEntity order : orders) {
+           if (order.getOrderStatus().equals(OrderEntity.OrderStatus.completed)) {
+               revenue = revenue + order.getTotalAmount();
+           }
+       }
+       return revenue;
+    }
+
+
+    public double getAllProfit(){
+        List<OrderEntity> orders = orderRepository.findAll();
+        double profit = 0;
+        for (OrderEntity order : orders) {
+            if (order.getOrderStatus().equals(OrderEntity.OrderStatus.completed)) {
+                profit = profit + order.getServiceFee();
+            }
+        }
+        return profit;
     }
 }
 
