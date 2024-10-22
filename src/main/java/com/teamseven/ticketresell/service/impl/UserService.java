@@ -207,20 +207,26 @@ public class UserService implements IUserService {
                 GoogleIdToken.Payload payload = idToken.getPayload();
                 String email = payload.getEmail();
                 String name = (String) payload.get("name");
+                String pictureUrl = (String) payload.get("picture");
 
                 // Check if user exists
                 UserEntity user = userRepository.findByEmail(email);
                 if (user == null) {
                     // Create a new user if not exists
                     user = new UserEntity();
-                    user.setUsername(email + "_google"); // Đảm bảo username không bị trùng
-                    user.setPassword(email + "_password"); // Đặt tạm mật khẩu
+                    user.setUsername(email + "_google");
+                    user.setPassword(email + "_password");
                     user.setEmail(email);
                     user.setStatus("active");
                     user.setRole("user"); // default == user
                     user.setCreatedDate(LocalDateTime.now());
                     user.setVerifiedEmail(true);
+                    user.setUserImage(pictureUrl);
                     user = userRepository.save(user);
+                } else {
+                    // Nếu user đã tồn tại, có thể cập nhật lại ảnh từ Google
+                    user.setUserImage(pictureUrl);
+                    userRepository.save(user);
                 }
 
                 // Generate JWT token

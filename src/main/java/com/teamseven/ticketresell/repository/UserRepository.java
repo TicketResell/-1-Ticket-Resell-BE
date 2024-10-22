@@ -16,4 +16,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     // Tìm người dùng bằng email hoặc username
     UserEntity findByEmailOrUsername(String email, String username);
     String findFullNameById(long userID);
+
+    @Query("SELECT COUNT(u) FROM UserEntity u")
+    long countTotalUsers();
 }

@@ -23,7 +23,7 @@ public class UserEntity extends BaseEntity {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "fullname", nullable = false)
+    @Column(name = "fullname")
     private String fullname;
 
     @Column(name = "user_image")
