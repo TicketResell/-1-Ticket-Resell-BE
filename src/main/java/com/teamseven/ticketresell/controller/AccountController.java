@@ -79,11 +79,6 @@ public class AccountController {
     }
 
     // get all accounts
-    @GetMapping("/staff")
-    public ResponseEntity<?> getAccounts() {
-        List<UserEntity> accounts = userRepository.findAll();
-        return ResponseEntity.ok(accounts.stream().map(accountConverter::toDTO).toList());
-    }
 
     @PutMapping("/staff/{id}")
     public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody UserDTO userDTO) {
