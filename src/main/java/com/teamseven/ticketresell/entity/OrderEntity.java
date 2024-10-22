@@ -43,7 +43,7 @@ public class OrderEntity extends BaseEntity {
     private OrderMethod orderMethod; // Phương thức thanh toán
 
     public enum OrderStatus {
-        pending, completed, cancelled
+        pending,shipping,received, completed, cancelled
     }
 
     public enum PaymentStatus {
