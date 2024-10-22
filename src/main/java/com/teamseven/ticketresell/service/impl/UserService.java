@@ -289,7 +289,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Integer countUser() {
+    public int countUser() {
         List<UserEntity> userEntities = userRepository.findAll();
         int count = 0;
         for(UserEntity user : userEntities){
