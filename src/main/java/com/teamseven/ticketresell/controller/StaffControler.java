@@ -40,7 +40,7 @@ public class StaffControler {
         return ResponseEntity.ok(true);
     }
 
-    @GetMapping("/get-number-of-user}")
+    @GetMapping("/get-number-of-user")
     public ResponseEntity<Integer> getNumberOfUser() {
         int users = userService.countUser();
         return ResponseEntity.ok(users);
