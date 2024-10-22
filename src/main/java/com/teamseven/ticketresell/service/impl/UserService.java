@@ -9,6 +9,7 @@ import com.teamseven.ticketresell.converter.UserConverter;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import com.teamseven.ticketresell.dto.JwtResponse;
@@ -285,6 +286,16 @@ public class UserService implements IUserService {
         UserEntity user = userRepository.findById(id).orElse(null);
         user.setStatus("banned");
         userRepository.save(user);
+    }
+
+    @Override
+    public Integer countUser() {
+        List<UserEntity> userEntities = userRepository.findAll();
+        int count = 0;
+        for(UserEntity user : userEntities){
+            count++;
+        }
+        return count;
     }
 
 

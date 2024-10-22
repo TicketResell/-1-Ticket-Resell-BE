@@ -29,4 +29,5 @@ public interface IUserService {
     Boolean isOnline(Long id);
     LocalDateTime lastSeen(Long id);
     void banUser(Long id);
+    Integer countUser();
 }

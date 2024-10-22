@@ -41,8 +41,8 @@ public class StaffControler {
     }
 
     @GetMapping("/get-number-of-user}")
-    public ResponseEntity<Long> getNumberOfUser() {
-        Long users = userRepository.countTotalUsers();
+    public ResponseEntity<Integer> getNumberOfUser() {
+        Integer users = userService.countUser();
         return ResponseEntity.ok(users);
     }
 
