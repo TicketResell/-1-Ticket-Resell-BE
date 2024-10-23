@@ -161,16 +161,14 @@ public class OrderService {
 
         // Kiểm tra nếu trạng thái đơn hàng được cập nhật thành "cancelled"
         if ("cancelled".equalsIgnoreCase(orderStatus)) {
+            order.setOrderStatus(OrderEntity.OrderStatus.cancelled);
             // Kiểm tra nếu payment_status của order là "paid"
             if (OrderEntity.PaymentStatus.paid.equals(order.getPaymentStatus())) {
-                // Cập nhật trạng thái order_status thành "cancelled"
-                order.setOrderStatus(OrderEntity.OrderStatus.cancelled);
-
-                // Tạo transaction refund trả lại tiền cho buyer
+                // Tạo transaction refund trả lại tiền cho buyer nếu đã thanh toán
                 transactionService.createRefundTransaction(order);
             } else {
-                throw new IllegalArgumentException("Payment has not been completed. No refund necessary.");
-            }
+                // Không ném ngoại lệ mà trả về thông báo lỗi (tùy chọn cách xử lý)
+                return orderConverter.toDTO(order);            }
         } else {
             throw new IllegalArgumentException("Invalid order status for refund");
         }
