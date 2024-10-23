@@ -3,7 +3,6 @@ package com.teamseven.ticketresell.controller;
 import com.teamseven.ticketresell.dto.ChatMessageDTO;
 import com.teamseven.ticketresell.dto.ConversationDTO;
 import com.teamseven.ticketresell.repository.ChatMessageRepository;
-import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.ChatService;
 import com.teamseven.ticketresell.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

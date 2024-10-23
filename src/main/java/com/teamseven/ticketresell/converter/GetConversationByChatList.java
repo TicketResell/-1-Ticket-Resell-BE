@@ -1,19 +1,16 @@
 package com.teamseven.ticketresell.converter;
 
 import com.teamseven.ticketresell.dto.ConversationDTO;
-import com.teamseven.ticketresell.dto.OrderDTO;
 import com.teamseven.ticketresell.entity.ChatMessageEntity;
-import com.teamseven.ticketresell.entity.OrderEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class GetConversationByChatList {
     public ConversationDTO createConversation(List<ChatMessageEntity> chatMessageEntities) {
-        Map<Long, Long> users = new HashMap<>();
+        List<Long> users = new ArrayList<>();
         ConversationDTO conversationDTO = new ConversationDTO();
 
         int unreadCount = 0;
@@ -22,10 +19,21 @@ public class GetConversationByChatList {
             if (!chatMessageEntity.getRead()) {
                 unreadCount++;
             }
-            users.put(chatMessageEntity.getUser1(), chatMessageEntity.getUser2());
+
+            // Thêm user1 và user2 vào danh sách nếu chưa có
+            if (!users.contains(chatMessageEntity.getUser1())) {
+                users.add(chatMessageEntity.getUser1());
+            }
+            if (!users.contains(chatMessageEntity.getUser2())) {
+                users.add(chatMessageEntity.getUser2());
+            }
+
             conversationDTO.setLastMessage(chatMessageEntity.getMessageContent());
         }
+
+        conversationDTO.setUsers(users);
         conversationDTO.setUnreadCount(unreadCount);
+
         return conversationDTO;
     }
 }
