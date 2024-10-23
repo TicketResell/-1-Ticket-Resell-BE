@@ -131,13 +131,19 @@ public class OrderService {
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found!"));
         // Kiểm tra nếu trạng thái đơn hàng được cập nhật thành "complete"
-        if ("Complete".equalsIgnoreCase(orderStatus)) {
-            if (OrderEntity.PaymentStatus.paid.equals(order.getPaymentStatus())){
+        if ("completed".equalsIgnoreCase(orderStatus)) {
+            if (!OrderEntity.PaymentStatus.paid.equals(order.getPaymentStatus())){
                 order.setPaymentStatus(OrderEntity.PaymentStatus.paid);
                 transactionService.createBuyerTransaction(order);
             }
             order.setOrderStatus(OrderEntity.OrderStatus.completed);
             transactionService.createSellerTransaction(order);
+        } else if ("shipping".equalsIgnoreCase(orderStatus)) {
+            // Xử lý khi trạng thái là "shipping"
+            order.setOrderStatus(OrderEntity.OrderStatus.shipping);
+        } else if ("received".equalsIgnoreCase(orderStatus)) {
+            // Xử lý khi trạng thái là "received"
+            order.setOrderStatus(OrderEntity.OrderStatus.received);
         } else {
             throw new IllegalArgumentException("Invalid order status");
         }
@@ -155,16 +161,14 @@ public class OrderService {
 
         // Kiểm tra nếu trạng thái đơn hàng được cập nhật thành "cancelled"
         if ("cancelled".equalsIgnoreCase(orderStatus)) {
+            order.setOrderStatus(OrderEntity.OrderStatus.cancelled);
             // Kiểm tra nếu payment_status của order là "paid"
             if (OrderEntity.PaymentStatus.paid.equals(order.getPaymentStatus())) {
-                // Cập nhật trạng thái order_status thành "cancelled"
-                order.setOrderStatus(OrderEntity.OrderStatus.cancelled);
-
-                // Tạo transaction refund trả lại tiền cho buyer
+                // Tạo transaction refund trả lại tiền cho buyer nếu đã thanh toán
                 transactionService.createRefundTransaction(order);
             } else {
-                throw new IllegalArgumentException("Payment has not been completed. No refund necessary.");
-            }
+                // Không ném ngoại lệ mà trả về thông báo lỗi (tùy chọn cách xử lý)
+                return orderConverter.toDTO(order);            }
         } else {
             throw new IllegalArgumentException("Invalid order status for refund");
         }

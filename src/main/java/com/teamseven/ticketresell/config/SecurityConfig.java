@@ -76,7 +76,13 @@ public class SecurityConfig {
                                 "/api/vnpay/callback",
                                 "/api/ratings",
                                 "/api/ratings/seller/{sellerId}",
-                                "/api/ratings/{rateId}"
+                                "/api/ratings/{rateId}",
+                                "/api/admin/view-accounts",
+                                "/api/admin/get-number-of-user",
+                                "/api/admin/promote/{id}",
+                                "/api/admin/all-orders",
+                                "/api/admin/count-orders",
+                                "/api/admin/update-service-fee/{orderId}"
                         ).permitAll() // Cho phép các endpoint không cần xác thực
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các yêu cầu khác
                 )

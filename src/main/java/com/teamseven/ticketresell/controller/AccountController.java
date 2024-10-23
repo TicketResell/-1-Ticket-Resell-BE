@@ -66,10 +66,6 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
-
-
-
-
     @DeleteMapping("/staff/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable("id") Long id) {
         try {

@@ -103,10 +103,13 @@ public class OrderController {
                 OrderDTO updatedOrder = orderService.updateOrderStatusForRefund(orderId, orderStatus);
                 return ResponseEntity.ok(updatedOrder);
                 // Nếu order_status là "complete", xử lý giao dịch cho seller
-            } else if ("complete".equalsIgnoreCase(orderStatus)) {
+            } else if ("completed".equalsIgnoreCase(orderStatus)) {
                 OrderDTO updatedOrder = orderService.updateOrderStatus(orderId, orderStatus);
                 return ResponseEntity.ok(updatedOrder);
                 // Nếu order_status là giá trị khác không hợp lệ
+            }else if ("shipping".equalsIgnoreCase(orderStatus) || "received".equalsIgnoreCase(orderStatus)) {
+                OrderDTO updatedOrder = orderService.updateOrderStatus(orderId, orderStatus);
+                return ResponseEntity.ok(updatedOrder);
             } else {
                 throw new IllegalArgumentException("Invalid order status");
             }
