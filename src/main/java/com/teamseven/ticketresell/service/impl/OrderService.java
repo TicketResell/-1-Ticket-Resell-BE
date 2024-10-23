@@ -131,13 +131,19 @@ public class OrderService {
         OrderEntity order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found!"));
         // Kiểm tra nếu trạng thái đơn hàng được cập nhật thành "complete"
-        if ("Complete".equalsIgnoreCase(orderStatus)) {
+        if ("completed".equalsIgnoreCase(orderStatus)) {
             if (OrderEntity.PaymentStatus.paid.equals(order.getPaymentStatus())){
                 order.setPaymentStatus(OrderEntity.PaymentStatus.paid);
                 transactionService.createBuyerTransaction(order);
             }
             order.setOrderStatus(OrderEntity.OrderStatus.completed);
             transactionService.createSellerTransaction(order);
+        } else if ("shipping".equalsIgnoreCase(orderStatus)) {
+            // Xử lý khi trạng thái là "shipping"
+            order.setOrderStatus(OrderEntity.OrderStatus.shipping);
+        } else if ("received".equalsIgnoreCase(orderStatus)) {
+            // Xử lý khi trạng thái là "received"
+            order.setOrderStatus(OrderEntity.OrderStatus.received);
         } else {
             throw new IllegalArgumentException("Invalid order status");
         }
