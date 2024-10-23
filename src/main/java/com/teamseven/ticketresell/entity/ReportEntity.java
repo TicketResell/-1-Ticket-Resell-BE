@@ -10,6 +10,8 @@ public class ReportEntity extends BaseEntity {
     private Long reportedUserId;
     @Column(name = "reporter_id")
     private Long reporterUserId;
+    @Column(name ="product_id")
+    private Long productId;
     @Column(name = "reason")
     private String reason;
     @Column(name = "status")
@@ -47,5 +49,13 @@ public class ReportEntity extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 }

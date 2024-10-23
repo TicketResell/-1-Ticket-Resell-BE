@@ -195,4 +195,20 @@ public class StaffController {
         List< OrderEntity>  orderEntities = orderRepository.findAll();
         return ResponseEntity.ok(orderEntities.stream().map(orderConverter::toDTO).toList());
     }
+
+    @PostMapping("/change-report-status/{id}")
+    public ResponseEntity<?> changeReportStatus(@PathVariable Long id, @RequestParam String status) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Kiểm tra xác thực
+        if (authentication == null || !authentication.isAuthenticated() || userService.getUserRoleByUsername(authentication.getName()).equals("user")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        ReportEntity reportEntity = rrepository.findById(id).orElse(null);
+        reportEntity.setStatus(status);
+        rrepository.save(reportEntity);
+
+        return ResponseEntity.ok("Report with id " + id + " and status " + status);
+    }
 }

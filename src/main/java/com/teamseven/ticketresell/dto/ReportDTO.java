@@ -6,6 +6,7 @@ public class ReportDTO {
     private Long id;
     private Long reportedUserId;
     private Long reporterUserId;
+    private Long productId;
     private String reason;
     private String status;
     private LocalDateTime reportDate;
@@ -59,4 +60,6 @@ public class ReportDTO {
     public void setReportDate(LocalDateTime reportDate) {
         this.reportDate = reportDate;
     }
+
+
 }

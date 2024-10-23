@@ -1,11 +1,12 @@
 package com.teamseven.ticketresell.controller;
 
 import com.teamseven.ticketresell.converter.RatingConverter;
+import com.teamseven.ticketresell.converter.ReportConverter;
 import com.teamseven.ticketresell.dto.RatingDTO;
-import com.teamseven.ticketresell.dto.TicketDTO;
+import com.teamseven.ticketresell.dto.ReportDTO;
 import com.teamseven.ticketresell.entity.OrderEntity;
 import com.teamseven.ticketresell.entity.RatingEntity;
-import com.teamseven.ticketresell.entity.TicketEntity;
+import com.teamseven.ticketresell.entity.ReportEntity;
 import com.teamseven.ticketresell.repository.OrderRepository;
 import com.teamseven.ticketresell.repository.RatingRepository;
 import com.teamseven.ticketresell.service.impl.RatingService;
@@ -17,11 +18,10 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/ratings")
-public class RatingController {
+public class RatingReportController {
 
     @Autowired
     private RatingService ratingService;
@@ -34,6 +34,9 @@ public class RatingController {
 
     @Autowired
     private RatingConverter ratingConverter;
+
+    @Autowired
+    private ReportConverter reportConverter;
 
 
     @PostMapping
@@ -73,6 +76,16 @@ public class RatingController {
     @DeleteMapping("/{rateId}")
     public ResponseEntity<?> deleteRating(@PathVariable Long rateId) {
         ratingService.deleteRating(rateId);
+        return ResponseEntity.ok("This rating was deleted successfully.");
+    }
+
+
+    //create report
+    @PostMapping("/create-report")
+    public ResponseEntity<?> createReport(@RequestBody ReportDTO reportDTO) {
+        ReportEntity reportEntity = reportConverter.toEntity(reportDTO);
+        reportEntity.setCreatedDate(LocalDateTime.now());
+        reportEntity.setStatus("pending");
         return ResponseEntity.ok("This rating was deleted successfully.");
     }
 }
