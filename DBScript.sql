@@ -16,6 +16,35 @@ SET NAMES utf8mb4 ;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `balances`
+--
+
+DROP TABLE IF EXISTS `balances`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `balances` (
+                            `id` int(11) NOT NULL AUTO_INCREMENT,
+                            `user_id` int(11) NOT NULL,
+                            `current_balance` decimal(10,2) NOT NULL DEFAULT '0.00',
+                            `last_update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                            `created_date` timestamp NULL DEFAULT NULL,
+                            PRIMARY KEY (`id`),
+                            KEY `fk_balance_user` (`user_id`),
+                            CONSTRAINT `fk_balance_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `balances`
+--
+
+LOCK TABLES `balances` WRITE;
+/*!40000 ALTER TABLE `balances` DISABLE KEYS */;
+INSERT INTO `balances` VALUES (1,1,143.21,'2024-10-23 05:53:57','2024-10-23 05:53:57');
+/*!40000 ALTER TABLE `balances` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `categories`
 --
 
@@ -55,6 +84,7 @@ CREATE TABLE `chat_message` (
                                 `message_content` varchar(1000) NOT NULL,
                                 `created_date` datetime DEFAULT CURRENT_TIMESTAMP,
                                 `chat_type` enum('text','image','bid') NOT NULL DEFAULT 'text',
+                                `is_read` tinyint(1) DEFAULT '0',
                                 PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -109,8 +139,8 @@ CREATE TABLE `orders` (
                           `quantity` int(11) NOT NULL,
                           `total_amount` decimal(10,2) DEFAULT NULL,
                           `service_fee` decimal(10,2) DEFAULT NULL,
-                          `order_status` enum('pending','completed','cancelled') DEFAULT 'pending',
-                          `payment_status` enum('pending','completed','cancelled') DEFAULT 'pending',
+                          `order_status` enum('pending','completed','cancelled','shipping','received') DEFAULT NULL,
+                          `payment_status` enum('pending','paid','failed') DEFAULT NULL,
                           PRIMARY KEY (`id`),
                           KEY `buyer_id` (`buyer_id`),
                           KEY `seller_id` (`seller_id`),
@@ -118,7 +148,7 @@ CREATE TABLE `orders` (
                           CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`buyer_id`) REFERENCES `users` (`id`),
                           CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`seller_id`) REFERENCES `users` (`id`),
                           CONSTRAINT `orders_ibfk_3` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -127,6 +157,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (2,2,1,8,'2024-10-21 16:53:55','COD',1,150.75,0.05,'pending','pending'),(25,2,1,8,'2024-10-21 16:55:49','COD',1,150.75,0.05,'completed','paid'),(26,2,1,8,'2024-10-21 16:55:55','COD',1,150.75,0.05,'pending','pending'),(27,2,1,8,'2024-10-21 16:55:56','COD',1,150.75,0.05,'pending','pending'),(28,2,1,8,'2024-10-21 16:55:58','COD',1,150.75,0.05,'pending','pending'),(29,2,1,8,'2024-10-21 16:55:59','COD',1,150.75,0.02,'pending','pending'),(30,2,1,8,'2024-10-21 16:56:00','COD',1,150.75,0.05,'pending','pending'),(31,2,1,8,'2024-10-22 04:25:50','COD',1,150.75,0.05,'pending','pending'),(32,2,1,8,'2024-10-22 14:14:03','COD',1,150.75,0.05,'pending','pending'),(33,2,1,8,'2024-10-22 14:14:55','COD',1,150.75,0.05,'pending','pending');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -138,18 +169,18 @@ DROP TABLE IF EXISTS `ratings`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 SET character_set_client = utf8mb4 ;
 CREATE TABLE `ratings` (
-                           `rate_id` int(11) NOT NULL AUTO_INCREMENT,
-                           `user_id` int(11) DEFAULT NULL,
-                           `order_id` int(11) DEFAULT NULL,
-                           `rating_score` int(11) DEFAULT NULL,
-                           `feedback` text,
-                           `rating_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                           PRIMARY KEY (`rate_id`),
-                           KEY `user_id` (`user_id`),
-                           KEY `order_id` (`order_id`),
-                           CONSTRAINT `ratings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-                           CONSTRAINT `ratings_ibfk_2` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+                           `id` int(11) NOT NULL AUTO_INCREMENT,
+                           `userID` int(11) NOT NULL,
+                           `orderID` int(11) NOT NULL,
+                           `rating_score` int(11) NOT NULL,
+                           `feedback` varchar(255) DEFAULT NULL,
+                           `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+                           PRIMARY KEY (`id`),
+                           KEY `userID` (`userID`),
+                           KEY `orderID` (`orderID`),
+                           CONSTRAINT `ratings_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `users` (`id`),
+                           CONSTRAINT `ratings_ibfk_2` FOREIGN KEY (`orderID`) REFERENCES `orders` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,6 +190,34 @@ CREATE TABLE `ratings` (
 LOCK TABLES `ratings` WRITE;
 /*!40000 ALTER TABLE `ratings` DISABLE KEYS */;
 /*!40000 ALTER TABLE `ratings` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `reports`
+--
+
+DROP TABLE IF EXISTS `reports`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `reports` (
+                           `id` int(10) NOT NULL,
+                           `reporter_id` int(10) DEFAULT NULL,
+                           `reported_id` int(10) DEFAULT NULL,
+                           `reason` varchar(4500) DEFAULT NULL,
+                           `status` varchar(45) DEFAULT NULL,
+                           `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                           PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reports`
+--
+
+LOCK TABLES `reports` WRITE;
+/*!40000 ALTER TABLE `reports` DISABLE KEYS */;
+INSERT INTO `reports` VALUES (1,1,14,'Product: spam mu vo doi','pending','2024-10-22 09:48:18'),(2,14,1,'User: scam ','pending','2024-10-22 09:48:18');
+/*!40000 ALTER TABLE `reports` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -206,6 +265,7 @@ CREATE TABLE `tickets` (
                            `ticket_details` varchar(255) DEFAULT NULL,
                            `created_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
                            `quantity` int(11) DEFAULT '1',
+                           `status` enum('onsale','used','expired') NOT NULL DEFAULT 'onsale',
                            PRIMARY KEY (`id`),
                            KEY `user_id` (`user_id`),
                            KEY `category_id` (`category_id`),
@@ -220,7 +280,7 @@ CREATE TABLE `tickets` (
 
 LOCK TABLES `tickets` WRITE;
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-INSERT INTO `tickets` VALUES (1,1,50,'Manchester United VS Manchester City','2024-10-12',2,'Old Trafford, Manchester','Standard',60.00,'Premier League football match','2024-09-20 08:34:00',1),(2,2,30,'Sky Tour','2024-11-05',1,'Ho Chi Minh City','VIP',45.00,'Concert by Sơn Tùng M-TP','2024-09-22 03:00:00',1),(3,3,20,'FPT Flash VS SGP','2024-10-22',3,'FPT Arena, Hanoi','Standard',25.00,'Mobile Legends Championship','2024-09-25 04:12:00',1),(5,2,75,'Taylor Swift - The Eras Tour','2024-11-15',1,'Sophie Stadium, LA','VIP',90.00,'Taylor Swift Live Concert','2024-09-29 02:30:00',1),(6,3,60,'Lakers VS Warriors','2024-11-01',2,'Crypto.com Arena, LA','Standard',65.00,'NBA regular season match','2024-09-30 03:20:00',1),(7,1,40,'VietNam National Day Celebration','2024-09-02',2,'Ba Dinh Square, Hanoi','Free',0.00,'Cultural event celebrating Vietnam Independence','2024-08-10 00:55:00',1),(8,1,80,'Formula 1: Abu Dhabi Grand Prix','2024-12-09',1,'Yas Marina Circuit, Abu Dhabi','Premium',95.00,'F1 season finale','2024-09-20 05:15:00',1),(9,2,45,'Coldplay: Music of the Spheres Tour','2024-11-30',2,'Wembley Stadium, London','VIP',55.00,'Coldplay Live Concert','2024-09-25 07:32:00',1),(10,3,35,'World Cup Qualifier: Brazil VS Argentina','2024-11-18',1,'Maracanã Stadium, Rio de Janeiro','Standard',40.00,'FIFA World Cup 2026 Qualifier','2024-09-21 02:40:00',1),(11,1,25,'Vietnam Idol Finals','2024-10-29',2,'Saigon Convention Center','Standard',30.00,'Final of Vietnam Idol 2024','2024-09-23 09:00:00',1),(12,2,20,'Champions League: Barcelona VS PSG','2024-12-12',1,'Camp Nou, Barcelona','Standard',25.00,'Champions League Group Stage','2024-09-19 10:45:00',1),(13,3,50,'Super Bowl LVIII','2024-02-11',1,'Allegiant Stadium, Las Vegas','VIP',65.00,'NFL Championship game','2024-09-30 11:20:00',1),(14,1,35,'SEA Games Opening Ceremony','2024-11-29',3,'My Dinh National Stadium, Hanoi','Standard',40.00,'SEA Games 2024 Opening','2024-09-21 13:30:00',1),(15,2,70,'Rihanna Live: Anti World Tour','2024-12-10',2,'Madison Square Garden, New York','VIP',85.00,'Rihanna Concert','2024-09-18 15:10:00',1),(16,3,30,'Wimbledon Finals','2024-07-14',1,'All England Club, London','Standard',35.00,'Wimbledon Tennis Final','2024-09-22 04:10:00',1),(17,1,25,'Vietnam VS Thailand','2024-10-15',1,'Thống Nhất Stadium, HCMC','Standard',30.00,'AFF Championship Match','2024-09-27 02:50:00',1),(18,2,55,'Billie Eilish: Happier Than Ever Tour','2024-12-20',2,'The O2, London','VIP',65.00,'Billie Eilish Concert','2024-09-20 09:55:00',1),(19,3,40,'V-League Finals: Hanoi FC VS Hoang Anh Gia Lai','2024-11-20',1,'Hang Day Stadium, Hanoi','Standard',45.00,'V-League Finals','2024-09-28 05:45:00',1),(20,1,15,'French Open: Nadal VS Djokovic','2024-06-09',1,'Roland Garros, Paris','Standard',20.00,'French Open Tennis Match','2024-09-23 07:30:00',1);
+INSERT INTO `tickets` VALUES (1,1,50,'Manchester United VS Manchester City','2024-10-12',2,'Old Trafford, Manchester','Standard',60.00,'Premier League football match','2024-09-20 08:34:00',1,'onsale'),(2,2,30,'Sky Tour','2024-11-05',1,'Ho Chi Minh City','VIP',45.00,'Concert by Sơn Tùng M-TP','2024-09-22 03:00:00',1,'onsale'),(3,3,20,'FPT Flash VS SGP','2024-10-22',3,'FPT Arena, Hanoi','Standard',25.00,'Mobile Legends Championship','2024-09-25 04:12:00',1,'onsale'),(5,2,75,'Taylor Swift - The Eras Tour','2024-11-15',1,'Sophie Stadium, LA','VIP',90.00,'Taylor Swift Live Concert','2024-09-29 02:30:00',1,'onsale'),(6,3,60,'Lakers VS Warriors','2024-11-01',2,'Crypto.com Arena, LA','Standard',65.00,'NBA regular season match','2024-09-30 03:20:00',1,'onsale'),(7,1,40,'VietNam National Day Celebration','2024-09-02',2,'Ba Dinh Square, Hanoi','Free',0.00,'Cultural event celebrating Vietnam Independence','2024-08-10 00:55:00',1,'onsale'),(8,1,80,'Formula 1: Abu Dhabi Grand Prix','2024-12-09',1,'Yas Marina Circuit, Abu Dhabi','Premium',95.00,'F1 season finale','2024-09-20 05:15:00',0,'used'),(9,2,45,'Coldplay: Music of the Spheres Tour','2024-11-30',2,'Wembley Stadium, London','VIP',55.00,'Coldplay Live Concert','2024-09-25 07:32:00',1,'onsale'),(10,3,35,'World Cup Qualifier: Brazil VS Argentina','2024-11-18',1,'Maracanã Stadium, Rio de Janeiro','Standard',40.00,'FIFA World Cup 2026 Qualifier','2024-09-21 02:40:00',1,'onsale'),(11,1,25,'Vietnam Idol Finals','2024-10-29',2,'Saigon Convention Center','Standard',30.00,'Final of Vietnam Idol 2024','2024-09-23 09:00:00',1,'onsale'),(12,2,20,'Champions League: Barcelona VS PSG','2024-12-12',1,'Camp Nou, Barcelona','Standard',25.00,'Champions League Group Stage','2024-09-19 10:45:00',1,'onsale'),(13,3,50,'Super Bowl LVIII','2024-02-11',1,'Allegiant Stadium, Las Vegas','VIP',65.00,'NFL Championship game','2024-09-30 11:20:00',1,'onsale'),(14,1,35,'SEA Games Opening Ceremony','2024-11-29',3,'My Dinh National Stadium, Hanoi','Standard',40.00,'SEA Games 2024 Opening','2024-09-21 13:30:00',1,'onsale'),(15,2,70,'Rihanna Live: Anti World Tour','2024-12-10',2,'Madison Square Garden, New York','VIP',85.00,'Rihanna Concert','2024-09-18 15:10:00',1,'onsale'),(16,3,30,'Wimbledon Finals','2024-07-14',1,'All England Club, London','Standard',35.00,'Wimbledon Tennis Final','2024-09-22 04:10:00',1,'onsale'),(17,1,25,'Vietnam VS Thailand','2024-10-15',1,'Thống Nhất Stadium, HCMC','Standard',30.00,'AFF Championship Match','2024-09-27 02:50:00',1,'onsale'),(18,2,55,'Billie Eilish: Happier Than Ever Tour','2024-12-20',2,'The O2, London','VIP',65.00,'Billie Eilish Concert','2024-09-20 09:55:00',1,'onsale'),(19,3,40,'V-League Finals: Hanoi FC VS Hoang Anh Gia Lai','2024-11-20',1,'Hang Day Stadium, Hanoi','Standard',45.00,'V-League Finals','2024-09-28 05:45:00',1,'onsale'),(20,1,15,'French Open: Nadal VS Djokovic','2024-06-09',1,'Roland Garros, Paris','Standard',20.00,'French Open Tennis Match','2024-09-23 07:30:00',1,'onsale');
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -249,7 +309,7 @@ CREATE TABLE `transactions` (
                                 CONSTRAINT `transactions_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
                                 CONSTRAINT `transactions_ibfk_2` FOREIGN KEY (`buyer_id`) REFERENCES `users` (`id`),
                                 CONSTRAINT `transactions_ibfk_3` FOREIGN KEY (`seller_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -258,6 +318,7 @@ CREATE TABLE `transactions` (
 
 LOCK TABLES `transactions` WRITE;
 /*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
+INSERT INTO `transactions` VALUES (2,25,2,1,143.21,'Expense',NULL,NULL,'2024-10-23 05:53:57','2024-10-23 05:53:57'),(5,25,2,1,150.75,'Income',NULL,NULL,'2024-10-23 06:07:20','2024-10-23 06:07:19');
 /*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -281,6 +342,9 @@ CREATE TABLE `users` (
                          `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
                          `verified_email` tinyint(1) DEFAULT '0',
                          `user_image` varchar(255) DEFAULT NULL,
+                         `is_online` tinyint(1) DEFAULT '0',
+                         `last_seen` datetime DEFAULT CURRENT_TIMESTAMP,
+                         `is_agency` tinyint(1) DEFAULT '0',
                          PRIMARY KEY (`id`),
                          KEY `role_id` (`role`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -292,7 +356,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'John Doe','john_doe','password123','john@example.com','123456789','123 Main St','user','active','2024-09-30 09:51:51',0,'https://th.bing.com/th/id/OIP.nMIr-nB5v0rbPzWEJzeZcQHaE7?https://th.bing.com/th/id/OIP.U5rs3o2TurXbKw5UAH2rAgAAAA?w=210&h=180&c=7&r=0&o=5&dpr=1.1&pid=1.7'),(2,'Jane','jane_seller','password456','jane@example.com','987654321','456 Elm St','staff','active','2024-09-30 09:51:51',0,'https://th.bing.com/th/id/OIP.nMIr-nB5v0rbPzWEJzeZcQHaE7?w=264&h=180&c=7&r=0&o=5&dpr=1.1&pid=1.7'),(3,'ADMIN','admin_user','admin789','admin@example.com','123123123','789 Oak St','admin','active','2024-09-30 09:51:51',1,'https://th.bing.com/th/id/OIP.nMIr-nB5v0rbPzWEJzeZcQHaE7?w=264&h=180&c=7&r=0&o=5&dpr=1.1&pid=1.7'),(14,'Tri dz','trinmse183033@fpt.edu.vn_google','trinmse183033@fpt.edu.vn_password','trinmse183033@fpt.edu.vn',NULL,NULL,'user','active','2024-10-01 06:09:30',1,NULL),(15,'Tri','minhtrifptu@gmail.com_google','minhtrifptu@gmail.com_password','minhtrifptu@gmail.com',NULL,NULL,'user','active','2024-10-01 08:11:28',1,NULL),(16,'Siuuuuu','tridz','Aa@123456','minhtri10504@gmail.com','0938132218',NULL,'user','active','2024-10-03 15:19:47',1,NULL);
+INSERT INTO `users` VALUES (1,'John Doe','john_doe','password123','john@example.com','123456789','123 Main St','staff','active','2024-09-30 09:51:51',1,'https://th.bing.com/th/id/OIP.nMIr-nB5v0rbPzWEJzeZcQHaE7?https://th.bing.com/th/id/OIP.U5rs3o2TurXbKw5UAH2rAgAAAA?w=210&h=180&c=7&r=0&o=5&dpr=1.1&pid=1.7',0,'2024-10-22 10:32:07',0),(2,'Jane','jane_seller','password456','jane@example.com','987654321','456 Elm St','staff','active','2024-09-30 09:51:51',0,'https://th.bing.com/th/id/OIP.nMIr-nB5v0rbPzWEJzeZcQHaE7?w=264&h=180&c=7&r=0&o=5&dpr=1.1&pid=1.7',0,'2024-10-22 10:32:07',0),(3,'ADMIN','admin_user','admin789','admin@example.com','123123123','789 Oak St','admin','active','2024-09-30 09:51:51',1,'https://th.bing.com/th/id/OIP.nMIr-nB5v0rbPzWEJzeZcQHaE7?w=264&h=180&c=7&r=0&o=5&dpr=1.1&pid=1.7',0,'2024-10-22 10:32:07',0),(14,'Tri dz','trinmse183033@fpt.edu.vn_google','trinmse183033@fpt.edu.vn_password','trinmse183033@fpt.edu.vn',NULL,NULL,'user','active','2024-10-01 06:09:30',1,NULL,0,'2024-10-22 10:32:07',0),(15,'Tri','minhtrifptu@gmail.com_google','minhtrifptu@gmail.com_password','minhtrifptu@gmail.com',NULL,NULL,'user','active','2024-10-01 08:11:28',1,NULL,0,'2024-10-22 10:32:07',0),(16,'Siuuuuu','tridz','Aa@123456','minhtri10504@gmail.com','0938132218',NULL,'user','active','2024-10-03 15:19:47',1,NULL,0,'2024-10-22 10:32:07',0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -305,4 +369,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-20 21:07:05
+-- Dump completed on 2024-10-23 13:13:42
