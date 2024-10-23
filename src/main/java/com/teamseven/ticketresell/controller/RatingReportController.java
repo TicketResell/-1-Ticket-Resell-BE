@@ -9,6 +9,7 @@ import com.teamseven.ticketresell.entity.RatingEntity;
 import com.teamseven.ticketresell.entity.ReportEntity;
 import com.teamseven.ticketresell.repository.OrderRepository;
 import com.teamseven.ticketresell.repository.RatingRepository;
+import com.teamseven.ticketresell.repository.ReportRepository;
 import com.teamseven.ticketresell.service.impl.RatingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,8 @@ public class RatingReportController {
 
     @Autowired
     private ReportConverter reportConverter;
+    @Autowired
+    private ReportRepository reportRepository;
 
 
     @PostMapping
@@ -86,7 +89,8 @@ public class RatingReportController {
         ReportEntity reportEntity = reportConverter.toEntity(reportDTO);
         reportEntity.setCreatedDate(LocalDateTime.now());
         reportEntity.setStatus("pending");
-        return ResponseEntity.ok("This rating was deleted successfully.");
+        reportRepository.save(reportEntity);
+        return ResponseEntity.ok("This report was post successfully.");
     }
 }
 

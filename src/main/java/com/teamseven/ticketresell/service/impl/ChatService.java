@@ -77,37 +77,32 @@ public class ChatService implements IChatService {
 
     @Override
     public List<ConversationDTO> getConversationsByUserId(Long userId) {
-        // Lấy danh sách các tin nhắn của người dùng từ repository
         List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findByUser1OrUser2(userId, userId);
 
-        // Tạo danh sách để chứa các ConversationDTO
-        Map<Long, ConversationDTO> conversationMap = new HashMap<>();
+        List<ConversationDTO> conversationDTOS = new ArrayList<>();
 
         for (ChatMessageEntity chatMessageEntity : chatMessageEntities) {
             Long otherUserId = chatMessageEntity.getUser1().equals(userId) ? chatMessageEntity.getUser2() : chatMessageEntity.getUser1();
 
-            // Kiểm tra xem cuộc hội thoại đã tồn tại trong bản đồ chưa
-            ConversationDTO conversationDTO = conversationMap.get(otherUserId);
+            // Tạo một ConversationDTO mới
+            ConversationDTO conversationDTO = new ConversationDTO();
 
-            if (conversationDTO == null) {
-                // Tạo một ConversationDTO mới nếu chưa có
-                conversationDTO = new ConversationDTO();
-                conversationDTO.setUsers(Map.of(userId, otherUserId)); // Lưu trữ người dùng trong cuộc hội thoại
-                conversationDTO.setUnreadCount(0); // Khởi tạo số tin nhắn chưa đọc
-                conversationMap.put(otherUserId, conversationDTO); // Thêm vào bản đồ
-            }
+            // Tạo danh sách userId và otherUserId
+            List<Long> users = new ArrayList<>();
+            users.add(userId);
+            users.add(otherUserId);
+            conversationDTO.setUsers(users);
 
-            // Cập nhật nội dung tin nhắn cuối cùng
+
             conversationDTO.setLastMessage(chatMessageEntity.getMessageContent());
 
             // Cập nhật số lượng tin nhắn chưa đọc
-            if (!chatMessageEntity.getRead()) {
-                conversationDTO.setUnreadCount(conversationDTO.getUnreadCount() + 1);
-            }
+            conversationDTO.setUnreadCount(chatMessageEntity.getRead() ? 0 : 1);
+
+            conversationDTOS.add(conversationDTO);
         }
 
-        // Chuyển đổi từ Map sang List và trả về
-        return new ArrayList<>(conversationMap.values());
+        //
+        return conversationDTOS;
     }
-
 }

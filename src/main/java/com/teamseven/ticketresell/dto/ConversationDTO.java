@@ -1,9 +1,9 @@
 package com.teamseven.ticketresell.dto;
 
-import java.util.Map;
+import java.util.List;
 
 public class ConversationDTO {
-    private Map<Long, Long> users;
+    private List<Long> users;
     private int unreadCount;
     private String lastMessage;
 
@@ -23,11 +23,11 @@ public class ConversationDTO {
         this.lastMessage = lastMessage;
     }
 
-    public Map<Long, Long> getUsers() {
+    public List<Long> getUsers() {
         return users;
     }
 
-    public void setUsers(Map<Long, Long> users) {
+    public void setUsers(List<Long> users) {
         this.users = users;
     }
 }
