@@ -132,7 +132,7 @@ public class OrderService {
                 .orElseThrow(() -> new IllegalArgumentException("Order not found!"));
         // Kiểm tra nếu trạng thái đơn hàng được cập nhật thành "complete"
         if ("completed".equalsIgnoreCase(orderStatus)) {
-            if (OrderEntity.PaymentStatus.paid.equals(order.getPaymentStatus())){
+            if (!OrderEntity.PaymentStatus.paid.equals(order.getPaymentStatus())){
                 order.setPaymentStatus(OrderEntity.PaymentStatus.paid);
                 transactionService.createBuyerTransaction(order);
             }
