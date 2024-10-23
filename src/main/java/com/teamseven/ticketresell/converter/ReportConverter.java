@@ -17,6 +17,7 @@ public class ReportConverter {
         entity.setReporterUserId(dto.getReporterUserId());
         entity.setReason(dto.getReason());
         entity.setStatus(dto.getStatus());
+        entity.setProductId(dto.getProductId());
         return entity;
     }
 
@@ -29,6 +30,7 @@ public class ReportConverter {
         dto.setReason(entity.getReason());
         dto.setStatus(entity.getStatus());
         dto.setReportDate(LocalDateTime.now());
+        dto.setProductId(entity.getProductId());
         return dto;
     }
 }
