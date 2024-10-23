@@ -41,11 +41,18 @@ public class RatingReportController {
 
     @PostMapping
     public ResponseEntity<?> createRating(@RequestBody RatingDTO ratingDTO) {
-        RatingEntity ratingEntity = ratingConverter.toEntity(ratingDTO);
-        ratingEntity.setCreatedDate(LocalDateTime.now());
-        RatingEntity savedRating = ratingRepository.save(ratingEntity);
-        return ResponseEntity.ok(ratingConverter.toDTO(savedRating));
+        try {
+            ratingDTO.setCreatedDate(LocalDateTime.now());
+            RatingEntity ratingEntity = ratingConverter.toEntity(ratingDTO);
+            RatingEntity savedRating = ratingRepository.save(ratingEntity);
+            return ResponseEntity.ok(ratingConverter.toDTO(savedRating));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
+
 //    // Tạo mới đánh giá
 //    @PostMapping
 //    public ResponseEntity<RatingEntity> createRating(@RequestBody RatingEntity rating) {

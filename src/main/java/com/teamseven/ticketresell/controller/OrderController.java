@@ -68,6 +68,14 @@ public class OrderController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Have not any buy order yet!");
     }
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderEntity> getOrderById(@PathVariable Long orderId) {
+        // Tìm order theo orderId
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Order not found with id: " + orderId));
+        // Trả về order với đầy đủ thông tin của buyer, seller, ticket
+        return ResponseEntity.ok(order);
+    }
     @DeleteMapping("/{orderId}")
     public ResponseEntity<?> deleteOrder(@PathVariable Long orderId) {
         try {

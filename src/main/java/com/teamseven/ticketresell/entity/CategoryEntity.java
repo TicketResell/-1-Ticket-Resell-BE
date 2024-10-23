@@ -6,6 +6,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "categories")
@@ -18,6 +19,7 @@ public class CategoryEntity extends BaseEntity {
     private String categoryImage;
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<TicketEntity> tickets;
 
     public String getCategoryName() {

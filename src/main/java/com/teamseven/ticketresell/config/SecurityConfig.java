@@ -66,6 +66,7 @@ public class SecurityConfig {
                                 "/ws/**",
                                 "/chat-websocket/**",
                                 "/api/orders",
+                                "/api/orders/{orderId}",
                                 "/api/orders/create",
                                 "/api/orders/buyer/{buyerId}",
                                 "/api/orders/seller/{sellerId}",

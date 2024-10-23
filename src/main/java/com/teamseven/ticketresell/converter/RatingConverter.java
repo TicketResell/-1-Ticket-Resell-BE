@@ -23,7 +23,6 @@ public class RatingConverter {
         ratingDTO.setRatingScore(ratingEntity.getRatingScore());
         ratingDTO.setFeedback(ratingEntity.getFeedback());
         ratingDTO.setCreatedDate(ratingEntity.getCreatedDate());
-
         return ratingDTO;
     }
 
