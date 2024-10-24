@@ -1,8 +1,10 @@
 package com.teamseven.ticketresell.controller;
 
 import com.teamseven.ticketresell.entity.OrderEntity;
+import com.teamseven.ticketresell.entity.TicketEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
 import com.teamseven.ticketresell.repository.OrderRepository;
+import com.teamseven.ticketresell.repository.TicketRepository;
 import com.teamseven.ticketresell.service.impl.EmailService;
 import com.teamseven.ticketresell.service.impl.OrderService;
 import com.teamseven.ticketresell.service.impl.VnpayService;
@@ -11,10 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -29,6 +34,9 @@ public class VnpayController {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
 
     @Autowired
     private EmailService emailService;
@@ -122,24 +130,59 @@ public class VnpayController {
                         .orElseThrow(() -> new IllegalArgumentException("Order not found!"));
                 UserEntity buyer = order.getBuyer();
                 UserEntity seller = order.getSeller();
+                TicketEntity ticket = order.getTicket();
                 String buyerEmail = buyer.getEmail();
                 String sellerEmail = seller.getEmail();
+                LocalDate eventDate = ticket.getEventDate();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                String ticketDate = eventDate.format(formatter);
                 System.out.println("Buyer Email: " + buyerEmail);
                 System.out.println("Seller Email: " + sellerEmail);
-                String verificationLink = "http://localhost:8084/api/accounts/reset?email=";
-                String subjectBuyer = "Reset Password";
-                String body = "Please click the link below to reset your password:\n" + verificationLink;
-
-                emailService.sendEmail(buyerEmail, subjectBuyer, body);
-
+                String subject = "Order Completion";
+                String bodyBuyer = "Dear " + buyer.getFullname() + ",\n\n" +
+                        "Thank you for your order of the ticket for the event: " + ticket.getEventTitle() + ".\n" +
+                        "We are excited to see you at the event, which is scheduled for: " + ticketDate + " at " + ticket.getLocation() + ".\n\n" +
+                        "Please keep this email as confirmation of your order. Make sure to bring your ticket to the event.\n\n" +
+                        "If you have any questions or need further assistance, feel free to contact us.\n\n" +
+                        "Best regards,\n" +
+                        "The TicketResell System";
+                String bodySeller = "Dear " + seller.getFullname() + ",\n\n" +
+                        "We are pleased to inform you that your ticket for the event: " + ticket.getEventTitle() + " has been sold.\n" +
+                        "The event is scheduled for: " + ticketDate + " at " + ticket.getLocation() + ".\n\n" +
+                        "Please prepare and ensure that all necessary arrangements are in place for the buyer.\n" +
+                        "You will receive your payment soon after the event.\n\n" +
+                        "If you have any questions or need further assistance, feel free to contact us.\n\n" +
+                        "Best regards,\n" +
+                        "The TicketResell Team";
+                emailService.sendEmail(buyerEmail, subject, bodyBuyer);
+                emailService.sendEmail(sellerEmail, subject, bodySeller);
                 return ResponseEntity.ok().body(htmlResponse);
             } else {
                 orderService.updatePaymentStatus(orderId, "failed",vnpResponseCode,vnpTransactionNo);
                 return ResponseEntity.badRequest().body("Payment failed with code: " + vnpResponseCode);
             }
         } catch (Exception e) {
-
-            return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
+            try {
+                Long orderId = Long.parseLong(vnpayResponse.get("vnp_TxnRef"));
+                OrderEntity order = orderRepository.findById(orderId)
+                        .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                // Khôi phục số lượng vé và trạng thái
+                TicketEntity ticket = order.getTicket();
+                ticket.setQuantity(ticket.getQuantity() + order.getQuantity());
+                if (ticket.getQuantity() > 0) {
+                    ticket.setStatus("onsale");
+                }
+                ticketRepository.save(ticket);
+                // Xóa order
+                orderRepository.delete(order);
+                // Chuyển hướng về trang lỗi
+//                response.sendRedirect("https://frontend-url/error");
+                return null;  // Không cần trả về gì thêm vì đã chuyển trang
+            } catch (Exception ex) {
+                // Ghi log hoặc xử lý lỗi
+                ex.printStackTrace();
+                return ResponseEntity.status(500).body("Error occurred while handling exception.");
+            }
         }
     }
 
