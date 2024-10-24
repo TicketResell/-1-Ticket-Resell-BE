@@ -261,6 +261,10 @@ public class UserService implements IUserService {
     @Override
     public Boolean isFullData(Long id) {
         UserEntity user = findById(id);
+
+        if(user.getPhone() == null || user.getAddress() == null
+                || user.getFullname() == null) return false;
+        
         if(user.getPhone().isEmpty() || user.getAddress().isEmpty()
                 || user.getFullname().isEmpty()) return false;
         return true;
