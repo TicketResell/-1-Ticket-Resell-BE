@@ -1,6 +1,8 @@
 package com.teamseven.ticketresell.entity;
 
 import jakarta.persistence.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -41,7 +43,16 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "order_method", nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderMethod orderMethod; // Phương thức thanh toán
+    @Column(name = "refund_deadline")
+    private LocalDateTime  refundDeadline;
 
+    public LocalDateTime  getRefundDeadline() {
+        return refundDeadline;
+    }
+
+    public void setRefundDeadline(LocalDateTime  refundDeadline) {
+        this.refundDeadline = refundDeadline;
+    }
     public enum OrderStatus {
         pending,shipping,received, completed, cancelled
     }

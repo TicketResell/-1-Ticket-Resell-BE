@@ -1,5 +1,9 @@
 package com.teamseven.ticketresell.controller;
 
+import com.teamseven.ticketresell.entity.OrderEntity;
+import com.teamseven.ticketresell.entity.UserEntity;
+import com.teamseven.ticketresell.repository.OrderRepository;
+import com.teamseven.ticketresell.service.impl.EmailService;
 import com.teamseven.ticketresell.service.impl.OrderService;
 import com.teamseven.ticketresell.service.impl.VnpayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,11 @@ public class VnpayController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private EmailService emailService;
     // Chuỗi ký bí mật từ file cấu hình
     @Value("${vnpay.hash_secret}")
     private String vnpHashSecret;
@@ -48,22 +57,12 @@ public class VnpayController {
             String vnpResponseCode = vnpayResponse.get("vnp_ResponseCode");
             String vnpTransactionNo = vnpayResponse.get("vnp_TransactionNo");
             String vnpSecureHash = vnpayResponse.get("vnp_SecureHash");
-            // Kiểm tra chữ ký bảo mật
-//            String rawData = buildRawData(vnpayResponse);
-//            System.out.println("RawData: " + rawData);
-//            String generatedSecureHash = hmacSHA512(vnpHashSecret, rawData);
-//            System.out.println("Generated SecureHash: " + generatedSecureHash);
-//            System.out.println("vnp_SecureHash: " + vnpSecureHash);
-//            if (!hmacSHA512(vnpHashSecret, rawData).equals(vnpSecureHash)) {
-//                throw new IllegalArgumentException("Invalid signature!");
-//            }
-            // Kiểm tra mã phản hồi của VNPay
+       // Kiểm tra mã phản hồi của VNPay
             Long orderId = null;
             if ("00".equals(vnpResponseCode)) {
                 // Thanh toán thành công, cập nhật trạng thái đơn hàng
                 orderId = Long.parseLong(vnpayResponse.get("vnp_TxnRef"));
-                orderService.updatePaymentStatus(
-                        orderId, "paid", vnpResponseCode, vnpTransactionNo);
+                orderService.updatePaymentStatus(orderId, "paid", vnpResponseCode, vnpTransactionNo);
                 String htmlResponse = String.format(
                         "<!DOCTYPE html>\n"
                                 + "<html lang=\"en\">\n"
@@ -119,12 +118,27 @@ public class VnpayController {
                                 + "    </div>\n"
                                 + "</body>\n"
                                 + "</html>");
+                OrderEntity order = orderRepository.findById(orderId)
+                        .orElseThrow(() -> new IllegalArgumentException("Order not found!"));
+                UserEntity buyer = order.getBuyer();
+                UserEntity seller = order.getSeller();
+                String buyerEmail = buyer.getEmail();
+                String sellerEmail = seller.getEmail();
+                System.out.println("Buyer Email: " + buyerEmail);
+                System.out.println("Seller Email: " + sellerEmail);
+                String verificationLink = "http://localhost:8084/api/accounts/reset?email=";
+                String subjectBuyer = "Reset Password";
+                String body = "Please click the link below to reset your password:\n" + verificationLink;
+
+                emailService.sendEmail(buyerEmail, subjectBuyer, body);
+
                 return ResponseEntity.ok().body(htmlResponse);
             } else {
                 orderService.updatePaymentStatus(orderId, "failed",vnpResponseCode,vnpTransactionNo);
                 return ResponseEntity.badRequest().body("Payment failed with code: " + vnpResponseCode);
             }
         } catch (Exception e) {
+
             return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
         }
     }
