@@ -114,7 +114,7 @@ public class VnpayController {
                                 + "    <div class=\"container\">\n"
                                 + "        <h1>Payment Successfully!</h1>\n"
                                 + "        <p>Your order is on the way. Thanks for your order!</p>\n"
-                                + "        <a href=\"/login\">Back</a>\n"
+                                + "        <a href=\"http://localhost:3000/customer\">Back</a>\n"
                                 + "    </div>\n"
                                 + "</body>\n"
                                 + "</html>");
