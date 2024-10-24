@@ -4,6 +4,7 @@ import com.teamseven.ticketresell.entity.OrderEntity;
 import com.teamseven.ticketresell.entity.TicketEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
 import com.teamseven.ticketresell.repository.OrderRepository;
+import com.teamseven.ticketresell.repository.TicketRepository;
 import com.teamseven.ticketresell.service.impl.EmailService;
 import com.teamseven.ticketresell.service.impl.OrderService;
 import com.teamseven.ticketresell.service.impl.VnpayService;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -32,6 +34,9 @@ public class VnpayController {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
 
     @Autowired
     private EmailService emailService;
@@ -157,8 +162,27 @@ public class VnpayController {
                 return ResponseEntity.badRequest().body("Payment failed with code: " + vnpResponseCode);
             }
         } catch (Exception e) {
-
-            return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
+            try {
+                Long orderId = Long.parseLong(vnpayResponse.get("vnp_TxnRef"));
+                OrderEntity order = orderRepository.findById(orderId)
+                        .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+                // Khôi phục số lượng vé và trạng thái
+                TicketEntity ticket = order.getTicket();
+                ticket.setQuantity(ticket.getQuantity() + order.getQuantity());
+                if (ticket.getQuantity() > 0) {
+                    ticket.setStatus("onsale");
+                }
+                ticketRepository.save(ticket);
+                // Xóa order
+                orderRepository.delete(order);
+                // Chuyển hướng về trang lỗi
+//                response.sendRedirect("https://frontend-url/error");
+                return null;  // Không cần trả về gì thêm vì đã chuyển trang
+            } catch (Exception ex) {
+                // Ghi log hoặc xử lý lỗi
+                ex.printStackTrace();
+                return ResponseEntity.status(500).body("Error occurred while handling exception.");
+            }
         }
     }
 
