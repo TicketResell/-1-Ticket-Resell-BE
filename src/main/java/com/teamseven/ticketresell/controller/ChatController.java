@@ -3,8 +3,10 @@ package com.teamseven.ticketresell.controller;
 import com.teamseven.ticketresell.dto.ChatMessageDTO;
 import com.teamseven.ticketresell.dto.ConversationDTO;
 import com.teamseven.ticketresell.repository.ChatMessageRepository;
+import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.ChatService;
 import com.teamseven.ticketresell.service.impl.UserService;
+import org.slf4j.ILoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -28,12 +30,24 @@ public class ChatController {
     @Autowired
     private UserService userService;
 
-    // Gửi tin nhắn qua WebSocket
     @MessageMapping("/sendMessage")
     @SendTo("/topic/messages")
     public ChatMessageDTO sendMessage(ChatMessageDTO message) {
-        return chatService.sendMessage(message);
+        if (message == null || message.getUser1_id() == null || message.getUser2_id() == null || message.getMessageContent() == null) {
+            throw new IllegalArgumentException("Invalid message data");
+        }
+
+        // Log thông điệp
+        System.out.println("Received message: {}" + message);
+
+        try {
+            return chatService.sendMessage(message);
+        } catch (Exception e) {
+            System.out.println("Error sending message");
+            throw new RuntimeException("Failed to send message");
+        }
     }
+
 
     // Lấy lịch sử chat qua WebSocket
     @MessageMapping("/chat/history")

@@ -12,6 +12,7 @@ import com.teamseven.ticketresell.repository.RatingRepository;
 import com.teamseven.ticketresell.repository.ReportRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.*;
+import com.teamseven.ticketresell.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,7 +87,8 @@ public class StaffController {
 
         try {
             userService.banUser(id);
-        } catch (UsernameNotFoundException e) {
+
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("404 NOT FOUND");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
