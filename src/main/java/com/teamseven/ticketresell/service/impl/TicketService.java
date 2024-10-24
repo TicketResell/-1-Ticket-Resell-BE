@@ -121,4 +121,9 @@ public class TicketService {
         ticketRepository.save(ticket);
         return null;
     }
+
+    public String showTicketName(long id){
+        TicketEntity ticket= findTicketById(id).orElse(null);
+        return ticket.getEventTitle();
+    }
 }

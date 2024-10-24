@@ -1,11 +1,15 @@
 package com.teamseven.ticketresell.dto;
-import java.time.LocalDateTime;
 
 public class OrderDTO {
     private Long id;
     private Long buyerId;
     private Long sellerId;
     private Long ticketId;
+
+    //for showing items:
+    private String buyerName;
+    private String sellerName;
+    private String ticketName;
 
     private int quantity;
     private double totalAmount;
@@ -93,6 +97,30 @@ public class OrderDTO {
 
     public void setOrderMethod(String orderMethod) {
         this.orderMethod = orderMethod;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
+    }
+
+    public void setTicketName(String ticketName) {
+        this.ticketName = ticketName;
+    }
+
+    public void setBuyerName(String buyerName) {
+        this.buyerName = buyerName;
+    }
+
+    public String getBuyerName() {
+        return buyerName;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public String getTicketName() {
+        return ticketName;
     }
 }
 

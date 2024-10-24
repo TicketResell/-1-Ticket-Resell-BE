@@ -2,6 +2,8 @@ package com.teamseven.ticketresell.converter;
 
 import com.teamseven.ticketresell.dto.ConversationDTO;
 import com.teamseven.ticketresell.entity.ChatMessageEntity;
+import com.teamseven.ticketresell.service.impl.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -9,6 +11,9 @@ import java.util.List;
 
 @Component
 public class GetConversationByChatList {
+    @Autowired
+    private UserService userService;
+
     public ConversationDTO createConversation(List<ChatMessageEntity> chatMessageEntities) {
         List<Long> users = new ArrayList<>();
         ConversationDTO conversationDTO = new ConversationDTO();
@@ -33,6 +38,7 @@ public class GetConversationByChatList {
 
         conversationDTO.setUsers(users);
         conversationDTO.setUnreadCount(unreadCount);
+        conversationDTO.setUser2FullName(userService.getFullNameByID(users.getLast()));
 
         return conversationDTO;
     }

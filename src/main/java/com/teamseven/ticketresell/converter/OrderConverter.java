@@ -3,6 +3,8 @@ import com.teamseven.ticketresell.dto.OrderDTO;
 import com.teamseven.ticketresell.entity.OrderEntity;
 import com.teamseven.ticketresell.repository.TicketRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
+import com.teamseven.ticketresell.service.impl.TicketService;
+import com.teamseven.ticketresell.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +14,14 @@ public class OrderConverter {
     private UserRepository userRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private TicketRepository ticketRepository;
+
+    @Autowired
+    private TicketService ticketService;
+
     // Chuyển đổi từ OrderEntity sang OrderDTO
     public OrderDTO toDTO(OrderEntity orderEntity) {
         OrderDTO orderDTO = new OrderDTO();
@@ -26,6 +35,12 @@ public class OrderConverter {
         orderDTO.setOrderMethod(orderEntity.getOrderMethod().name()); // Lấy tên enum
         orderDTO.setOrderStatus(orderEntity.getOrderStatus().name()); // Lấy tên enum
         orderDTO.setPaymentStatus(orderEntity.getPaymentStatus().name());
+
+
+        //thêm thông tin cho front-end:
+        orderDTO.setBuyerName(userService.getFullNameByID(orderEntity.getBuyer().getId()));
+        orderDTO.setSellerName(userService.getFullNameByID(orderEntity.getSeller().getId()));
+        orderDTO.setTicketName(ticketService.showTicketName(orderEntity.getTicket().getId()));
         return orderDTO;
     }
 

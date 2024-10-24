@@ -248,13 +248,12 @@ public class UserService implements IUserService {
     @Override
     public String getUserNameByID(Long id) {
        UserEntity user = userRepository.findById(id).orElse(null);
-       return user.getFullname();
+       return user.getUsername();
     }
 
     @Override
     public String getFullNameByID(Long id) {
-        UserEntity user = new UserEntity();
-        userRepository.findById(id).orElse(null);
+        UserEntity user = userRepository.findById(id).orElse(null);
         return user.getFullname();
     }
 
@@ -264,7 +263,7 @@ public class UserService implements IUserService {
 
         if(user.getPhone() == null || user.getAddress() == null
                 || user.getFullname() == null) return false;
-        
+
         if(user.getPhone().isEmpty() || user.getAddress().isEmpty()
                 || user.getFullname().isEmpty()) return false;
         return true;
