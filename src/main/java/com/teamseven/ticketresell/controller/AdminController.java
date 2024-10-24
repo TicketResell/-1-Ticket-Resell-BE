@@ -15,6 +15,8 @@ import com.teamseven.ticketresell.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,12 +48,20 @@ public class AdminController {
     // Cho coi full account bao gồm admin
     @GetMapping("/view-accounts")
     public ResponseEntity<?> getAccounts() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || userService.getUserRoleByUsername(authentication.getName()).equals("user")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
         List<UserEntity> accounts = userRepository.findAll();
         return ResponseEntity.ok(accounts.stream().map(accountConverter::toDTO).toList());
     }
 
     @PutMapping("/promote/{id}")
     public ResponseEntity<?> updateUser(@PathVariable("id") Long id, @RequestBody Map<String, String> request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || !userService.getUserRoleByUsername(authentication.getName()).equals("admin")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
         try {
             String role = request.get("role");
             if (!"admin".equalsIgnoreCase(role) && !"staff".equalsIgnoreCase(role)) {
@@ -70,6 +80,10 @@ public class AdminController {
     }
     @GetMapping("/count-orders")
     public ResponseEntity<?> countOrders() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || !userService.getUserRoleByUsername(authentication.getName()).equals("admin")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
         try {
             long orderCount = orderRepository.count();
             return ResponseEntity.ok(orderCount);
@@ -80,6 +94,10 @@ public class AdminController {
 
     @GetMapping("/all-orders")
     public ResponseEntity<?> getAllOrders() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || !userService.getUserRoleByUsername(authentication.getName()).equals("admin")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
         try {
             List<OrderEntity> orders = orderRepository.findAll();
             if (orders != null) {
@@ -91,12 +109,20 @@ public class AdminController {
         }
     }
     @GetMapping("/get-number-of-user")
-    public ResponseEntity<Integer> getNumberOfUser() {
+    public ResponseEntity<?> getNumberOfUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || !userService.getUserRoleByUsername(authentication.getName()).equals("admin")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
         int users = userService.countUser();
         return ResponseEntity.ok(users);
     }
     @PutMapping("/update-service-fee/{orderId}")
     public ResponseEntity<?> updateServiceFee(@PathVariable Long orderId, @RequestBody Map<String, Double> request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || !userService.getUserRoleByUsername(authentication.getName()).equals("admin")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
         try {
             // Tìm Order theo orderId
             OrderEntity order = orderRepository.findById(orderId)

@@ -93,11 +93,17 @@ public class RatingReportController {
     //create report
     @PostMapping("/create-report")
     public ResponseEntity<?> createReport(@RequestBody ReportDTO reportDTO) {
+        try {
         ReportEntity reportEntity = reportConverter.toEntity(reportDTO);
         reportEntity.setCreatedDate(LocalDateTime.now());
         reportEntity.setStatus("pending");
         reportRepository.save(reportEntity);
         return ResponseEntity.ok("This report was post successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
 }
 
