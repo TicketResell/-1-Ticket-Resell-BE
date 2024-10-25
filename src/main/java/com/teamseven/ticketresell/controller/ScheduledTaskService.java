@@ -1,5 +1,6 @@
 package com.teamseven.ticketresell.controller;
 
+import com.teamseven.ticketresell.dto.OrderDTO;
 import com.teamseven.ticketresell.entity.OrderEntity;
 import com.teamseven.ticketresell.entity.TicketEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
@@ -7,6 +8,7 @@ import com.teamseven.ticketresell.repository.OrderRepository;
 import com.teamseven.ticketresell.repository.TicketRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.EmailService;
+import com.teamseven.ticketresell.service.impl.OrderService;
 import com.teamseven.ticketresell.service.impl.TicketService;
 import com.teamseven.ticketresell.service.impl.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class ScheduledTaskService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private OrderService orderService;
 
 //    // Tác vụ tự động khởi động
 //    @Scheduled(fixedRate = 15000) //miliseconds
@@ -149,6 +154,8 @@ public class ScheduledTaskService {
                             "Best regards,\n" +
                             "The TicketResell Team";
                     emailService.sendEmail(order.getBuyer().getEmail(), subject, body2);
+
+                    OrderDTO dto = orderService.updateOrderStatusForRefund(order.getId(),"cancelled");
 
 
                 }

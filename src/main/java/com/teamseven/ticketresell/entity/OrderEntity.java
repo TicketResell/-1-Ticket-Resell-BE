@@ -49,10 +49,10 @@ public class OrderEntity extends BaseEntity {
     @Column(name ="send_deadline")
     private LocalDateTime  sendDeadline;
 
-    @Column(name = "is_seller_warn", nullable = false, columnDefinition = "BIT")
+    @Column(name = "is_seller_warn", columnDefinition = "BIT")
     private Boolean isSellerWarn;
 
-    @Column(name = "is_buyer_warn", nullable = false, columnDefinition = "BIT")
+    @Column(name = "is_buyer_warn", columnDefinition = "BIT")
     private Boolean isBuyerWarn;
 
 
