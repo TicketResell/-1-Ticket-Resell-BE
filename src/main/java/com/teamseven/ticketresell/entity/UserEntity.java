@@ -44,6 +44,9 @@ public class UserEntity extends BaseEntity {
     @Column(name = "last_seen")
     private LocalDateTime lastSeen;
 
+    @Column(name = "violation_warning")
+    private short violationWarning;
+
     public enum Role {
         user, staff, admin
     }
@@ -148,5 +151,13 @@ public class UserEntity extends BaseEntity {
 
     public void setOnline(boolean online) {
         isOnline = online;
+    }
+
+    public short getViolationWarning() {
+        return violationWarning;
+    }
+
+    public void setViolationWarning(short violationWarning) {
+        this.violationWarning = violationWarning;
     }
 }

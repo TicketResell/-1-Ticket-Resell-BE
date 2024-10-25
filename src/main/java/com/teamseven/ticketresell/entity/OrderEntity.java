@@ -46,6 +46,16 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "refund_deadline")
     private LocalDateTime  refundDeadline;
 
+    @Column(name ="send_deadline")
+    private LocalDateTime  sendDeadline;
+
+    @Column(name = "is_seller_warn", nullable = false, columnDefinition = "BIT")
+    private Boolean isSellerWarn;
+
+    @Column(name = "is_buyer_warn", nullable = false, columnDefinition = "BIT")
+    private Boolean isBuyerWarn;
+
+
     public LocalDateTime  getRefundDeadline() {
         return refundDeadline;
     }
@@ -138,5 +148,29 @@ public class OrderEntity extends BaseEntity {
 
     public void setOrderMethod(OrderMethod orderMethod) {
         this.orderMethod = orderMethod;
+    }
+
+    public LocalDateTime getSendDeadline() {
+        return sendDeadline;
+    }
+
+    public void setSendDeadline(LocalDateTime sendDeadline) {
+        this.sendDeadline = sendDeadline;
+    }
+
+    public Boolean getSellerWarn() {
+        return isSellerWarn;
+    }
+
+    public void setSellerWarn(Boolean sellerWarn) {
+        isSellerWarn = sellerWarn;
+    }
+
+    public Boolean getBuyerWarn() {
+        return isBuyerWarn;
+    }
+
+    public void setBuyerWarn(Boolean buyerWarn) {
+        isBuyerWarn = buyerWarn;
     }
 }

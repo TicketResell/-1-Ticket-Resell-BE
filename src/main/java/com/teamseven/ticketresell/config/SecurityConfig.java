@@ -78,13 +78,9 @@ public class SecurityConfig {
                                 "/api/ratings",
                                 "/api/ratings/create-report",
                                 "/api/ratings/seller/{sellerId}",
-                                "/api/ratings/{rateId}"
-//                                "/api/admin/view-accounts",
-//                                "/api/admin/get-number-of-user",
-//                                "/api/admin/promote/{id}",
-//                                "/api/admin/all-orders",
-//                                "/api/admin/count-orders",
-//                                "/api/admin/update-service-fee/{orderId}"
+                                "/api/ratings/{rateId}",
+                                "api/accounts/is-full-data/{id}",
+                                "api/accounts/profile/{username}"
                         ).permitAll() // Cho phép các endpoint không cần xác thực
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các yêu cầu khác
                 )
