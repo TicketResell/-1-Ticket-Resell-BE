@@ -89,6 +89,17 @@ public class ScheduledTaskService {
                 user.setStatus("banned");
                 userRepository.save(user);
                 userRepository.flush();
+
+                //Làm cái mail thông báo
+                String sellerMail = user.getEmail();
+                String subject = "Notice of Terms of Service Violation and Permanent Account Ban";
+                String body = "Dear " + user.getEmail() + ",\n\n" +
+                        "Following a thorough review, we have identified that your account has violated the Terms of Service of TicketResell. According to our policies, severe violations may lead to a permanent account ban.\n\n" +
+                        "Due to these violations, your account has been permanently suspended and cannot be restored. You will no longer have access to the account or any associated services under this account.\n\n" +
+                        "Thank you for using TicketResell, and we regret any inconvenience this may cause.\n\n" +
+                        "Best regards,\n" +
+                        "The TicketResell Team";
+                emailService.sendEmail(sellerMail, subject, body);
             }
         }
     }
@@ -97,20 +108,20 @@ public class ScheduledTaskService {
     public void autoSetOrderStatusWhenSellerNotSendTicket(){
         List<OrderEntity> orders = orderRepository.findAll();
         for (OrderEntity order : orders) {
-            if(order.getOrderStatus() == OrderEntity.OrderStatus.pending && order.getSendDeadline() ==null){
-                order.setSendDeadline(LocalDateTime.now());
+            if(order.getOrderStatus() == OrderEntity.OrderStatus.pending && order.getSendDeadline() ==null && order.getOrderMethod().equals((OrderEntity.OrderMethod.COD))){
+                order.setSendDeadline(LocalDateTime.now().plusDays(7));
                 orderRepository.save(order);
                 orderRepository.flush();
             }
             if(order.getSendDeadline()!=null) {
-                if (order.getSendDeadline().isBefore(LocalDateTime.now()) && !order.getSellerWarn()) { //chưa cảnh cáo
+                if (order.getSendDeadline().isBefore(LocalDateTime.now()) && !order.getSellerWarn() && order.getOrderStatus().equals(OrderEntity.OrderStatus.pending)) { //chưa cảnh cáo
                     order.setOrderStatus(OrderEntity.OrderStatus.cancelled);
                     //Làm cái mail chửi tk bán
                     String sellerMail = order.getSeller().getEmail();
                     String subject = "Order Completion";
                     String body = "Dear " + order.getSeller().getFullname() + ",\n\n" +
                             "We noticed that you have not sent the ticket for your order in time. Therefore, we have canceled this order due to your non-compliance.\n\n" +
-                            "Please be aware that repeated violations may lead to account suspension or ban.\n\n" +
+                            "Please be aware that repeated violations may lead to account suspension or get a permanent ban.\n\n" +
                             "If you believe this was a mistake, or if you need assistance, please contact our support team as soon as possible.\n\n" +
                             "Best regards,\n" +
                             "The TicketResell Team";
@@ -129,6 +140,17 @@ public class ScheduledTaskService {
                     catch (NullPointerException e) {
                         System.err.println("Error updating seller violation warning: " + e.getMessage());
                     }
+                    //start refund
+                    String body2 = "Dear " + order.getBuyer().getFullname() + ",\n\n" +
+                            "We regret to inform you that your order has been canceled because the seller did not send the ticket on time.\n\n" +
+                            "If payment has already been made, please rest assured that we are processing your refund, which will be credited back to your account as soon as possible.\n\n" +
+                            "We apologize for the inconvenience this may have caused and appreciate your understanding.\n\n" +
+                            "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+                            "Best regards,\n" +
+                            "The TicketResell Team";
+                    emailService.sendEmail(order.getBuyer().getEmail(), subject, body2);
+
+
                 }
             }
         }
