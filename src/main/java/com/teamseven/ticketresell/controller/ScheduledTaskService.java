@@ -6,6 +6,7 @@ import com.teamseven.ticketresell.entity.UserEntity;
 import com.teamseven.ticketresell.repository.OrderRepository;
 import com.teamseven.ticketresell.repository.TicketRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
+import com.teamseven.ticketresell.service.impl.EmailService;
 import com.teamseven.ticketresell.service.impl.TicketService;
 import com.teamseven.ticketresell.service.impl.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class ScheduledTaskService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 
 //    // Tác vụ tự động khởi động
 //    @Scheduled(fixedRate = 15000) //miliseconds
@@ -102,7 +106,15 @@ public class ScheduledTaskService {
                 if (order.getSendDeadline().isBefore(LocalDateTime.now()) && !order.getSellerWarn()) { //chưa cảnh cáo
                     order.setOrderStatus(OrderEntity.OrderStatus.cancelled);
                     //Làm cái mail chửi tk bán
-
+                    String sellerMail = order.getSeller().getEmail();
+                    String subject = "Order Completion";
+                    String body = "Dear " + order.getSeller().getFullname() + ",\n\n" +
+                            "We noticed that you have not sent the ticket for your order in time. Therefore, we have canceled this order due to your non-compliance.\n\n" +
+                            "Please be aware that repeated violations may lead to account suspension or ban.\n\n" +
+                            "If you believe this was a mistake, or if you need assistance, please contact our support team as soon as possible.\n\n" +
+                            "Best regards,\n" +
+                            "The TicketResell Team";
+                    emailService.sendEmail(sellerMail, subject, body);
                     //cảnh cáo +1
                     order.setSellerWarn(true);
                     orderRepository.save(order);
