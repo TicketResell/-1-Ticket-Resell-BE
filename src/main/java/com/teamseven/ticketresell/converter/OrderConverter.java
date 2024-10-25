@@ -56,6 +56,8 @@ public class OrderConverter {
         orderEntity.setServiceFee(orderDTO.getServiceFee());
         orderEntity.setOrderStatus(OrderEntity.OrderStatus.valueOf(orderDTO.getOrderStatus())); // Chuyển từ String sang enum
         orderEntity.setPaymentStatus(OrderEntity.PaymentStatus.valueOf(orderDTO.getPaymentStatus()));
+        if(orderEntity.getSellerWarn()==null) orderEntity.setSellerWarn(false);
+        if(orderEntity.getBuyerWarn()==null) orderEntity.setBuyerWarn(false);
         return orderEntity;
     }
 }

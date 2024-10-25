@@ -109,11 +109,21 @@ public class ScheduledTaskService {
         }
     }
 
+    public boolean orderConditions(OrderEntity order){
+        if(order.getOrderMethod().equals(OrderEntity.OrderMethod.COD) && !order.getPaymentStatus().equals(OrderEntity.PaymentStatus.failed)) {
+            return true;
+        }
+        if(order.getOrderMethod().equals(OrderEntity.OrderMethod.vnpay) && order.getPaymentStatus().equals(OrderEntity.PaymentStatus.paid)) {
+            return true;
+        }
+        return false;
+    }
+
     @Scheduled(fixedRate = 3600000)//1 hour
     public void autoSetOrderStatusWhenSellerNotSendTicket(){
         List<OrderEntity> orders = orderRepository.findAll();
         for (OrderEntity order : orders) {
-            if(order.getOrderStatus() == OrderEntity.OrderStatus.pending && order.getSendDeadline() ==null && order.getOrderMethod().equals((OrderEntity.OrderMethod.COD))){
+            if(order.getOrderStatus() == OrderEntity.OrderStatus.pending && order.getSendDeadline() ==null && orderConditions(order)) {
                 order.setSendDeadline(LocalDateTime.now().plusDays(7));
                 orderRepository.save(order);
                 orderRepository.flush();
