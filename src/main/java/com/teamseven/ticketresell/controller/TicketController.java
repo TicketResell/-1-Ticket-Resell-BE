@@ -61,7 +61,7 @@ public class TicketController {
         TicketEntity existing = ticketRepository.findById(id);
 
         if (existing != null) {
-            return ResponseEntity.ok(ticketConverter.toDTO(existing));
+            return ResponseEntity.ok(existing);
         }
 
         // if user not exist, return 404

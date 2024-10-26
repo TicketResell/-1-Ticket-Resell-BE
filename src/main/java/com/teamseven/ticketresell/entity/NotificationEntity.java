@@ -8,12 +8,9 @@ import jakarta.persistence.*;
 public class NotificationEntity extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "userID", nullable = false)
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne
-    @JoinColumn(name = "orderID", nullable = false)
-    private OrderEntity order;
 
     @Column(name = "message", nullable = false)
     private String message;
@@ -40,14 +37,6 @@ public class NotificationEntity extends BaseEntity {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public OrderEntity getOrder() {
-        return order;
-    }
-
-    public void setOrder(OrderEntity order) {
-        this.order = order;
     }
 
     public NotificationType getNotificationType() {
