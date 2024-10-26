@@ -52,7 +52,7 @@ public class TicketController {
                 ticketRepository.save(ticket);
             }
         }
-        return ResponseEntity.ok(finalList.stream().map(ticketConverter::toDTO).toList());
+        return ResponseEntity.ok(finalList);
     }
     // Lấy vé theo ID
     @GetMapping("/id/{id}")
@@ -105,7 +105,7 @@ public class TicketController {
             }
         }
         if (result != null && !result.isEmpty()) {
-            return ResponseEntity.ok(result.stream().map(ticketConverter::toDTO).toList());
+            return ResponseEntity.ok(result);
         }
 
         // Nếu không tìm thấy vé, trả về 404
@@ -121,7 +121,7 @@ public class TicketController {
         List<TicketEntity> tickets = ticketRepository.findByCategoryIdAndEventTitleContainingIgnoreCase(categoryId, eventTitle);
 
         if (tickets != null && !tickets.isEmpty()) {
-            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());
+            return ResponseEntity.ok(tickets);
         }
 
         // Nếu không tìm thấy vé, trả về 404
@@ -137,7 +137,7 @@ public class TicketController {
         List<TicketEntity> tickets = ticketRepository.findByCategoryIdAndEventTitleContainingIgnoreCase(categoryId, eventTitle);
 
         if (tickets != null && !tickets.isEmpty()) {
-            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());
+            return ResponseEntity.ok(tickets);
         }
 
         // Nếu không tìm thấy vé, trả về 404
@@ -153,7 +153,7 @@ public class TicketController {
         // Tìm kiếm vé dựa trên ngày và tiêu đề sự kiện
         List<TicketEntity> tickets = ticketService.searchDateAndTitle(date, eventTitle);
         if (tickets != null && !tickets.isEmpty()) {
-            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());
+            return ResponseEntity.ok(tickets);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for this date search: " + eventTitle);
     }
@@ -162,7 +162,7 @@ public class TicketController {
     public ResponseEntity<?> getUsedTicketsByUserId(@PathVariable Long userId) {
         List<TicketEntity> tickets = ticketRepository.findBySeller_IdAndStatus(userId, "onsale");
         if (tickets != null && !tickets.isEmpty()) {
-            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());
+            return ResponseEntity.ok(tickets);
         }
 
         // Nếu không tìm thấy vé, trả về 404
@@ -209,7 +209,7 @@ public class TicketController {
     public ResponseEntity<?> searchTickets(@PathVariable("term") String term) {
         List<TicketEntity> tickets = ticketService.searchTickets(term);
         if (tickets != null && !tickets.isEmpty()) {
-            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
+            return ResponseEntity.ok(tickets);  // Trả về message "empty ticket" nếu không tìm thấy vé
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No ticket found for "+ term );  // Trả về danh sách vé tìm thấy
     }
@@ -218,7 +218,7 @@ public class TicketController {
     public ResponseEntity<?> getUpcomingTickets() {
         List<TicketEntity> tickets = ticketService.getUpcomingTickets();
         if (tickets != null && !tickets.isEmpty()) {
-            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
+            return ResponseEntity.ok(tickets);  // Trả về message "empty ticket" nếu không tìm thấy vé
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
     }
@@ -226,7 +226,7 @@ public class TicketController {
     public ResponseEntity<?> getAscPriceTickets() {
         List<TicketEntity> tickets = ticketService.getTicketsSortedBySalePriceAsc();
         if (tickets != null && !tickets.isEmpty()) {
-            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
+            return ResponseEntity.ok(tickets);  // Trả về message "empty ticket" nếu không tìm thấy vé
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
     }
@@ -234,7 +234,7 @@ public class TicketController {
     public ResponseEntity<?> getDescPriceTickets() {
         List<TicketEntity> tickets = ticketService.getTicketsSortedBySalePriceDesc();
         if (tickets != null && !tickets.isEmpty()) {
-            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
+            return ResponseEntity.ok(tickets);  // Trả về message "empty ticket" nếu không tìm thấy vé
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
     }
@@ -242,24 +242,11 @@ public class TicketController {
     public ResponseEntity<?> getDateTickets(@PathVariable("date") LocalDate date) {
         List<TicketEntity> tickets = ticketService.getUpcomingTickets(date);
         if (tickets != null && !tickets.isEmpty()) {
-            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());  // Trả về message "empty ticket" nếu không tìm thấy vé
+            return ResponseEntity.ok(tickets);  // Trả về message "empty ticket" nếu không tìm thấy vé
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
     }
     // API phân trang với RequestBody không DTO
-    @PostMapping("/pagination")
-    public ResponseEntity<?> getTicketsWithPagination(@RequestBody Map<String, Integer> request) {
-        int page = request.get("page");
-        int size = request.get("size");
-
-        Page<TicketEntity> tickets = ticketService.getTicketsWithPagination(page, size);
-
-        if (tickets.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tickets will come soon!" );  // Trả về danh sách vé tìm thấy
-        }
-
-        return ResponseEntity.ok(tickets);  // Trả về danh sách vé phân trang
-    }
     @PostMapping("/checkValidTicket/{id}")
     public ResponseEntity<?> checkValidTicket(@PathVariable String id) {
         Long tickID;
