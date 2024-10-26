@@ -172,4 +172,17 @@ public class ScheduledTaskService {
             }
         }
     }
+    @Scheduled(fixedRate = 3600000) // 1 giờ (3600000 milliseconds)
+    public void checkAndSetAgencyStatus() {
+        List<UserEntity> sellers = userRepository.findAll();
+        for (UserEntity seller : sellers) {
+            // Đếm số đơn hàng "completed" của seller
+            int completedOrders = orderRepository.countBySellerAndOrderStatus(seller, OrderEntity.OrderStatus.completed);
+            if (completedOrders >= 15 && !seller.isAgency()) {
+                // Nếu seller có đủ 15 đơn hàng và chưa là agency, cập nhật isAgency thành true
+                seller.setAgency(true);
+                userRepository.save(seller);
+            }
+        }
+    }
 }

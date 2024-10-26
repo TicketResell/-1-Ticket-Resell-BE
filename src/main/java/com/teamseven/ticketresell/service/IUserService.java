@@ -30,4 +30,5 @@ public interface IUserService {
     LocalDateTime lastSeen(Long id);
     void banUser(Long id);
     int countUser();
+    UserEntity setUserAgency(Long id);
 }

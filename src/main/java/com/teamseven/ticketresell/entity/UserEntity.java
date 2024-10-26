@@ -47,6 +47,17 @@ public class UserEntity extends BaseEntity {
     @Column(name = "violation_warning")
     private short violationWarning;
 
+    @Column(name ="is_agency")
+    private boolean isAgency;
+
+    public boolean isAgency() {
+        return isAgency;
+    }
+
+    public void setAgency(boolean agency) {
+        isAgency = agency;
+    }
+
     public enum Role {
         user, staff, admin
     }
