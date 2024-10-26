@@ -227,6 +227,16 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
+    // Update Agency
+    @PutMapping("/agency/{userId}")
+    public ResponseEntity<?> editAgency(@PathVariable Long userId) {
+        try {
+            UserEntity updatedUser = userService.setUserAgency(userId);
+            return ResponseEntity.ok("User ID " + userId + " is now set as agency.");
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
 
 
     // Login with Google Oauth

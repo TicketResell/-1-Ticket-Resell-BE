@@ -311,5 +311,13 @@ public class UserService implements IUserService {
         return count;
     }
 
+    @Override
+    public UserEntity setUserAgency(Long id) {
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + id));
+        user.setAgency(true);
+        return userRepository.save(user);
+    }
+
 
 }

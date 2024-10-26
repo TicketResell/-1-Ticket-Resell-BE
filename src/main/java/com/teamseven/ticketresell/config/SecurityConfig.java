@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 // Public API
                                 "/api/accounts/login",
+                                "/api/accounts/agency/{userId}",
                                 "/api/accounts/register",
                                 "/api/accounts/verify",
                                 "/api/accounts/reset",
