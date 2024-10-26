@@ -97,8 +97,15 @@ public class TicketController {
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<?> getTicketsByCategory(@PathVariable Long categoryId) {
         List<TicketEntity> tickets = ticketRepository.findByCategoryId(categoryId);
-        if (tickets != null && !tickets.isEmpty()) {
-            return ResponseEntity.ok(tickets.stream().map(ticketConverter::toDTO).toList());
+
+        List<TicketEntity> result = new ArrayList<>();
+        for (TicketEntity ticket: tickets){
+            if(ticket.getEventDate().isAfter(LocalDate.now())){
+                result.add(ticket);
+            }
+        }
+        if (result != null && !result.isEmpty()) {
+            return ResponseEntity.ok(result.stream().map(ticketConverter::toDTO).toList());
         }
 
         // Nếu không tìm thấy vé, trả về 404
