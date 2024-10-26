@@ -197,7 +197,7 @@ public class OrderService {
         double profit = 0;
         for (OrderEntity order : orders) {
             if (order.getOrderStatus().equals(OrderEntity.OrderStatus.completed)) {
-                profit = profit + order.getServiceFee();
+                profit = profit + order.getServiceFee()*order.getTotalAmount();
             }
         }
         return profit;
