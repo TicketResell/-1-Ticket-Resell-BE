@@ -68,7 +68,7 @@ public class OrderService {
         OrderEntity orderEntity = orderConverter.toEntity(orderDTO);
         // Lưu vào cơ sở dữ liệu
         orderEntity.setCreatedDate(LocalDateTime.now());
-        if (seladdler.isAgency()) {
+        if (seller.isAgency()) {
             orderEntity.setServiceFee(0.05); // Nếu là agency, set phí dịch vụ thành 0.03
         } else {
             orderEntity.setServiceFee(0.1); // Nếu không phải agency, set phí dịch vụ thành 0.05
