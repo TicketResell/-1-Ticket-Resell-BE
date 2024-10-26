@@ -127,5 +127,10 @@ public class OrderController {
             return ResponseEntity.status(500).body("Error occurred: " + e.getMessage());
         }
     }
+    @GetMapping("/seller/count/{sellerId}")
+    public ResponseEntity<?> countOrdersBySellerId(@PathVariable Long sellerId) {
+        long orderCount = orderRepository.countBySeller_Id(sellerId);
+        return ResponseEntity.ok(orderCount);
+    }
 }
 
