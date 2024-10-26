@@ -64,7 +64,7 @@ public class RatingReportController {
 
     // Lấy đánh giá theo userId (seller)
     // Lấy đánh giá theo sellerId
-    @GetMapping("/seller/{sellerId}")
+    @PostMapping("/seller/{sellerId}")
     public ResponseEntity<?> getRatingsBySellerId(@PathVariable Long sellerId) {
         // Lấy danh sách các orders có sellerId đó
         List<OrderEntity> orders = orderRepository.findBySeller_Id(sellerId);
