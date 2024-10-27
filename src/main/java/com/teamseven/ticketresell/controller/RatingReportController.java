@@ -77,7 +77,7 @@ public class RatingReportController {
                 }
             }
             if (!ratings.isEmpty()) {
-                return ResponseEntity.ok(ratings.stream().map(ratingConverter::toDTO).toList());
+                return ResponseEntity.ok(ratings);
             }
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No rating found for this seller!");
