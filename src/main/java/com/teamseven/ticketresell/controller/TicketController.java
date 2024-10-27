@@ -121,13 +121,12 @@ public class TicketController {
         // Nếu không tìm thấy vé, trả về 404
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for this seller");
     }
-    @GetMapping("/onsale-seller/{sellerId}")
+    @GetMapping("/onsale/{sellerId}")
     public ResponseEntity<?> getTicketsOnsaleBySellerId(@PathVariable Long sellerId) {
         List<TicketEntity> tickets = ticketRepository.findBySeller_IdAndStatus(sellerId,"onsale");
         if (tickets != null && !tickets.isEmpty()) {
             return ResponseEntity.ok(tickets);
         }
-        // Nếu không tìm thấy vé, trả về 404
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for this seller");
     }
     @PostMapping("/category-search")

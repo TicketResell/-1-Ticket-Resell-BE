@@ -11,17 +11,14 @@ public class NotificationEntity extends BaseEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @Column(name = "title", nullable = false)
+    private String title;
 
     @Column(name = "message", nullable = false)
     private String message;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "notification_type", nullable = false)
-    private NotificationType notificationType;
-
-    public enum NotificationType {
-        REMINDER, ALERT
-    }
+    @Column(name = "is_global", nullable = false)
+    private boolean isGlobal;
 
     public UserEntity getUser() {
         return user;
@@ -29,6 +26,14 @@ public class NotificationEntity extends BaseEntity {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getMessage() {
@@ -39,11 +44,11 @@ public class NotificationEntity extends BaseEntity {
         this.message = message;
     }
 
-    public NotificationType getNotificationType() {
-        return notificationType;
+    public boolean isGlobal() {
+        return isGlobal;
     }
 
-    public void setNotificationType(NotificationType notificationType) {
-        this.notificationType = notificationType;
+    public void setGlobal(boolean global) {
+        isGlobal = global;
     }
 }
