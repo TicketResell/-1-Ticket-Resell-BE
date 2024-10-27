@@ -16,7 +16,7 @@ public class TicketEntity extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore  // Ngăn không serialize seller để tránh vòng lặp
+//    @JsonIgnore  // Ngăn không serialize seller để tránh vòng lặp
     private UserEntity seller;
 
     @Column(name = "price", nullable = false)
@@ -29,6 +29,7 @@ public class TicketEntity extends BaseEntity {
     private LocalDate eventDate;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity category;
 

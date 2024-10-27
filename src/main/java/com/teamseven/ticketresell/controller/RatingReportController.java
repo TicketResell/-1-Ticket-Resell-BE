@@ -64,7 +64,7 @@ public class RatingReportController {
 
     // Lấy đánh giá theo userId (seller)
     // Lấy đánh giá theo sellerId
-    @PostMapping("/seller/{sellerId}")
+    @GetMapping("/seller/{sellerId}")
     public ResponseEntity<?> getRatingsBySellerId(@PathVariable Long sellerId) {
         // Lấy danh sách các orders có sellerId đó
         List<OrderEntity> orders = orderRepository.findBySeller_Id(sellerId);
@@ -82,11 +82,59 @@ public class RatingReportController {
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No rating found for this seller!");
     }
+//    // Tính điểm trung bình của các đánh giá cho một seller
+//    @GetMapping("/average/{sellerId}")
+//    public ResponseEntity<?> calculateAverageRatingForSeller(@PathVariable Long sellerId) {
+//        List<RatingEntity> ratings = ratingRepository.findBySeller_Id(sellerId);
+//        double averageRating = ratings.stream()
+//                .mapToInt(RatingEntity::getRatingScore)
+//                .average()
+//                .orElse(0.0);
+//        return ResponseEntity.ok(averageRating);
+//    }
+
     // Xóa đánh giá
     @DeleteMapping("/{rateId}")
     public ResponseEntity<?> deleteRating(@PathVariable Long rateId) {
         ratingService.deleteRating(rateId);
         return ResponseEntity.ok("This rating was deleted successfully.");
+    }
+    @GetMapping("/total/{sellerId}")
+    public ResponseEntity<?> countRatingsBySellerId(@PathVariable Long sellerId) {
+        // Lấy danh sách các orders có sellerId đó
+        List<OrderEntity> orders = orderRepository.findBySeller_Id(sellerId);
+        if (orders != null && !orders.isEmpty()) {
+            int totalRatings = 0;
+            for (OrderEntity order : orders) {
+                List<RatingEntity> orderRatings = ratingRepository.findByOrder_Id(order.getId());
+                if (orderRatings != null) {
+                    totalRatings += orderRatings.size();
+                }
+            }
+            return ResponseEntity.ok(totalRatings);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No ratings found for this seller!");
+    }
+    @GetMapping("/average/{sellerId}")
+    public ResponseEntity<?> averageRatingBySellerId(@PathVariable Long sellerId) {
+        List<OrderEntity> orders = orderRepository.findBySeller_Id(sellerId);
+        if (orders != null && !orders.isEmpty()) {
+            List<RatingEntity> ratings = new ArrayList<>();
+            for (OrderEntity order : orders) {
+                List<RatingEntity> orderRatings = ratingRepository.findByOrder_Id(order.getId());
+                if (orderRatings != null) {
+                    ratings.addAll(orderRatings);
+                }
+            }
+            if (!ratings.isEmpty()) {
+                double averageRating = ratings.stream()
+                        .mapToInt(RatingEntity::getRatingScore)
+                        .average()
+                        .orElse(0.0);
+                return ResponseEntity.ok(averageRating);
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No ratings found for this seller!");
     }
 
 

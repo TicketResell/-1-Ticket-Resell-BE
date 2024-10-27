@@ -8,23 +8,14 @@ import jakarta.persistence.*;
 public class NotificationEntity extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "userID", nullable = false)
+    @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne
-    @JoinColumn(name = "orderID", nullable = false)
-    private OrderEntity order;
+    @Column(name = "title", nullable = false)
+    private String title;
 
     @Column(name = "message", nullable = false)
     private String message;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "notification_type", nullable = false)
-    private NotificationType notificationType;
-
-    public enum NotificationType {
-        REMINDER, ALERT
-    }
 
     public UserEntity getUser() {
         return user;
@@ -34,27 +25,19 @@ public class NotificationEntity extends BaseEntity {
         this.user = user;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getMessage() {
         return message;
     }
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public OrderEntity getOrder() {
-        return order;
-    }
-
-    public void setOrder(OrderEntity order) {
-        this.order = order;
-    }
-
-    public NotificationType getNotificationType() {
-        return notificationType;
-    }
-
-    public void setNotificationType(NotificationType notificationType) {
-        this.notificationType = notificationType;
     }
 }

@@ -1,5 +1,6 @@
 package com.teamseven.ticketresell.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ public class UserEntity extends BaseEntity {
 
     @Column(name = "username", nullable = false)
     private String username;
-
+    @JsonIgnore
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -19,7 +20,7 @@ public class UserEntity extends BaseEntity {
 
     @Column(name = "phone")
     private String phone;
-
+    @JsonIgnore
     @Column(name = "address")
     private String address;
 
@@ -37,13 +38,14 @@ public class UserEntity extends BaseEntity {
 
     @Column(name = "role", nullable = false)
     private String role;
-
+    @JsonIgnore
     @Column(name = "is_online")
     private boolean isOnline;
-
+    @JsonIgnore
     @Column(name = "last_seen")
     private LocalDateTime lastSeen;
 
+    @JsonIgnore
     @Column(name = "violation_warning")
     private short violationWarning;
 
