@@ -17,6 +17,7 @@ public class NotificationConverter {
         NotificationEntity entity = new NotificationEntity();
         entity.setTitle(dto.getTitle());
         entity.setMessage(dto.getMessage());
+        entity.setCreatedDate(dto.getCreatedDate());
         if (dto.getUserId() != null) {
             entity.setUser(userRepository.findById(dto.getUserId()).orElse(null));
         }
