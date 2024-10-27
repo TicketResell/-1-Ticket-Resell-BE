@@ -8,7 +8,6 @@ public class NotificationDTO {
     private String title;
     private String message;
     private LocalDateTime createdDate;
-    private boolean isGlobal;
     private Long userId;
 
     // Getters và Setters
@@ -42,14 +41,6 @@ public class NotificationDTO {
 
     public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
-    }
-
-    public boolean isGlobal() {
-        return isGlobal;
-    }
-
-    public void setGlobal(boolean global) {
-        isGlobal = global;
     }
 
     public Long getUserId() {

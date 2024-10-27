@@ -25,37 +25,19 @@ public class NotificationService {
     @Autowired
     private NotificationConverter notificationConverter;
 
-    // Tạo thông báo
-    public NotificationDTO createNotification(NotificationDTO notificationDTO) {
-        UserEntity user = null;
-        if (notificationDTO.getUserId() != null) {
-            user = userRepository.findById(notificationDTO.getUserId())
-                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
-        }
-        NotificationEntity notification = notificationConverter.toEntity(notificationDTO, user);
-        NotificationEntity savedNotification = notificationRepository.save(notification);
-        return notificationConverter.toDTO(savedNotification);
+    public NotificationEntity createNotification(NotificationDTO dto) {
+        NotificationEntity notification = notificationConverter.toEntity(dto);
+        return notificationRepository.save(notification);
     }
 
-    // Xóa thông báo theo ID
-    public void deleteNotification(Long notificationId) {
-        if (!notificationRepository.existsById(notificationId)) {
-            throw new IllegalArgumentException("Notification not found");
-        }
-        notificationRepository.deleteById(notificationId);
-    }
-
-    // Lấy thông báo cho tất cả người dùng hoặc cho một người dùng cụ thể
-    public List<NotificationDTO> getNotifications(Long userId) {
-        List<NotificationEntity> notifications;
-        if (userId == null) {
-            notifications = notificationRepository.findAll();
+    public List<NotificationEntity> getNotificationsForUser(Long userId) {
+        if (userId != null) {
+            // Lấy thông báo cho user cụ thể và thông báo chung
+            return notificationRepository.findByUser_IdOrUserIsNull(userId);
         } else {
-            notifications = notificationRepository.findByIsGlobalTrue();
+            // Lấy tất cả thông báo chung
+            return notificationRepository.findByUserIsNull();
         }
-        return notifications.stream()
-                .map(notificationConverter::toDTO)
-                .collect(Collectors.toList());
     }
 }
 

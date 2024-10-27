@@ -69,6 +69,8 @@ public class SecurityConfig {
                                 "/chat/**",
                                 "/ws/**",
                                 "/chat-websocket/**",
+                                "/api/notifications",
+                                "/api/notifications/{userId}",
                                 "/api/orders",
                                 "/api/orders/seller/count/{sellerId}",
                                 "/api/orders/{orderId}",

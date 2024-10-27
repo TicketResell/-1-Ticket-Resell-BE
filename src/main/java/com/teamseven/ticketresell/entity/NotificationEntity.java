@@ -17,9 +17,6 @@ public class NotificationEntity extends BaseEntity {
     @Column(name = "message", nullable = false)
     private String message;
 
-    @Column(name = "is_global", nullable = false)
-    private boolean isGlobal;
-
     public UserEntity getUser() {
         return user;
     }
@@ -42,13 +39,5 @@ public class NotificationEntity extends BaseEntity {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public boolean isGlobal() {
-        return isGlobal;
-    }
-
-    public void setGlobal(boolean global) {
-        isGlobal = global;
     }
 }

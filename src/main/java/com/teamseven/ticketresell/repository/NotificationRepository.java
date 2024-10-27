@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<NotificationEntity, Long> {
-    List<NotificationEntity> findByUser(UserEntity user);
-    List<NotificationEntity> findByIsGlobalTrue();  // Lấy các thông báo toàn cầu
+    List<NotificationEntity> findByUser_IdOrUserIsNull(Long userId); // Lấy thông báo cho user cụ thể và thông báo chung
+    List<NotificationEntity> findByUserIsNull(); // Chỉ lấy thông báo chung
 }
 
