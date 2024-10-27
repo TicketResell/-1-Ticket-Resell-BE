@@ -52,6 +52,8 @@ public class SecurityConfig {
                                 "/api/accounts/update-password",
                                 "/api/accounts/login-google",
                                 "/api/tickets",
+                                "/api/tickets/seller/{sellerId}",
+                                "/api/tickets/onsale-seller/{sellerId}",
                                 "/api/tickets/id/{id}",
                                 "/api/tickets/saleprice-desc",
                                 "/api/tickets/saleprice-asc",

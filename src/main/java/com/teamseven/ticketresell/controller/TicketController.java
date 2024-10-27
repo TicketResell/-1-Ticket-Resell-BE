@@ -111,6 +111,25 @@ public class TicketController {
         // Nếu không tìm thấy vé, trả về 404
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for category ID: " + categoryId);
     }
+    @GetMapping("/seller/{sellerId}")
+    public ResponseEntity<?> getTicketsBySellerId(@PathVariable Long sellerId) {
+        List<TicketEntity> tickets = ticketRepository.findBySeller_Id(sellerId);
+
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets);
+        }
+        // Nếu không tìm thấy vé, trả về 404
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for this seller");
+    }
+    @GetMapping("/onsale-seller/{sellerId}")
+    public ResponseEntity<?> getTicketsOnsaleBySellerId(@PathVariable Long sellerId) {
+        List<TicketEntity> tickets = ticketRepository.findBySeller_IdAndStatus(sellerId,"onsale");
+        if (tickets != null && !tickets.isEmpty()) {
+            return ResponseEntity.ok(tickets);
+        }
+        // Nếu không tìm thấy vé, trả về 404
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No tickets found for this seller");
+    }
     @PostMapping("/category-search")
     public ResponseEntity<?> getTicketsByCategorySearch(@RequestBody Map<String, Object> request) {
         // Lấy categoryId và eventTitle từ request body dưới dạng Map
