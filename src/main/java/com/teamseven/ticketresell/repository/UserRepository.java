@@ -15,5 +15,4 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findById(long userID);
     // Tìm người dùng bằng email hoặc username
     UserEntity findByEmailOrUsername(String email, String username);
-//    String findFullNameById(long userID);
 }

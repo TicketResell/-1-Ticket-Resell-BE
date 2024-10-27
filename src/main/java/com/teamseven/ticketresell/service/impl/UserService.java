@@ -254,6 +254,7 @@ public class UserService implements IUserService {
     @Override
     public String getFullNameByID(Long id) {
         UserEntity user = userRepository.findById(id).orElse(null);
+        assert user != null;
         return user.getFullname();
     }
 

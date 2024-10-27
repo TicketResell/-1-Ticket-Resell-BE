@@ -11,8 +11,12 @@ import java.util.List;
 
 @Component
 public class GetConversationByChatList {
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+
+    public GetConversationByChatList(UserService userService) {
+        this.userService = userService;
+    }
 
     public ConversationDTO createConversation(List<ChatMessageEntity> chatMessageEntities) {
         List<Long> users = new ArrayList<>();
@@ -38,7 +42,7 @@ public class GetConversationByChatList {
 
         conversationDTO.setUsers(users);
         conversationDTO.setUnreadCount(unreadCount);
-        conversationDTO.setUser2FullName(userService.getFullNameByID(users.get(users.size() - 1)));
+        conversationDTO.setUser2FullName(userService.getFullNameByID(users.getLast()));
 
         return conversationDTO;
     }
