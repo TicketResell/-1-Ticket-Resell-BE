@@ -38,7 +38,7 @@ public class GetConversationByChatList {
 
         conversationDTO.setUsers(users);
         conversationDTO.setUnreadCount(unreadCount);
-        conversationDTO.setUser2FullName(userService.getFullNameByID(users.getLast()));
+        conversationDTO.setUser2FullName(userService.getFullNameByID(users.get(users.size() - 1)));
 
         return conversationDTO;
     }
