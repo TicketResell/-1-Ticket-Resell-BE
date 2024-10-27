@@ -37,8 +37,14 @@ public class NotificationController {
         }
     }
     @GetMapping("/{userId}")
-    public ResponseEntity<?> getNotifications(@RequestParam Long userId) {
-        List<NotificationEntity> notifications = notificationService.getNotificationsForUser(userId);
-        return ResponseEntity.ok(notifications);
+    public ResponseEntity<?> getNotifications(@PathVariable Long userId) {
+        try {
+            List<NotificationEntity> notifications = notificationService.getNotificationsForUser(userId);
+                return ResponseEntity.ok(notifications);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid data: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
+        }
     }
 }
