@@ -10,4 +10,5 @@ public interface IChatService {
     List<ChatMessageDTO> getChatHistory(Long chatId);
     List<ChatMessageDTO> getChatHistory(Long buyerId, Long sellerId);
     public List<ConversationDTO> getConversationsByUserId(Long userId);
+    Boolean setChatStatus(Long usr1, Long usr2);
 }

@@ -75,6 +75,10 @@ public class UserService implements IUserService {
             throw new RuntimeException("Email already exists");
         }
 
+        if(userRepository.findByPhone(userDTO.getPhone()) != null){
+            throw new RuntimeException("Phone already exists");
+        }
+
         UserEntity newUser = accountConverter.toEntity(userDTO);
         newUser.setCreatedDate(LocalDateTime.now());
         newUser.setRole("user");

@@ -119,4 +119,15 @@ public class ChatService implements IChatService {
         return conversationDTOS;
     }
 
+    @Override
+    public Boolean setChatStatus(Long usr1, Long usr2) {
+        List<ChatMessageEntity> entities = chatMessageRepository.findByUser1OrUser2(usr1, usr2);
+        for(ChatMessageEntity chatMessageEntity : entities) {
+            chatMessageEntity.setRead(true);
+        }
+        chatMessageRepository.saveAll(entities);
+        chatMessageRepository.flush();
+        return true;
+    }
+
 }

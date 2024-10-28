@@ -79,4 +79,12 @@ public class ChatController {
         // Trả về trạng thái của người dùng
         return isOnline ? "User " + userId + " is online." : "User " + userId + " is offline." + "last seen: " + lastSeen;
     }
+
+    @MessageMapping("/chat/set-hasRead-status")
+    @SendTo("/topic/read-status")
+    public Boolean getRead(Long userId, Long user2Id) {
+
+        // Trả về trạng thái của người dùng
+        return chatService.setChatStatus(userId,user2Id);
+    }
 }
