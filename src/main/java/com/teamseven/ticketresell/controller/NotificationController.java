@@ -47,4 +47,14 @@ public class NotificationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred: " + e.getMessage());
         }
     }
+    @GetMapping
+    public ResponseEntity<List<NotificationEntity>> getAllNotifications() {
+        List<NotificationEntity> notifications = notificationRepository.findAll();
+        return ResponseEntity.ok(notifications);
+    }
+    @DeleteMapping("/{notificationId}")
+    public ResponseEntity<?> deleteNotifications(@PathVariable Long notificationId) {
+        notificationRepository.deleteById(notificationId);
+        return ResponseEntity.ok("This notification was deleted successfully!");
+    }
 }

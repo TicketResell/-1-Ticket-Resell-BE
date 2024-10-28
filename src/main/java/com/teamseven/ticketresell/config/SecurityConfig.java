@@ -72,6 +72,7 @@ public class SecurityConfig {
                                 "/api/notifications",
                                 "/api/balance/{userId}",
                                 "/api/notifications/{userId}",
+                                "/api/notifications/{notificationId}",
                                 "/api/orders",
                                 "/api/orders/count-completed/{sellerId}",
                                 "/api/orders/seller/count/{sellerId}",
