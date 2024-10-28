@@ -172,7 +172,7 @@ public class ScheduledTaskService {
             }
         }
     }
-    @Scheduled(fixedRate = 3600000) // 1 giờ (3600000 milliseconds)
+    @Scheduled(fixedRate = 15000) // 1 giờ (3600000 milliseconds)
     public void checkAndSetAgencyStatus() {
         List<UserEntity> sellers = userRepository.findAll();
         for (UserEntity seller : sellers) {
@@ -182,7 +182,61 @@ public class ScheduledTaskService {
                 // Nếu seller có đủ 15 đơn hàng và chưa là agency, cập nhật isAgency thành true
                 seller.setAgency(true);
                 userRepository.save(seller);
+                userRepository.flush();
             }
         }
     }
+
+    @Scheduled(fixedRate = 15000)//1 hour
+    public void autoSetOrderStatusWhenReceiverBombing(){
+        List<OrderEntity> orders = orderRepository.findAll();
+        for (OrderEntity order : orders) {
+                if (!order.getBuyerWarn() && order.getOrderStatus().equals(OrderEntity.OrderStatus.orderbombing)) { //chưa cảnh cáo
+                    order.setOrderStatus(OrderEntity.OrderStatus.cancelled);
+                    //Làm cái mail chửi tk mua
+                    String buyerMail = order.getBuyer().getEmail();
+                    String subject = "Order Completion";
+                    String body = "Dear " + order.getBuyer().getFullname() + ",\n\n" +
+                            "We noticed that you have not received the ticket for your order in time. Therefore, we have canceled this order due to your non-compliance.\n\n" +
+                            "Please be aware that repeated violations may lead to account suspension or get a permanent ban.\n\n" +
+                            "If you believe this was a mistake, or if you need assistance, please contact our support team as soon as possible.\n\n" +
+                            "Best regards,\n" +
+                            "The TicketResell Team";
+                    emailService.sendEmail(buyerMail, subject, body);
+                    //cảnh cáo +1
+                    order.setBuyerWarn(true);
+                    orderRepository.save(order);
+                    orderRepository.flush();
+                    autoCallBackTicket(order);
+                    try {
+                        //câp nhật cảnh cáo vô database
+                        UserEntity buyer = userRepository.findById(order.getBuyer().getId()).orElse(null);
+                        buyer.setViolationWarning((short) (buyer.getViolationWarning() + 1));
+                        userRepository.save(buyer);
+                        userRepository.flush();
+                    }
+                    catch (NullPointerException e) {
+                        System.err.println("Error updating seller violation warning: " + e.getMessage());
+                    }
+                    //xin lỗi
+                    String body2 = "Dear " + order.getSeller().getFullname() + ",\n\n" +
+                            "We regret to inform you that your order has been canceled because the buyer did not recejved the ticket on time.\n\n" +
+                            "We will resend your ticket back to you as soon as possible\n\n" +
+                            "We apologize for the inconvenience this may have caused and appreciate your understanding.\n\n" +
+                            "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+                            "Best regards,\n" +
+                            "The TicketResell Team";
+                    emailService.sendEmail(order.getSeller().getEmail(), subject, body2);
+                }
+            }
+        }
+
+        public void autoCallBackTicket(OrderEntity order){
+        TicketEntity entity = ticketRepository.findById(order.getTicket().getId()).orElse(null);
+        if(order.getOrderStatus() == OrderEntity.OrderStatus.orderbombing && order.getBuyerWarn()){
+            entity.setQuantity(entity.getQuantity() + 1);
+            entity.setStatus(TicketEntity.Status.onsale.name());
+        }
+        }
 }
+

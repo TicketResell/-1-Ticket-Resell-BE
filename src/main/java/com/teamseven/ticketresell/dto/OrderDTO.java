@@ -14,9 +14,10 @@ public class OrderDTO {
     private int quantity;
     private double totalAmount;
     private double serviceFee;
-    private String paymentStatus;  // Enum dưới dạng String
-    private String orderStatus;    // Enum dưới dạng String
-    private String orderMethod;    // Enum dưới dạng String
+    private String paymentStatus;
+    private String orderStatus;
+    private String orderMethod;
+    private String shippingImg;
 
     // Getters và Setters
     public Long getId() {
@@ -99,6 +100,8 @@ public class OrderDTO {
         this.orderMethod = orderMethod;
     }
 
+
+
     public void setSellerName(String sellerName) {
         this.sellerName = sellerName;
     }
@@ -121,6 +124,14 @@ public class OrderDTO {
 
     public String getTicketName() {
         return ticketName;
+    }
+
+    public String getShippingImg() {
+        return shippingImg;
+    }
+
+    public void setShippingImg(String shippingImg) {
+        this.shippingImg = shippingImg;
     }
 }
 

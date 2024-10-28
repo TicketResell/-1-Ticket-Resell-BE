@@ -55,6 +55,9 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "is_buyer_warn", columnDefinition = "BIT")
     private Boolean isBuyerWarn;
 
+    @Column(name = "img_from_shipper")
+    private String imgShiper;
+
 
     public LocalDateTime  getRefundDeadline() {
         return refundDeadline;
@@ -64,7 +67,7 @@ public class OrderEntity extends BaseEntity {
         this.refundDeadline = refundDeadline;
     }
     public enum OrderStatus {
-        pending,shipping,received, completed, cancelled
+        pending,shipping,received, completed, cancelled, orderbombing
     }
 
     public enum PaymentStatus {
@@ -172,5 +175,13 @@ public class OrderEntity extends BaseEntity {
 
     public void setBuyerWarn(Boolean buyerWarn) {
         isBuyerWarn = buyerWarn;
+    }
+
+    public String getImgShiper() {
+        return imgShiper;
+    }
+
+    public void setImgShiper(String imgShiper) {
+        this.imgShiper = imgShiper;
     }
 }
