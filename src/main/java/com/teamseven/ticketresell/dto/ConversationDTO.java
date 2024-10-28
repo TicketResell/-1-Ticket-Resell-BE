@@ -1,5 +1,6 @@
 package com.teamseven.ticketresell.dto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,7 @@ public class ConversationDTO {
     private String user2FullName;
     private int unreadCount;
     private String lastMessage;
+    private LocalDateTime lastMessageTime;
 
     public int getUnreadCount() {
         return unreadCount;
@@ -59,5 +61,13 @@ public class ConversationDTO {
 
     public void setUser1(Long user1) {
         this.user1 = user1;
+    }
+
+    public LocalDateTime getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(LocalDateTime lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
     }
 }

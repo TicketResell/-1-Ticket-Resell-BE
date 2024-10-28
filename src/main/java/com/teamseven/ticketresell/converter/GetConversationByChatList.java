@@ -43,6 +43,7 @@ public class GetConversationByChatList {
             }
 
             lastMessage = chatMessageEntity.getMessageContent();
+            conversationDTO.setLastMessageTime(chatMessageEntity.getTimestamp());
         }
 
         conversationDTO.setUser1(user1);
