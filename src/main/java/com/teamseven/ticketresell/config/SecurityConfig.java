@@ -70,6 +70,7 @@ public class SecurityConfig {
                                 "/ws/**",
                                 "/chat-websocket/**",
                                 "/api/notifications",
+                                "/api/balance/{userId}",
                                 "/api/notifications/{userId}",
                                 "/api/orders",
                                 "/api/orders/seller/count/{sellerId}",
