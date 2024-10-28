@@ -30,6 +30,9 @@ public class ChatService implements IChatService {
     @Autowired
     private GetConversationByChatList getConversationByChatList;
 
+    @Autowired
+    private UserService userService;
+
 
     @Override
     public ChatMessageDTO sendMessage(ChatMessageDTO message) {
@@ -53,7 +56,7 @@ public class ChatService implements IChatService {
         System.out.println("Fetching chat history for userId: " + userId); // Log userId
 
         List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findByUser1OrUser2(userId, userId);
-        System.out.println("Found " + chatMessageEntities.size() + " messages for userId: " + userId); // Log số lượng tin nhắn tìm thấy
+        System.out.println("Found " + chatMessageEntities.size() + " messages for userId: " + userId);
 
 
         // Chuyển đổi danh sách ChatMessageEntity thành danh sách ChatMessageDTO
@@ -78,31 +81,46 @@ public class ChatService implements IChatService {
     @Override
     public List<ConversationDTO> getConversationsByUserId(Long userId) {
         List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findByUser1OrUser2(userId, userId);
-
         List<ConversationDTO> conversationDTOS = new ArrayList<>();
 
+        Map<Long, Integer> unreadCountMap = new HashMap<>();
+
+        // Duyệt qua các tin nhắn và cập nhật DTO cho từng otherUserId
         for (ChatMessageEntity chatMessageEntity : chatMessageEntities) {
             Long otherUserId = chatMessageEntity.getUser1().equals(userId) ? chatMessageEntity.getUser2() : chatMessageEntity.getUser1();
 
-            // Tạo một ConversationDTO mới
-            ConversationDTO conversationDTO = new ConversationDTO();
+            // Lấy hoặc khởi tạo ConversationDTO mới cho otherUserId
+            ConversationDTO conversationDTO = conversationDTOS.stream()
+                    .filter(dto -> dto.getUser2().containsKey(otherUserId) || dto.getUser1().containsKey(otherUserId))
+                    .findFirst()
+                    .orElse(new ConversationDTO());
 
-            // Tạo danh sách userId và otherUserId
-            List<Long> users = new ArrayList<>();
-            users.add(userId);
-            users.add(otherUserId);
-            conversationDTO.setUsers(users);
+            // Thiết lập user1 và user2 với thông tin (ID, fullName)
+            Map<Long, String> user1Map = new HashMap<>();
+            Map<Long, String> user2Map = new HashMap<>();
+            user1Map.put(userId, userService.getFullNameByID(userId));
+            user2Map.put(otherUserId, userService.getFullNameByID(otherUserId));
 
+            conversationDTO.setUser1(user1Map);
+            conversationDTO.setUser2(user2Map);
 
+            // Cập nhật tin nhắn cuối cùng
             conversationDTO.setLastMessage(chatMessageEntity.getMessageContent());
 
             // Cập nhật số lượng tin nhắn chưa đọc
-            conversationDTO.setUnreadCount(chatMessageEntity.getRead() ? 0 : 1);
+            int unreadCount = unreadCountMap.getOrDefault(otherUserId, 0);
+            if (!chatMessageEntity.getRead()) {
+                unreadCount++;
+            }
+            unreadCountMap.put(otherUserId, unreadCount);
+            conversationDTO.setUnreadCount(unreadCount);
 
-            conversationDTOS.add(conversationDTO);
+            // Thêm ConversationDTO vào danh sách nếu chưa tồn tại
+            if (!conversationDTOS.contains(conversationDTO)) {
+                conversationDTOS.add(conversationDTO);
+            }
         }
 
-        //
         return conversationDTOS;
     }
 }
