@@ -85,24 +85,24 @@ public class ChatService implements IChatService {
 
         Map<Long, Integer> unreadCountMap = new HashMap<>();
 
-        // Duyệt qua các tin nhắn và cập nhật DTO cho từng otherUserId
         for (ChatMessageEntity chatMessageEntity : chatMessageEntities) {
             Long otherUserId = chatMessageEntity.getUser1().equals(userId) ? chatMessageEntity.getUser2() : chatMessageEntity.getUser1();
 
-            // Lấy hoặc khởi tạo ConversationDTO mới cho otherUserId
+            // Kiểm tra xem ConversationDTO đã tồn tại cho otherUserId chưa
             ConversationDTO conversationDTO = conversationDTOS.stream()
-                    .filter(dto -> dto.getUser2().containsKey(otherUserId) || dto.getUser1().containsKey(otherUserId))
+                    .filter(dto -> dto.getUser1().equals(otherUserId) || dto.getUser2().equals(otherUserId))
                     .findFirst()
-                    .orElse(new ConversationDTO());
+                    .orElse(null);
 
-            // Thiết lập user1 và user2 với thông tin (ID, fullName)
-            Map<Long, String> user1Map = new HashMap<>();
-            Map<Long, String> user2Map = new HashMap<>();
-            user1Map.put(userId, userService.getFullNameByID(userId));
-            user2Map.put(otherUserId, userService.getFullNameByID(otherUserId));
-
-            conversationDTO.setUser1(user1Map);
-            conversationDTO.setUser2(user2Map);
+            // Nếu chưa tồn tại, khởi tạo ConversationDTO mới
+            if (conversationDTO == null) {
+                conversationDTO = new ConversationDTO();
+                conversationDTO.setUser1(userId);
+                conversationDTO.setUser1FullName(userService.getFullNameByID(userId));
+                conversationDTO.setUser2(otherUserId);
+                conversationDTO.setUser2FullName(userService.getFullNameByID(otherUserId));
+                conversationDTOS.add(conversationDTO);
+            }
 
             // Cập nhật tin nhắn cuối cùng
             conversationDTO.setLastMessage(chatMessageEntity.getMessageContent());
@@ -114,13 +114,9 @@ public class ChatService implements IChatService {
             }
             unreadCountMap.put(otherUserId, unreadCount);
             conversationDTO.setUnreadCount(unreadCount);
-
-            // Thêm ConversationDTO vào danh sách nếu chưa tồn tại
-            if (!conversationDTOS.contains(conversationDTO)) {
-                conversationDTOS.add(conversationDTO);
-            }
         }
 
         return conversationDTOS;
     }
+
 }
