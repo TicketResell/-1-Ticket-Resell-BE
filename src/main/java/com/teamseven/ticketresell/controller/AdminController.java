@@ -6,8 +6,10 @@ import com.teamseven.ticketresell.converter.UserConverter;
 import com.teamseven.ticketresell.dto.UserDTO;
 import com.teamseven.ticketresell.entity.OrderEntity;
 import com.teamseven.ticketresell.entity.RatingEntity;
+import com.teamseven.ticketresell.entity.TransactionEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
 import com.teamseven.ticketresell.repository.OrderRepository;
+import com.teamseven.ticketresell.repository.TransactionRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.OrderService;
 import com.teamseven.ticketresell.service.impl.RatingService;
@@ -43,6 +45,10 @@ public class AdminController {
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
+
 
 
     // Cho coi full account bao gồm admin
@@ -137,6 +143,22 @@ public class AdminController {
             order.setServiceFee(serviceFee);
             orderRepository.save(order);
             return ResponseEntity.ok("Updated done!");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @GetMapping("/transactions")
+    public ResponseEntity<?> getAllTransactions() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || !userService.getUserRoleByUsername(authentication.getName()).equals("admin")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+        try {
+        List<TransactionEntity> transactions = transactionRepository.findAll();
+        if (transactions != null && !transactions.isEmpty()) {
+            return ResponseEntity.ok(transactions);
+        }
+            return ResponseEntity.status(404).body("No transactions found");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
