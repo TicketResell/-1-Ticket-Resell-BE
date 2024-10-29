@@ -2,6 +2,7 @@ package com.teamseven.ticketresell.controller;
 
 import com.teamseven.ticketresell.dto.ChatMessageDTO;
 import com.teamseven.ticketresell.dto.ConversationDTO;
+import com.teamseven.ticketresell.entity.ChatMessageEntity;
 import com.teamseven.ticketresell.repository.ChatMessageRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.ChatService;
@@ -87,4 +88,20 @@ public class ChatController {
         // Trả về trạng thái của người dùng
         return chatService.setChatStatus(userId,user2Id);
     }
+   @PostMapping("/check-converstation")
+    public ResponseEntity<?> geExistConversations(@RequestParam Long userId, Long user2Id) {
+
+       List<ChatMessageDTO> dtos = chatService.getChatHistory(userId, user2Id);
+
+       ConversationDTO conversationDTO = new ConversationDTO();
+       if (dtos.isEmpty()) {
+           conversationDTO.setUser1(userId);
+           conversationDTO.setUser2(user2Id);
+           conversationDTO.setUser1FullName(userService.getFullNameByID(userId));
+           conversationDTO.setUser2FullName(userService.getFullNameByID(user2Id));
+           return ResponseEntity.ok(conversationDTO);
+       }
+      else return ResponseEntity.ok("Conversation exist, you can use WebSocket Module.");
+   }
+
 }
