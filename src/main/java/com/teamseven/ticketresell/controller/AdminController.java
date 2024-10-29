@@ -59,7 +59,7 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
         List<UserEntity> accounts = userRepository.findAll();
-        return ResponseEntity.ok(accounts.stream().map(accountConverter::toDTO).toList());
+        return ResponseEntity.ok(accounts);
     }
 
     @PutMapping("/promote/{id}")
@@ -107,7 +107,7 @@ public class AdminController {
         try {
             List<OrderEntity> orders = orderRepository.findAll();
             if (orders != null) {
-                return ResponseEntity.ok(orders.stream().map(orderConverter::toDTO).toList());
+                return ResponseEntity.ok(orders);
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Have not any order yet!");
         } catch (Exception e) {
