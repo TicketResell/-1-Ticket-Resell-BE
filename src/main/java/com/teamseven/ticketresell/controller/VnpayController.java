@@ -9,6 +9,7 @@ import com.teamseven.ticketresell.service.impl.EmailService;
 import com.teamseven.ticketresell.service.impl.OrderService;
 import com.teamseven.ticketresell.service.impl.VnpayService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.crypto.Mac;
@@ -19,7 +20,9 @@ import java.util.stream.Collectors;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
-import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 
 @RestController
@@ -176,8 +179,10 @@ public class VnpayController {
                 // Xóa order
                 orderRepository.delete(order);
                 // Chuyển hướng về trang lỗi
-//                response.sendRedirect("https://frontend-url/error");
-                return null;  // Không cần trả về gì thêm vì đã chuyển trang
+                String redirectUrl = "http://localhost:3000/order";
+                return ResponseEntity.status(HttpStatus.FOUND)
+                        .header(HttpHeaders.LOCATION, redirectUrl)
+                        .build();
             } catch (Exception ex) {
                 // Ghi log hoặc xử lý lỗi
                 ex.printStackTrace();
