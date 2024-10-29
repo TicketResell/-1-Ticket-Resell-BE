@@ -43,14 +43,23 @@ public class JwtUtil {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
+        long now = System.currentTimeMillis();
+        try {
+            // Adding a small delay to ensure different timestamps
+            Thread.sleep(1); // Sleep for 1 millisecond
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs))
+                .setIssuedAt(new Date(now))
+                .setExpiration(new Date(now + jwtExpirationInMs))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
+
+
 
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();

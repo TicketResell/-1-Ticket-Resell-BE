@@ -50,6 +50,7 @@ public class AccountController {
 
             // Tạo JWT nếu thông tin hợp lệ
             String jwt = jwtUtil.generateToken(userDTO.getId(), userDTO.getUsername(), userDTO.getEmail(), userDTO.getFullname(), userDTO.getUserImage(), userDTO.getRole());
+            System.out.println("JWT:" + jwt);
             return ResponseEntity.ok(new JwtResponse(jwt));
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());

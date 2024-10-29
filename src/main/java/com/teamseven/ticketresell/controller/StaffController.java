@@ -67,7 +67,6 @@ public class StaffController {
     @GetMapping("/get-all-report")
     public ResponseEntity<?> getRatingsByOrderId(@PathVariable Long orderId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         // Kiểm tra xác thực
         if (authentication == null || !authentication.isAuthenticated() || userService.getUserRoleByUsername(authentication.getName()).equals("user")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
