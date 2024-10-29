@@ -167,6 +167,13 @@ public class OrderService {
         if ("cancelled".equalsIgnoreCase(orderStatus)) {
             order.setOrderStatus(OrderEntity.OrderStatus.cancelled);
             // Kiểm tra nếu payment_status của order là "paid"
+            TicketEntity ticket = order.getTicket();
+            ticket.setQuantity(ticket.getQuantity() + order.getQuantity()); // Cộng lại số lượng vé
+            // Nếu số lượng vé sau khi hoàn lại lớn hơn 0, đặt trạng thái thành "onsale"
+            if (ticket.getQuantity() > 0) {
+                ticket.setStatus("onsale");
+            }
+            ticketRepository.save(ticket);
             if (OrderEntity.PaymentStatus.paid.equals(order.getPaymentStatus())) {
                 // Tạo transaction refund trả lại tiền cho buyer nếu đã thanh toán
                 transactionService.createRefundTransaction(order);
