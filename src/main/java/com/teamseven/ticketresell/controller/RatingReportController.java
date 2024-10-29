@@ -64,6 +64,11 @@ public class RatingReportController {
 
     // Lấy đánh giá theo userId (seller)
     // Lấy đánh giá theo sellerId
+    @GetMapping
+    public ResponseEntity<List<RatingEntity>> getAllRatings() {
+        List<RatingEntity> ratings = ratingService.getAllRatings();
+        return ResponseEntity.ok(ratings);
+    }
     @GetMapping("/seller/{sellerId}")
     public ResponseEntity<?> getRatingsBySellerId(@PathVariable Long sellerId) {
         // Lấy danh sách các orders có sellerId đó
@@ -92,7 +97,6 @@ public class RatingReportController {
 //                .orElse(0.0);
 //        return ResponseEntity.ok(averageRating);
 //    }
-
     // Xóa đánh giá
     @DeleteMapping("/{rateId}")
     public ResponseEntity<?> deleteRating(@PathVariable Long rateId) {

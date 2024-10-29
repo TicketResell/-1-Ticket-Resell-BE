@@ -76,6 +76,11 @@ public class OrderController {
         // Trả về order với đầy đủ thông tin của buyer, seller, ticket
         return ResponseEntity.ok(order);
     }
+    @GetMapping("/count-completed/{sellerId}")
+    public ResponseEntity<?> countCompletedOrdersBySellerId(@PathVariable Long sellerId) {
+        long completedOrderCount = orderRepository.countBySeller_IdAndOrderStatus(sellerId, OrderEntity.OrderStatus.completed);
+        return ResponseEntity.ok(completedOrderCount);
+    }
     @DeleteMapping("/{orderId}")
     public ResponseEntity<?> deleteOrder(@PathVariable Long orderId) {
         try {

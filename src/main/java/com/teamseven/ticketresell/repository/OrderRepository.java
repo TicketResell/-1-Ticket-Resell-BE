@@ -15,4 +15,6 @@ public interface OrderRepository extends JpaRepository<OrderEntity, Long> {
     int countBySellerAndOrderStatus(UserEntity seller, OrderEntity.OrderStatus orderStatus);
     long countBySeller_Id(Long sellerId); // Đếm số lượng order của seller
     List<OrderEntity> findByOrderStatusAndOrderMethodAndPaymentStatus(OrderEntity.OrderStatus orderStatus, OrderEntity.OrderMethod orderMethod, OrderEntity.PaymentStatus paymentStatus);
+    long countBySeller_IdAndOrderStatus(Long sellerId, OrderEntity.OrderStatus orderStatus);
+
 }

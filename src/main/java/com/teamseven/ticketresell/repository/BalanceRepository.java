@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BalanceRepository extends JpaRepository<BalanceEntity, Long> {
     BalanceEntity findByUser(UserEntity userEntity);
+    BalanceEntity findByUser_Id(Long userId);
+
 }
 
 
