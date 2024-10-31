@@ -102,8 +102,8 @@ public class ChatController {
         // Trả về trạng thái của người dùng
         return chatService.setChatStatus(userId,user2Id);
     }
-   @PostMapping("/check-converstation")
-    public ResponseEntity<?> geExistConversations(@RequestParam Long userId, Long user2Id) {
+   @PostMapping("/check-conversation/{userId}/{user2Id}")
+    public ResponseEntity<?> geExistConversations(@PathVariable Long userId,@PathVariable Long user2Id) {
 
        List<ChatMessageDTO> dtos = chatService.getChatHistory(userId, user2Id);
 
