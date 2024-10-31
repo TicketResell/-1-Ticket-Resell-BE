@@ -60,6 +60,7 @@ public class ShipCompletedController {
         }
         orderEntity.setImgShiper(img);
         orderEntity.setOrderStatus(OrderEntity.OrderStatus.received);
+        orderEntity.setPaymentStatus(OrderEntity.PaymentStatus.paid);
         orderEntity.setRefundDeadline(LocalDateTime.now().plusDays(7));
         orderRepository.save(orderEntity);
 
@@ -113,10 +114,8 @@ public class ShipCompletedController {
         }
 
         // Lấy tất cả các đơn hàng có trạng thái và phương thức thanh toán mong muốn
-        List<OrderEntity> orders = orderRepository.findByOrderStatusAndOrderMethodAndPaymentStatus(
-                OrderEntity.OrderStatus.shipping,
-                OrderEntity.OrderMethod.COD,
-                OrderEntity.PaymentStatus.paid
+        List<OrderEntity> orders = orderRepository.findByOrderStatus(
+                OrderEntity.OrderStatus.shipping
         );
         List<OrderDTO> dtos = new ArrayList<>();
         for (OrderEntity order : orders) {
