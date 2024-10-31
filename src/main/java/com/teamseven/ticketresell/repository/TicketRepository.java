@@ -22,4 +22,5 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
     List<TicketEntity> findByEventDateAfterAndEventTitleContainingIgnoreCaseOrderByEventDateAsc(LocalDate date, String eventTitle);
     List<TicketEntity> findAllByOrderBySalePriceAsc();  // Giá giảm giá tăng dần
     List<TicketEntity> findAllByOrderBySalePriceDesc(); // Giá giảm giá giảm dần
+    List<TicketEntity> findByTicketType(String ticketType);
 }

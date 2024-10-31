@@ -92,7 +92,8 @@ public class SecurityConfig {
                                 "/api/ratings/seller/{sellerId}",
                                 "/api/ratings/{rateId}",
                                 "api/accounts/is-full-data/{id}",
-                                "api/accounts/profile/{username}"
+                                "api/accounts/profile/{username}",
+                                "/api/tickets/search-ticket-/{type}/{name}"
                         ).permitAll() // Cho phép các endpoint không cần xác thực
                         .anyRequest().authenticated() // Yêu cầu xác thực cho các yêu cầu khác
                 )

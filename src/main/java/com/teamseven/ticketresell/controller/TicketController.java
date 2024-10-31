@@ -280,4 +280,24 @@ public class TicketController {
         else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(status);
 
     }
+
+    @GetMapping("/search-ticket-/{type}/{name}")
+    public ResponseEntity<?> searchTicketsByNameAndType(@PathVariable String type, @PathVariable String name) {
+        List<TicketEntity> ticketEntities = ticketRepository.findByTicketType(type);
+        List<TicketDTO> responseDTOs = new ArrayList<>();
+        if(ticketEntities ==null || ticketEntities.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No ticket found for "+ type );
+        }
+        else for (TicketEntity ticketEntity : ticketEntities) {
+            if (ticketEntity.getEventTitle().toLowerCase().contains(name.toLowerCase())) {
+               responseDTOs.add(ticketConverter.toDTO(ticketEntity));
+            }
+        }
+        if (!responseDTOs.isEmpty()) {
+            return ResponseEntity.ok(responseDTOs);
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No ticket found for "+ type );
+    }
+
 }

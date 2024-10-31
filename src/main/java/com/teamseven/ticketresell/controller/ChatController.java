@@ -1,5 +1,6 @@
 package com.teamseven.ticketresell.controller;
 
+import com.teamseven.ticketresell.converter.ChatMessageConverter;
 import com.teamseven.ticketresell.dto.ChatMessageDTO;
 import com.teamseven.ticketresell.dto.ConversationDTO;
 import com.teamseven.ticketresell.entity.ChatMessageEntity;
@@ -13,10 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -30,6 +34,8 @@ public class ChatController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ChatMessageConverter chatMessageConverter;
 
     @MessageMapping("/sendMessage")
     @SendTo("/topic/messages")
@@ -57,7 +63,15 @@ public class ChatController {
         return chatService.getChatHistory(userId);
     }
 
-
+    @GetMapping("chat-history/{id1}/{id2}")
+    public ResponseEntity<List<ChatMessageDTO>> getChatttHistory(@PathVariable Long id1, @PathVariable Long id2) {
+        List<ChatMessageEntity> en = chatMessageRepository.findByUser1AndUser2(id1, id2);
+        List<ChatMessageDTO> dtos = new ArrayList<>();
+        for (ChatMessageEntity chatMessageEntity : en) {
+            dtos.add(chatMessageConverter.toDTO(chatMessageEntity));
+        }
+        return ResponseEntity.ok(dtos);
+    }
 
     //ONLY FOR STAFF!!!
     @PostMapping("/get-chat-history")
