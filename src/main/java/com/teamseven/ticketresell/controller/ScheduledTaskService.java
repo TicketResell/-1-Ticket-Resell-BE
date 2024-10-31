@@ -73,7 +73,7 @@ public class ScheduledTaskService {
     public void autoRefundTicket(){
         List<OrderEntity> orders = orderRepository.findAll();
         for (OrderEntity order : orders) {
-            if(order.getSendDeadline()!=null) {
+            if(order.getSendDeadline()!=null&&!order.getOrderStatus().equals(OrderEntity.OrderStatus.completed)) {//TUI THÊM &&!order.getOrderStatus(completed) để chặn nó lặp á
                 if (order.getRefundDeadline().isBefore(LocalDateTime.now())) {
                     if (!OrderEntity.PaymentStatus.paid.equals(order.getPaymentStatus())) {
                         order.setPaymentStatus(OrderEntity.PaymentStatus.paid);
