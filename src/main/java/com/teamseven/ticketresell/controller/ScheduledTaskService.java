@@ -90,21 +90,25 @@ public class ScheduledTaskService {
     public void autoGetBanUser(){
         List<UserEntity> users = userRepository.findAll();
         for (UserEntity user : users) {
-            if(user.getViolationWarning() > 2){
-                user.setStatus("banned");
-                userRepository.save(user);
-                userRepository.flush();
+            if(user.getViolationWarning() > 2) {
+                if (user.getStatus().equals("banned")) {
+                    return;
+                } else {
+                    user.setStatus("banned");
+                    userRepository.save(user);
+                    userRepository.flush();
 
-                //Làm cái mail thông báo
-                String sellerMail = user.getEmail();
-                String subject = "Notice of Terms of Service Violation and Permanent Account Ban";
-                String body = "Dear " + user.getEmail() + ",\n\n" +
-                        "Following a thorough review, we have identified that your account has violated the Terms of Service of TicketResell. According to our policies, severe violations may lead to a permanent account ban.\n\n" +
-                        "Due to these violations, your account has been permanently suspended and cannot be restored. You will no longer have access to the account or any associated services under this account.\n\n" +
-                        "Thank you for using TicketResell, and we regret any inconvenience this may cause.\n\n" +
-                        "Best regards,\n" +
-                        "The TicketResell Team";
-                emailService.sendEmail(sellerMail, subject, body);
+                    //Làm cái mail thông báo
+                    String sellerMail = user.getEmail();
+                    String subject = "Notice of Terms of Service Violation and Permanent Account Ban";
+                    String body = "Dear " + user.getEmail() + ",\n\n" +
+                            "Following a thorough review, we have identified that your account has violated the Terms of Service of TicketResell. According to our policies, severe violations may lead to a permanent account ban.\n\n" +
+                            "Due to these violations, your account has been permanently suspended and cannot be restored. You will no longer have access to the account or any associated services under this account.\n\n" +
+                            "Thank you for using TicketResell, and we regret any inconvenience this may cause.\n\n" +
+                            "Best regards,\n" +
+                            "The TicketResell Team";
+                    emailService.sendEmail(sellerMail, subject, body);
+                }
             }
         }
     }
