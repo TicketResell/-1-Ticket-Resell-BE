@@ -3,7 +3,9 @@ package com.teamseven.ticketresell.controller;
 import com.teamseven.ticketresell.converter.UserConverter;
 import com.teamseven.ticketresell.dto.UserDTO;
 import com.teamseven.ticketresell.dto.JwtResponse;
+import com.teamseven.ticketresell.entity.NotificationEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
+import com.teamseven.ticketresell.repository.NotificationRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.EmailService;
 import com.teamseven.ticketresell.service.impl.UserService;
@@ -15,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.teamseven.ticketresell.util.JwtUtil;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -37,8 +40,12 @@ public class AccountController {
 
     @Autowired
     private EmailService emailService;
+
     @Autowired
     private UserConverter userConverter;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
@@ -233,6 +240,14 @@ public class AccountController {
     public ResponseEntity<?> editAgency(@PathVariable Long userId) {
         try {
             UserEntity updatedUser = userService.setUserAgency(userId);
+            // Tạo thông báo chúc mừng người dùng
+            NotificationEntity notification = new NotificationEntity();
+            notification.setUser(updatedUser); // Đặt người nhận thông báo là user vừa được set agency
+            notification.setTitle("Congratulations on Becoming an Agency!");
+            notification.setMessage("Congratulations, " + updatedUser.getUsername() + "! You have been designated as an agency in our system. Take advantage of this new role to increase your transactions and benefits!");
+            notification.setCreatedDate(LocalDateTime.now());
+            // Lưu thông báo vào cơ sở dữ liệu
+            notificationRepository.save(notification);
             return ResponseEntity.ok("User ID " + userId + " is now set as agency.");
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
