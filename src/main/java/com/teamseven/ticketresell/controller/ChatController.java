@@ -102,20 +102,44 @@ public class ChatController {
         // Trả về trạng thái của người dùng
         return chatService.setChatStatus(userId,user2Id);
     }
-   @PostMapping("/check-conversation/{userId}/{user2Id}")
-    public ResponseEntity<?> geExistConversations(@PathVariable Long userId,@PathVariable Long user2Id) {
 
-       List<ChatMessageDTO> dtos = chatService.getChatHistory(userId, user2Id);
+    @MessageMapping("/chat/check-conversation-exist-ws")
+    @SendTo("/topic/check-conversation-ws")
+    public ConversationDTO checkConversationExistWebSocketVersion(Long userId, Long user2Id) {
 
-       ConversationDTO conversationDTO = new ConversationDTO();
-       if (dtos.isEmpty()) {
-           conversationDTO.setUser1(userId);
-           conversationDTO.setUser2(user2Id);
-           conversationDTO.setUser1FullName(userService.getFullNameByID(userId));
-           conversationDTO.setUser2FullName(userService.getFullNameByID(user2Id));
-           return ResponseEntity.ok(conversationDTO);
-       }
-      else return ResponseEntity.ok("Conversation exist, you can use WebSocket Module.");
-   }
+        List<ChatMessageEntity> entities = chatMessageRepository.findByUser1AndUser2(userId,user2Id);
+        ConversationDTO conversationDTO = new ConversationDTO();
+        if (entities.isEmpty()) {
+
+            conversationDTO.setUser1(userId);
+            conversationDTO.setUser2(user2Id);
+            conversationDTO.setUser1FullName(userService.getFullNameByID(userId));
+            conversationDTO.setUser2FullName(userService.getFullNameByID(user2Id));
+            return conversationDTO;
+        } else {
+            return null;
+        }
+    }
+
+    @PostMapping("/check-conversation/{userId}/{user2Id}")
+    public ResponseEntity<?> checkExistingConversation(
+            @PathVariable Long userId,
+            @PathVariable Long user2Id
+    ) {
+
+        List<ChatMessageEntity> entities = chatMessageRepository.findByUser1AndUser2(userId,user2Id);
+
+        if (entities.isEmpty()) {
+            // Cuộc trò chuyện chưa tồn tại
+            ConversationDTO conversationDTO = new ConversationDTO();
+            conversationDTO.setUser1(userId);
+            conversationDTO.setUser2(user2Id);
+            conversationDTO.setUser1FullName(userService.getFullNameByID(userId));
+            conversationDTO.setUser2FullName(userService.getFullNameByID(user2Id));
+            return ResponseEntity.ok(conversationDTO);
+        } else {
+            return ResponseEntity.ok("Conversation exists, you can use WebSocket Module.");
+        }
+    }
 
 }

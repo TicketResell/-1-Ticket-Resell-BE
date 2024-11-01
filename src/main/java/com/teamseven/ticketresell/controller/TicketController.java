@@ -285,7 +285,7 @@ public class TicketController {
     public ResponseEntity<?> searchTicketsByNameAndType(@PathVariable String type, @PathVariable String name) {
         List<TicketEntity> ticketEntities = ticketRepository.findByTicketType(type);
         List<TicketDTO> responseDTOs = new ArrayList<>();
-        if(ticketEntities ==null || ticketEntities.isEmpty()){
+        if(ticketEntities == null || ticketEntities.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No ticket found for "+ type );
         }
         else for (TicketEntity ticketEntity : ticketEntities) {
@@ -297,7 +297,8 @@ public class TicketController {
             return ResponseEntity.ok(responseDTOs);
         }
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No ticket found for "+ type );
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No ticket found for "+ type );
+        return ResponseEntity.ok(responseDTOs);
     }
 
 }

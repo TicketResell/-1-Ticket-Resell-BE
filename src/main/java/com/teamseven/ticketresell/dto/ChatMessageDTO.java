@@ -6,6 +6,7 @@
         private Long chatId;
         private Long user1_id;
         private String user1_avatar;
+        private String user2_avatar;
         private Long user2_id;
         private String messageContent;
         private String messageType;
@@ -85,5 +86,13 @@
 
         public void setIsread(boolean isread) {
             this.isread = isread;
+        }
+
+        public String getUser2_avatar() {
+            return user2_avatar;
+        }
+
+        public void setUser2_avatar(String user2_avatar) {
+            this.user2_avatar = user2_avatar;
         }
     }
