@@ -131,12 +131,24 @@ public class ChatController {
 
         if (entities.isEmpty()) {
             // Cuộc trò chuyện chưa tồn tại
-            ConversationDTO conversationDTO = new ConversationDTO();
-            conversationDTO.setUser1(userId);
-            conversationDTO.setUser2(user2Id);
-            conversationDTO.setUser1FullName(userService.getFullNameByID(userId));
-            conversationDTO.setUser2FullName(userService.getFullNameByID(user2Id));
-            return ResponseEntity.ok(conversationDTO);
+//            ConversationDTO conversationDTO = new ConversationDTO();
+//            conversationDTO.setUser1(userId);
+//            conversationDTO.setUser2(user2Id);
+//            conversationDTO.setUser1FullName(userService.getFullNameByID(userId));
+//            conversationDTO.setUser2FullName(userService.getFullNameByID(user2Id));
+
+            //thay vì tạo 1 conversation, ta sẽ tạo 1 chat message welcome để tự sinh conversation
+            ChatMessageEntity entity = new ChatMessageEntity();
+            entity.setUser1(user2Id);
+            entity.setUser2(userId); //ngược lại vì người bán welcome
+            entity.setMessageContent("Xin chào, tôi có thể hỗ trợ gì cho bạn?");
+            entity.setMessageType("text");
+            entity.setRead(false);
+            entity.setCreatedDate(LocalDateTime.now());
+
+            chatMessageRepository.save(entity);
+            chatMessageRepository.flush();
+            return ResponseEntity.ok(entity);
         } else {
             return ResponseEntity.ok("Conversation exists, you can use WebSocket Module.");
         }
