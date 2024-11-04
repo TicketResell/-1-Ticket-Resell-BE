@@ -4,6 +4,7 @@ import com.teamseven.ticketresell.converter.ChatMessageConverter;
 import com.teamseven.ticketresell.dto.ChatMessageDTO;
 import com.teamseven.ticketresell.dto.ConversationDTO;
 import com.teamseven.ticketresell.entity.ChatMessageEntity;
+import com.teamseven.ticketresell.entity.UserEntity;
 import com.teamseven.ticketresell.repository.ChatMessageRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
 import com.teamseven.ticketresell.service.impl.ChatService;
@@ -36,6 +37,7 @@ public class ChatController {
     private UserService userService;
     @Autowired
     private ChatMessageConverter chatMessageConverter;
+    private UserRepository userRepository;
 
     @MessageMapping("/sendMessage")
     @SendTo("/topic/messages")
@@ -86,14 +88,25 @@ public class ChatController {
         return chatService.getConversationsByUserId(userId);
     }
 
-    @MessageMapping("/chat/online-status")
-    @SendTo("/topic/online-status")
+    @MessageMapping("/chat/set-online-status")
+    @SendTo("/topic/set-online-status")
+    public ResponseEntity<String> setOnlineStatus(@RequestParam Long userId) {
+        UserEntity  user = userRepository.findById(userId).orElse(null);
+        user.setStatus("online");
+        user.setLastSeen(LocalDateTime.now());
+        return ResponseEntity.ok("");
+    }
+
+    @MessageMapping("/chat/get-online-status")
+    @SendTo("/topic/get-online-status")
     public String getOnlineStatus(@RequestParam Long userId) {
+        UserEntity  user = userRepository.findById(userId).orElse(null);
         boolean isOnline = userService.isOnline(userId);
-        LocalDateTime lastSeen  = LocalDateTime.now();
+        LocalDateTime lastSeen  = user.getLastSeen();
         // Trả về trạng thái của người dùng
         return isOnline ? "User " + userId + " is online." : "User " + userId + " is offline." + "last seen: " + lastSeen;
     }
+
 
     @MessageMapping("/chat/set-hasRead-status")
     @SendTo("/topic/read-status")
