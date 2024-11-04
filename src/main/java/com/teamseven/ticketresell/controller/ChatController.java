@@ -130,13 +130,6 @@ public class ChatController {
         List<ChatMessageEntity> entities = chatMessageRepository.findByUser1AndUser2(userId,user2Id);
 
         if (entities.isEmpty()) {
-            // Cuộc trò chuyện chưa tồn tại
-//            ConversationDTO conversationDTO = new ConversationDTO();
-//            conversationDTO.setUser1(userId);
-//            conversationDTO.setUser2(user2Id);
-//            conversationDTO.setUser1FullName(userService.getFullNameByID(userId));
-//            conversationDTO.setUser2FullName(userService.getFullNameByID(user2Id));
-
             //thay vì tạo 1 conversation, ta sẽ tạo 1 chat message welcome để tự sinh conversation
             ChatMessageEntity entity = new ChatMessageEntity();
             entity.setUser1(user2Id);
