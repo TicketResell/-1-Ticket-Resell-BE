@@ -92,6 +92,9 @@ public class ChatController {
     @SendTo("/topic/set-online-status")
     public ResponseEntity<String> setOnlineStatus(@RequestParam Long userId) {
         UserEntity  user = userRepository.findById(userId).orElse(null);
+        if(user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
         user.setStatus("online");
         user.setLastSeen(LocalDateTime.now());
         return ResponseEntity.ok("");
@@ -102,6 +105,7 @@ public class ChatController {
     public String getOnlineStatus(@RequestParam Long userId) {
         UserEntity  user = userRepository.findById(userId).orElse(null);
         boolean isOnline = userService.isOnline(userId);
+        if (user == null) return ("User not found");
         LocalDateTime lastSeen  = user.getLastSeen();
         // Trả về trạng thái của người dùng
         return isOnline ? "User " + userId + " is online." : "User " + userId + " is offline." + "last seen: " + lastSeen;
