@@ -63,15 +63,7 @@ public class ConversationDTO {
         this.user1 = user1;
     }
 
-    public LocalDateTime getLastMessageTime() {
-        return lastMessageTime;
-    }
-
-    public void setLastMessageTime(LocalDateTime lastMessageTime) {
-        this.lastMessageTime = lastMessageTime;
-    }
-
-    public String getUser2Img(String avatarByID) {
+    public String getUser2Img() {
         return user2Img;
     }
 
@@ -79,11 +71,19 @@ public class ConversationDTO {
         this.user2Img = user2Img;
     }
 
-    public boolean isUser2OnlineStatus(Boolean online) {
+    public boolean isUser2OnlineStatus() {
         return user2OnlineStatus;
     }
 
     public void setUser2OnlineStatus(boolean user2OnlineStatus) {
         this.user2OnlineStatus = user2OnlineStatus;
+    }
+
+    public LocalDateTime getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(LocalDateTime lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
     }
 }

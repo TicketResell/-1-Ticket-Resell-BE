@@ -101,8 +101,8 @@ public class ChatService implements IChatService {
                 conversationDTO.setUser1FullName(userService.getFullNameByID(userId));
                 conversationDTO.setUser2(otherUserId);
                 conversationDTO.setUser2FullName(userService.getFullNameByID(otherUserId));
-                conversationDTO.getUser2Img(userService.getAvatarByID(otherUserId));
-                conversationDTO.isUser2OnlineStatus(userService.isOnline(otherUserId));
+                conversationDTO.setUser2Img(userService.getAvatarByID(otherUserId));
+                conversationDTO.setUser2OnlineStatus(userService.isOnline(otherUserId));
                 conversationDTOS.add(conversationDTO);
             }
 

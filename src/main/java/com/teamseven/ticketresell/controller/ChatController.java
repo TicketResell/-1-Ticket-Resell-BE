@@ -37,6 +37,7 @@ public class ChatController {
     private UserService userService;
     @Autowired
     private ChatMessageConverter chatMessageConverter;
+    @Autowired
     private UserRepository userRepository;
 
     @MessageMapping("/sendMessage")
@@ -136,11 +137,12 @@ public class ChatController {
             @PathVariable Long user2Id
     ) {
 
-        List<ChatMessageEntity> entities = chatMessageRepository.findByUser1AndUser2(userId,user2Id);
+        List<ChatMessageEntity> entities = chatMessageRepository.findByUser1AndUser2(userId, user2Id);
 
+        ChatMessageEntity entity = null;
         if (entities.isEmpty()) {
             //thay vì tạo 1 conversation, ta sẽ tạo 1 chat message welcome để tự sinh conversation
-            ChatMessageEntity entity = new ChatMessageEntity();
+            entity = new ChatMessageEntity();
             entity.setUser1(user2Id);
             entity.setUser2(userId); //ngược lại vì người bán welcome
             entity.setMessageContent("Xin chào, tôi có thể hỗ trợ gì cho bạn?");
@@ -152,7 +154,7 @@ public class ChatController {
             chatMessageRepository.flush();
             return ResponseEntity.ok(entity);
         } else {
-            return ResponseEntity.ok("Conversation exists, you can use WebSocket Module.");
+            return ResponseEntity.ok(entities);
         }
     }
 
