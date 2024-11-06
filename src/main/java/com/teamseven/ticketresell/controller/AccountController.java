@@ -4,6 +4,7 @@ import com.teamseven.ticketresell.converter.UserConverter;
 import com.teamseven.ticketresell.dto.UserDTO;
 import com.teamseven.ticketresell.dto.JwtResponse;
 import com.teamseven.ticketresell.dto.UserOnlineDTO;
+import com.teamseven.ticketresell.entity.ChatMessageEntity;
 import com.teamseven.ticketresell.entity.NotificationEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
 import com.teamseven.ticketresell.repository.NotificationRepository;
@@ -304,6 +305,17 @@ public class AccountController {
         UserOnlineDTO onlineDTO = new UserOnlineDTO(user.isOnline(), user.getLastSeen());
         return ResponseEntity.ok(onlineDTO);
     }
+    @PostMapping("/set-user-online/{status}/{id}")
+    public boolean setUserOnline(@PathVariable String status, @PathVariable Long id) {
+        UserEntity user = userRepository.findById(id).orElse(null);
+        if(status.equals("online")) user.setOnline(true);
+        else if(status.equals("offline")) user.setOnline(false);
+        user.setLastSeen(LocalDateTime.now());
+        userRepository.save(user);
+        userRepository.flush();
+        return true;
+    }
+
 
     //phục vụ môn SWT301
     @GetMapping("/extract-data-from-token")

@@ -155,16 +155,6 @@ public class ChatController {
             return ResponseEntity.ok("Conversation exists, you can use WebSocket Module.");
         }
     }
-    @PostMapping("/set-user-status/{status}/{id}")
-    public boolean setUserOnline(@PathVariable String status, @PathVariable Long id) {
-        UserEntity user = userRepository.findById(id).orElse(null);
-        if(status.equals("online")) user.setOnline(true);
-        else if(status.equals("offline")) user.setOnline(false);
-        user.setLastSeen(LocalDateTime.now());
-        userRepository.save(user);
-        userRepository.flush();
-        return true;
-    }
 
     @PostMapping("/chat/set-hasRead-status/{userId}/{user2Id}")
     public Boolean getRead(@PathVariable  Long userId,@PathVariable Long user2Id) {
