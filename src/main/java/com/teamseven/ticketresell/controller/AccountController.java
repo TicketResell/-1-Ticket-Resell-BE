@@ -3,6 +3,7 @@ package com.teamseven.ticketresell.controller;
 import com.teamseven.ticketresell.converter.UserConverter;
 import com.teamseven.ticketresell.dto.UserDTO;
 import com.teamseven.ticketresell.dto.JwtResponse;
+import com.teamseven.ticketresell.dto.UserOnlineDTO;
 import com.teamseven.ticketresell.entity.NotificationEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
 import com.teamseven.ticketresell.repository.NotificationRepository;
@@ -295,6 +296,13 @@ public class AccountController {
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @GetMapping("/get-user-online-status/{id}")
+    public ResponseEntity<?> getOnlineStatus(@PathVariable("id") Long id) {
+        UserEntity user = userRepository.findById(id).orElse(null);
+        UserOnlineDTO onlineDTO = new UserOnlineDTO(user.isOnline(), user.getLastSeen());
+        return ResponseEntity.ok(onlineDTO);
     }
 
     //phục vụ môn SWT301

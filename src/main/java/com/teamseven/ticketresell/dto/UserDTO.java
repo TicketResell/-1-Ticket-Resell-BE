@@ -1,5 +1,7 @@
 package com.teamseven.ticketresell.dto;
 
+import java.time.LocalDateTime;
+
 public class UserDTO {
     private Long id;
     private String username;
@@ -7,8 +9,8 @@ public class UserDTO {
     private String email;
     private String phone;
     private String address;
-    private String fullname;  // Thêm fullname
-    private String userImage; // Thêm user_image
+    private String fullname;
+    private String userImage;
     private String status;
     private boolean verifiedEmail;
     private String role;
