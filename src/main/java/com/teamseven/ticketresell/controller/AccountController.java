@@ -256,7 +256,7 @@ public class AccountController {
 
 
     // Login with Google Oauth
-    @PostMapping("/login-google")
+        @PostMapping("/login-google")
     public ResponseEntity<?> loginWithGoogle(@RequestBody Map<String, String> body) {
         String idTokenString = body.get("id_token");
         try {
@@ -264,6 +264,7 @@ public class AccountController {
             return ResponseEntity.ok(jwtResponse);
         } catch (RuntimeException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+
         }
     }
     @PostMapping("/hidden-search-profile/{id}")
@@ -294,6 +295,15 @@ public class AccountController {
         } catch (NumberFormatException e) {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    //phục vụ môn SWT301
+    @GetMapping("/extract-data-from-token")
+    public ResponseEntity<UserEntity> extractNameFromToken() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserEntity user = userRepository.findByUsername(authentication.getName());
+
+        return ResponseEntity.ok(user);
     }
 
 }

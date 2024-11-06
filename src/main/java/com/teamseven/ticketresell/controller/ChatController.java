@@ -112,14 +112,6 @@ public class ChatController {
     }
 
 
-    @MessageMapping("/chat/set-hasRead-status")
-    @SendTo("/topic/read-status")
-    public Boolean getRead(Long userId, Long user2Id) {
-
-        // Trả về trạng thái của người dùng
-        return chatService.setChatStatus(userId,user2Id);
-    }
-
     @MessageMapping("/chat/check-conversation-exist-ws")
     @SendTo("/topic/check-conversation-ws")
     public ConversationDTO checkConversationExistWebSocketVersion(Long userId, Long user2Id) {
@@ -163,5 +155,25 @@ public class ChatController {
             return ResponseEntity.ok("Conversation exists, you can use WebSocket Module.");
         }
     }
+    @PostMapping("/set-user-status/{status}/{id}")
+    public boolean setUserOnline(@PathVariable String status, @PathVariable Long id) {
+        UserEntity user = userRepository.findById(id).orElse(null);
+        if(status.equals("online")) user.setOnline(true);
+        else if(status.equals("offline")) user.setOnline(false);
+        user.setLastSeen(LocalDateTime.now());
+        userRepository.save(user);
+        userRepository.flush();
+        return true;
+    }
 
+    @PostMapping("/chat/set-hasRead-status/{userId}/{user2Id}")
+    public Boolean getRead(@PathVariable  Long userId,@PathVariable Long user2Id) {
+        List<ChatMessageEntity> entities = chatMessageRepository.findByUser1AndUser2(userId, user2Id); //loì ra mọi đoạn chat
+        for(ChatMessageEntity chatMessageEntity : entities) {
+            chatMessageEntity.setRead(true);
+        }
+        chatMessageRepository.saveAll(entities);
+        chatMessageRepository.flush();
+        return true;
+    }
 }

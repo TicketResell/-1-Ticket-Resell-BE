@@ -52,7 +52,7 @@ public class AdminController {
 
 
     // Cho coi full account bao gồm admin
-    @GetMapping("/view-accounts")
+        @GetMapping("/view-accounts")
     public ResponseEntity<?> getAccounts() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || userService.getUserRoleByUsername(authentication.getName()).equals("user")) {
