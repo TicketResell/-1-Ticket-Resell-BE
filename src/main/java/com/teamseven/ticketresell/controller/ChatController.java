@@ -159,13 +159,13 @@ public class ChatController {
     }
 
     @PostMapping("/chat/set-hasRead-status/{userId}/{user2Id}")
-    public Boolean getRead(@PathVariable  Long userId,@PathVariable Long user2Id) {
+    public ResponseEntity<Boolean> getRead(@PathVariable  Long userId,@PathVariable Long user2Id) {
         List<ChatMessageEntity> entities = chatMessageRepository.findByUser1AndUser2(userId, user2Id); //loì ra mọi đoạn chat
         for(ChatMessageEntity chatMessageEntity : entities) {
             chatMessageEntity.setRead(true);
         }
         chatMessageRepository.saveAll(entities);
         chatMessageRepository.flush();
-        return true;
+        return ResponseEntity.ok(true);
     }
 }
