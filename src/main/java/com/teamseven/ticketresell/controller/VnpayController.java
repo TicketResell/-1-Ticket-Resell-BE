@@ -179,7 +179,7 @@ public class VnpayController {
                 // Xóa order
                 orderRepository.delete(order);
                 // Chuyển hướng về trang lỗi
-                String redirectUrl = "http://localhost:3000/order";
+                String redirectUrl = "http://localhost:3000";
                 return ResponseEntity.status(HttpStatus.FOUND)
                         .header(HttpHeaders.LOCATION, redirectUrl)
                         .build();
