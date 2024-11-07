@@ -34,11 +34,11 @@ public class GetConversationByChatList {
 
             // Gán user1 và user2
             if (user1 == null) {
-                user1 = chatMessageEntity.getUser1();
+                user1 = chatMessageEntity.getUser1().getId();
                 user1FullName = userService.getFullNameByID(user1);
             }
             if (user2 == null) {
-                user2 = chatMessageEntity.getUser2();
+                user2 = chatMessageEntity.getUser2().getId();
                 user2FullName = userService.getFullNameByID(user2);
             }
 

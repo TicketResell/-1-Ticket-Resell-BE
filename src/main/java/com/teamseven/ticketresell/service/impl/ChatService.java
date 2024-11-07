@@ -55,7 +55,7 @@ public class ChatService implements IChatService {
     public List<ChatMessageDTO> getChatHistory(Long userId) {
         System.out.println("Fetching chat history for userId: " + userId); // Log userId
 
-        List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findByUser1OrUser2(userId, userId);
+        List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findByUser1IdOrUser2Id(userId, userId);
         System.out.println("Found " + chatMessageEntities.size() + " messages for userId: " + userId);
 
 
@@ -72,7 +72,7 @@ public class ChatService implements IChatService {
     // Lấy lịch sử chat giữa 2 người dùng (sender và receiver)
     @Override
     public List<ChatMessageDTO> getChatHistory(Long senderID, Long receiverID) {
-        List<ChatMessageEntity> chats = chatMessageRepository.findByUser1OrUser2(senderID, receiverID);
+        List<ChatMessageEntity> chats = chatMessageRepository.findByUser1IdOrUser2Id(senderID, receiverID);
         return chats.stream()
                 .map(chatMessageConverter::toDTO)
                 .collect(Collectors.toList());
@@ -80,13 +80,13 @@ public class ChatService implements IChatService {
 
     @Override
     public List<ConversationDTO> getConversationsByUserId(Long userId) {
-        List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findByUser1OrUser2(userId, userId);
+        List<ChatMessageEntity> chatMessageEntities = chatMessageRepository.findByUser1IdOrUser2Id(userId, userId);
         List<ConversationDTO> conversationDTOS = new ArrayList<>();
 
         Map<Long, Integer> unreadCountMap = new HashMap<>();
 
         for (ChatMessageEntity chatMessageEntity : chatMessageEntities) {
-            Long otherUserId = chatMessageEntity.getUser1().equals(userId) ? chatMessageEntity.getUser2() : chatMessageEntity.getUser1();
+            Long otherUserId = chatMessageEntity.getUser1().getId().equals(userId) ? chatMessageEntity.getUser2().getId() : chatMessageEntity.getUser1().getId();
 
             // Kiểm tra xem ConversationDTO đã tồn tại cho otherUserId chưa
             ConversationDTO conversationDTO = conversationDTOS.stream()
@@ -123,7 +123,7 @@ public class ChatService implements IChatService {
 
     @Override
     public Boolean setChatStatus(Long usr1, Long usr2) {
-        List<ChatMessageEntity> entities = chatMessageRepository.findByUser1OrUser2(usr1, usr2);
+        List<ChatMessageEntity> entities = chatMessageRepository.findByUser1IdOrUser2Id(usr1, usr2);
         for(ChatMessageEntity chatMessageEntity : entities) {
             chatMessageEntity.setRead(true);
         }

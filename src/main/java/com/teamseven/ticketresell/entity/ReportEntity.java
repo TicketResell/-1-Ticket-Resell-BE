@@ -6,12 +6,16 @@ import java.time.LocalDateTime;
 @Table(name = "reports")
 public class ReportEntity extends BaseEntity {
 
-    @Column(name = "reported_id")
-    private Long reportedUserId;
-    @Column(name = "reporter_id")
-    private Long reporterUserId;
-    @Column(name ="product_id")
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "reported_id")
+    private UserEntity reportedUser;
+
+    @ManyToOne
+    @JoinColumn(name = "reporter_id")
+    private UserEntity reporterUser;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    private TicketEntity productId;
     @Column(name = "reason")
     private String reason;
     @Column(name = "status")
@@ -19,20 +23,20 @@ public class ReportEntity extends BaseEntity {
 
     // Getter và Setter
 
-    public Long getReportedUserId() {
-        return reportedUserId;
+    public UserEntity getReportedUser() {
+        return reportedUser;
     }
 
-    public void setReportedUserId(Long reportedUserId) {
-        this.reportedUserId = reportedUserId;
+    public void setReportedUser(UserEntity reportedUser) {
+        this.reportedUser = reportedUser;
     }
 
-    public Long getReporterUserId() {
-        return reporterUserId;
+    public UserEntity getReporterUser() {
+        return reporterUser;
     }
 
-    public void setReporterUserId(Long reporterUserId) {
-        this.reporterUserId = reporterUserId;
+    public void setReporterUser(UserEntity reporterUser) {
+        this.reporterUser = reporterUser;
     }
 
     public String getReason() {
@@ -51,11 +55,11 @@ public class ReportEntity extends BaseEntity {
         this.status = status;
     }
 
-    public Long getProductId() {
+    public TicketEntity getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(TicketEntity productId) {
         this.productId = productId;
     }
 }

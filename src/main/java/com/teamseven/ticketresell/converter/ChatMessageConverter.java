@@ -14,11 +14,14 @@ public class ChatMessageConverter {
     @Autowired
     UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // Chuyển đổi từ DTO sang Entity
     public ChatMessageEntity toEntity(ChatMessageDTO dto) {
         ChatMessageEntity entity = new ChatMessageEntity();
-        entity.setUser1(dto.getUser1_id());
-        entity.setUser2(dto.getUser2_id());
+        entity.setUser1(userRepository.findById(dto.getUser1_id()).orElse(null));
+        entity.setUser2(userRepository.findById(dto.getUser2_id()).orElse(null));
         entity.setMessageContent(dto.getMessageContent());
         entity.setMessageType(dto.getMessageType());
         entity.setCreatedDate(dto.getTimestamp());
@@ -30,11 +33,11 @@ public class ChatMessageConverter {
     public ChatMessageDTO toDTO(ChatMessageEntity entity) {
         ChatMessageDTO dto = new ChatMessageDTO();
         dto.setChatId(entity.getId());
-        dto.setUser1_id(entity.getUser1());
-        dto.setUser2_id(entity.getUser2());
+        dto.setUser1_id(entity.getUser1().getId());
+        dto.setUser2_id(entity.getUser2().getId());
         dto.setMessageContent(entity.getMessageContent());
-        dto.setUser2Name(userService.getFullNameByID(entity.getUser2()));
-        dto.setUser1_avatar(userService.getAvatarByID(entity.getUser1()));
+        dto.setUser2Name(userService.getFullNameByID(entity.getUser2().getId()));
+        dto.setUser1_avatar(userService.getAvatarByID(entity.getUser1().getId()));
         dto.setTimestamp(entity.getTimestamp());
         dto.setMessageType(entity.getMessageType());
         dto.setIsread(entity.getRead());

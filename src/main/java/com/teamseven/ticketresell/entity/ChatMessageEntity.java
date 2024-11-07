@@ -7,11 +7,13 @@ import java.time.LocalDateTime;
 @Table(name = "chat_message")
 public class ChatMessageEntity extends BaseEntity {
 
-    @Column(name = "user1_id", nullable = false)
-    private Long user1;
+    @ManyToOne
+    @JoinColumn(name = "user1_id", nullable = false)
+    private UserEntity user1;
 
-    @Column(name = "user2_id", nullable = false)
-    private Long user2;
+    @ManyToOne
+    @JoinColumn(name = "user2_id", nullable = false)
+    private UserEntity user2;
 
     @Column(name = "message_content", nullable = false, length = 1000)
     private String messageContent;
@@ -23,19 +25,19 @@ public class ChatMessageEntity extends BaseEntity {
     private Boolean isRead;
 
 
-    public Long getUser1() {
+    public UserEntity getUser1() {
         return user1;
     }
 
-    public void setUser1(Long user1) {
+    public void setUser1(UserEntity user1) {
         this.user1 = user1;
     }
 
-    public Long getUser2() {
+    public UserEntity getUser2() {
         return user2;
     }
 
-    public void setUser2(Long user2) {
+    public void setUser2(UserEntity user2) {
         this.user2 = user2;
     }
 

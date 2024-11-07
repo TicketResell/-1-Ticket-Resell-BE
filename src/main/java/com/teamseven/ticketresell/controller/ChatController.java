@@ -143,8 +143,8 @@ public class ChatController {
         if (entities.isEmpty()) {
             //thay vì tạo 1 conversation, ta sẽ tạo 1 chat message welcome để tự sinh conversation
             entity = new ChatMessageEntity();
-            entity.setUser1(user2Id);
-            entity.setUser2(userId); //ngược lại vì người bán welcome
+            entity.setUser1(userRepository.findById(user2Id).orElse(null));
+            entity.setUser2(userRepository.findById(userId).orElse(null)); //ngược lại vì người bán welcome
             entity.setMessageContent("Xin chào, tôi có thể hỗ trợ gì cho bạn?");
             entity.setMessageType("text");
             entity.setRead(false);
