@@ -1,9 +1,11 @@
 package com.teamseven.ticketresell.controller;
 
 import com.teamseven.ticketresell.dto.OrderDTO;
+import com.teamseven.ticketresell.entity.NotificationEntity;
 import com.teamseven.ticketresell.entity.OrderEntity;
 import com.teamseven.ticketresell.entity.TicketEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
+import com.teamseven.ticketresell.repository.NotificationRepository;
 import com.teamseven.ticketresell.repository.OrderRepository;
 import com.teamseven.ticketresell.repository.TicketRepository;
 import com.teamseven.ticketresell.repository.UserRepository;
@@ -39,6 +41,9 @@ public class ScheduledTaskService {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private NotificationRepository notificationRepository;
 
 //    // Tác vụ tự động khởi động
 //    @Scheduled(fixedRate = 15000) //miliseconds
@@ -176,15 +181,22 @@ public class ScheduledTaskService {
             }
         }
     }
-    @Scheduled(fixedRate = 15000) // 1 giờ (3600000 milliseconds)
+    @Scheduled(fixedRate = 3600000) // 1 giờ (3600000 milliseconds)
     public void checkAndSetAgencyStatus() {
-        List<UserEntity> sellers = userRepository.findAll();
-        for (UserEntity seller : sellers) {
+        List<UserEntity> nonAgencySellers = userRepository.findByIsAgencyFalse();
+        for (UserEntity seller : nonAgencySellers) {
             // Đếm số đơn hàng "completed" của seller
             int completedOrders = orderRepository.countBySellerAndOrderStatus(seller, OrderEntity.OrderStatus.completed);
-            if (completedOrders >= 15 && !seller.isAgency()) {
-                // Nếu seller có đủ 15 đơn hàng và chưa là agency, cập nhật isAgency thành true
+            if (completedOrders >= 3 && !seller.isAgency()) {
+                // Nếu seller có đủ 3 đơn hàng và chưa là agency, cập nhật isAgency thành true
                 seller.setAgency(true);
+                NotificationEntity notification = new NotificationEntity();
+                notification.setUser(seller); // Đặt người nhận thông báo là user vừa được set agency
+                notification.setTitle("Congratulations on Becoming an Agency!");
+                notification.setMessage("Congratulations, " + seller.getUsername() + "! You have been designated as an agency in our system. Take advantage of this new role to increase your transactions and benefits!");
+                notification.setCreatedDate(LocalDateTime.now());
+                // Lưu thông báo vào cơ sở dữ liệu
+                notificationRepository.save(notification);
                 userRepository.save(seller);
                 userRepository.flush();
             }

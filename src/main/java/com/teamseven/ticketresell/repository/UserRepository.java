@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByUsername(String username);
@@ -16,4 +18,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     // Tìm người dùng bằng email hoặc username
     UserEntity findByEmailOrUsername(String email, String username);
     UserEntity findByPhone(String phone);
+    List<UserEntity> findByIsAgencyFalse();
+
 }
