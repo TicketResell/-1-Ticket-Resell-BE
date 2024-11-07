@@ -53,7 +53,6 @@ public class TicketService {
             ticket.setEventDate(ticketDetails.getEventDate());
             ticket.setLocation(ticketDetails.getLocation());
             ticket.setTicketType(ticketDetails.getTicketType());
-            ticket.setSalePrice(ticketDetails.getSalePrice());
             ticket.setImageUrls(ticketDetails.getImageUrls());
             ticket.setQuantity(ticketDetails.getQuantity());
             ticket.setStatus(ticket.getStatus());
@@ -96,15 +95,6 @@ public class TicketService {
     }
     public List<TicketEntity> searchDateAndTitle(LocalDate date, String eventTitle) {
         return ticketRepository.findByEventDateAfterAndEventTitleContainingIgnoreCaseOrderByEventDateAsc(date, eventTitle);
-    }
-    // Lấy danh sách vé theo salePrice tăng dần
-    public List<TicketEntity> getTicketsSortedBySalePriceAsc() {
-        return ticketRepository.findAllByOrderBySalePriceAsc();
-    }
-
-    // Lấy danh sách vé theo salePrice giảm dần
-    public List<TicketEntity> getTicketsSortedBySalePriceDesc() {
-        return ticketRepository.findAllByOrderBySalePriceDesc();
     }
 
     public String isReadyTicket(long id){

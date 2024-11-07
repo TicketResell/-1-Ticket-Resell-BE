@@ -38,10 +38,6 @@ public class TicketEntity extends BaseEntity {
 
     @Column(name = "ticket_type", nullable = false)
     private String ticketType;
-
-    @Column(name = "sale_price", precision = 10, scale = 2)
-    private double salePrice;
-
     @Column(name = "ticket_details")
     private String ticketDetails;
 
@@ -122,14 +118,6 @@ public class TicketEntity extends BaseEntity {
 
     public void setTicketType(String ticketType) {
         this.ticketType = ticketType;
-    }
-
-    public double getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(double salePrice) {
-        this.salePrice = salePrice;
     }
 
     public String getStatus() {

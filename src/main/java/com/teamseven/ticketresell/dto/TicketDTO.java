@@ -12,7 +12,6 @@ public class TicketDTO {
     private Long categoryId;
     private String location;
     private String ticketType;
-    private double salePrice;
     private String ticketDetails;
     private List<String> imageUrls;
     private String status;
@@ -98,15 +97,6 @@ public class TicketDTO {
     public void setTicketType(String ticketType) {
         this.ticketType = ticketType;
     }
-
-    public double getSalePrice() {
-        return salePrice;
-    }
-
-    public void setSalePrice(double salePrice) {
-        this.salePrice = salePrice;
-    }
-
     public String getTicketDetails() {
         return ticketDetails;
     }

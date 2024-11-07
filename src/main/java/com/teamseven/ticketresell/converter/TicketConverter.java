@@ -29,7 +29,6 @@ public class TicketConverter {
         ticketEntity.setEventDate(ticketDTO.getEventDate());
         ticketEntity.setLocation(ticketDTO.getLocation());
         ticketEntity.setTicketType(ticketDTO.getTicketType());
-        ticketEntity.setSalePrice(ticketDTO.getSalePrice());
         ticketEntity.setCategory(categoryRepository.findById(ticketDTO.getCategoryId()).orElse(null));
         ticketEntity.setTicketDetails(ticketDTO.getTicketDetails());
         ticketEntity.setStatus(ticketDTO.getStatus());
@@ -50,7 +49,6 @@ public class TicketConverter {
         ticketDTO.setCategoryId(ticketEntity.getCategory().getId());
         ticketDTO.setLocation(ticketEntity.getLocation());
         ticketDTO.setTicketType(ticketEntity.getTicketType());
-        ticketDTO.setSalePrice(ticketEntity.getSalePrice());
         ticketDTO.setTicketDetails(ticketEntity.getTicketDetails());
         ticketDTO.setImageUrls(ticketEntity.getImageUrls());
         ticketDTO.setStatus(ticketEntity.getStatus());
