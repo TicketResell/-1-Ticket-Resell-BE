@@ -8,6 +8,8 @@ public class ConversationDTO {
     private Long user1;
     private Long user2;
     private String user1FullName;
+    private String user1Img;
+    private boolean user1OnlineStatus;
     private String user2FullName;
     private String user2Img;
     private boolean user2OnlineStatus;
@@ -85,5 +87,21 @@ public class ConversationDTO {
 
     public void setLastMessageTime(LocalDateTime lastMessageTime) {
         this.lastMessageTime = lastMessageTime;
+    }
+
+    public String getUser1Img() {
+        return user1Img;
+    }
+
+    public void setUser1Img(String user1Img) {
+        this.user1Img = user1Img;
+    }
+
+    public boolean isUser1OnlineStatus() {
+        return user1OnlineStatus;
+    }
+
+    public void setUser1OnlineStatus(boolean user1OnlineStatus) {
+        this.user1OnlineStatus = user1OnlineStatus;
     }
 }

@@ -81,7 +81,7 @@ public class ChatController {
     public ResponseEntity<List<ChatMessageDTO>> getChatHistoryByPairUserId(Long userId, Long user2Id) {
         return ResponseEntity.ok(chatService.getChatHistory(userId, user2Id));
     }
-
+    //ĐÂY LÀ API CHÍNH ĐỂ CALL CONVERSATION!!!!
     //MUST READ DTO -> CONVERSATION DTO DATA TYPE
     @MessageMapping("/chat/conversations")
     @SendTo("/topic/conversations")

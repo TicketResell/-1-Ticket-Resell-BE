@@ -97,12 +97,19 @@ public class ChatService implements IChatService {
             // Nếu chưa tồn tại, khởi tạo ConversationDTO mới
             if (conversationDTO == null) {
                 conversationDTO = new ConversationDTO();
+                //data user 1
                 conversationDTO.setUser1(userId);
                 conversationDTO.setUser1FullName(userService.getFullNameByID(userId));
+                conversationDTO.setUser1Img(userService.getAvatarByID(userId));
+                conversationDTO.setUser1OnlineStatus(userService.isOnline(userId));
+
+                //data user 2
                 conversationDTO.setUser2(otherUserId);
                 conversationDTO.setUser2FullName(userService.getFullNameByID(otherUserId));
                 conversationDTO.setUser2Img(userService.getAvatarByID(otherUserId));
                 conversationDTO.setUser2OnlineStatus(userService.isOnline(otherUserId));
+
+
                 conversationDTOS.add(conversationDTO);
             }
 
