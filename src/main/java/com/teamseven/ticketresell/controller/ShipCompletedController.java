@@ -125,5 +125,26 @@ public class ShipCompletedController {
 
         return ResponseEntity.ok(dtos);
     }
+    @GetMapping("/all-order/ship")
+    public ResponseEntity<?> allOrderForShipper() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (authentication == null || !authentication.isAuthenticated()) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: No authentication provided.");
+//        }
+//
+//        String username = authentication.getName();
+//        String userRole = userService.getUserRoleByUsername(username);
+//
+//        if (!userRole.equals("user")) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Role - " + userRole);
+//        }
+
+        // Lấy tất cả các đơn hàng có trạng thái và phương thức thanh toán mong muốn
+        List<OrderEntity> orders = orderRepository.findByOrderStatusIn(
+                List.of(OrderEntity.OrderStatus.shipping, OrderEntity.OrderStatus.received)
+        );
+        return ResponseEntity.ok(orders);
+    }
 
 }

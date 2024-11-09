@@ -67,6 +67,7 @@ public class SecurityConfig {
                                 "/health",
                                 "/sendMessage",
                                 "/chat/**",
+                                "/order/all-order/ship",
                                 "/ws/**",
                                 "/chat-websocket/**",
                                 "/api/notifications",
