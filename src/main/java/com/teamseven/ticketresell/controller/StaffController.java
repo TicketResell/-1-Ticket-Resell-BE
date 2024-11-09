@@ -164,7 +164,6 @@ public class StaffController {
         return ResponseEntity.ok(chatMessages);
     }
 
-
     @GetMapping("/view-all-report")
     public ResponseEntity<?> viewReport() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -175,14 +174,7 @@ public class StaffController {
         }
 
         List<ReportEntity> reportEntities = rrepository.findAll();
-        List<ReportEntity> finale = new ArrayList<>();
-        for (ReportEntity reportEntity : reportEntities) {
-            if(reportEntity.getStatus().equals("pending")){
-                finale.add(reportEntity);
-            }
-        }
-
-        return ResponseEntity.ok(finale);
+        return ResponseEntity.ok(reportEntities);
     }
 
         @GetMapping("/get-all-orders")
