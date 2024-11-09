@@ -118,7 +118,6 @@ public class StaffController {
         int tickets = ticketService.totalTicketsSold();
         return ResponseEntity.ok(tickets);
     }
-
     @GetMapping("/get-list-user")
     public ResponseEntity<?> getListUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -127,8 +126,8 @@ public class StaffController {
         if (authentication == null || !authentication.isAuthenticated() || userService.getUserRoleByUsername(authentication.getName()).equals("user")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
-        List<UserEntity> accounts = userRepository.findAll();
-        return ResponseEntity.ok(accounts.stream().map(userConverter::toDTO).toList());
+        List<UserEntity> accounts = userRepository.findByRole("user");
+        return ResponseEntity.ok(accounts);
     }
 
     @GetMapping("/get-total-revenue-profit")

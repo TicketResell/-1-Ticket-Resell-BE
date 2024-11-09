@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     UserEntity findByPhone(String phone);
     List<UserEntity> findByIsAgencyFalse();
 
+    List<UserEntity> findByRole(String role);
+
 }
