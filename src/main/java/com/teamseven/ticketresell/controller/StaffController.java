@@ -43,7 +43,7 @@ public class StaffController {
     private TicketService ticketService;
 
     @Autowired
-    private UserConverter userConverter;
+    private TransactionService transactionService;
 
     @Autowired
     private OrderService orderService;
@@ -59,9 +59,6 @@ public class StaffController {
 
     @Autowired
     private ReportRepository rrepository;
-
-    @Autowired
-    private ReportConverter reportConverter;
 
     // Lấy đánh giá theo order
     @GetMapping("/get-all-report")

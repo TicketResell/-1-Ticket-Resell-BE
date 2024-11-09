@@ -6,6 +6,7 @@ import com.teamseven.ticketresell.entity.OrderEntity;
 import com.teamseven.ticketresell.entity.UserEntity;
 import com.teamseven.ticketresell.repository.OrderRepository;
 import com.teamseven.ticketresell.service.impl.OrderService;
+import com.teamseven.ticketresell.service.impl.TransactionService;
 import com.teamseven.ticketresell.service.impl.UserService;
 import com.teamseven.ticketresell.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,35 +39,8 @@ public class ShipCompletedController {
     @Autowired
     private OrderConverter orderConverter;
 
-    @PutMapping("/set-shipping-status/{orderId}")
-    public ResponseEntity<?> updateOrderStatusTrue(@PathVariable Long orderId, String img) {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: No authentication provided.");
-        }
-
-        String username = authentication.getName();
-        String userRole = userService.getUserRoleByUsername(username);
-
-        if (!userRole.equals("shipper")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Role - " + userRole);
-        }
-        OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
-
-        if (orderEntity == null) {
-            return ResponseEntity.badRequest().body("NOT FOUND FROM DB 404");
-        }
-        orderEntity.setImgShiper(img);
-        orderEntity.setOrderStatus(OrderEntity.OrderStatus.received);
-        orderEntity.setPaymentStatus(OrderEntity.PaymentStatus.paid);
-        orderEntity.setRefundDeadline(LocalDateTime.now().plusDays(7));
-        orderRepository.save(orderEntity);
-
-        return ResponseEntity.ok().build();
-    }
-
+    @Autowired
+    private TransactionService transactionService;
 
     @PutMapping("/set-shipping-status-false/{orderId}")
     public ResponseEntity<?> updateOrderStatusFalse(@PathVariable Long orderId, String img) {
@@ -91,6 +65,9 @@ public class ShipCompletedController {
         }
         orderEntity.setImgShiper(img);
         orderEntity.setOrderStatus(OrderEntity.OrderStatus.orderbombing);
+        if (OrderEntity.PaymentStatus.paid.equals(orderEntity.getPaymentStatus())){
+            transactionService.createSellerTransaction(orderEntity);
+        }
         orderRepository.save(orderEntity);
         orderRepository.flush();
 
@@ -125,21 +102,39 @@ public class ShipCompletedController {
 
         return ResponseEntity.ok(dtos);
     }
+    @PutMapping("/set-shipping-status/{orderId}")
+    public ResponseEntity<?> updateOrderStatusTrue(@PathVariable Long orderId, String img) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: No authentication provided.");
+        }
+
+        String username = authentication.getName();
+        String userRole = userService.getUserRoleByUsername(username);
+
+        if (!userRole.equals("shipper")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Role - " + userRole);
+        }
+        OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
+
+        if (orderEntity == null) {
+            return ResponseEntity.badRequest().body("NOT FOUND FROM DB 404");
+        }
+        orderEntity.setImgShiper(img);
+        orderEntity.setOrderStatus(OrderEntity.OrderStatus.received);
+        if (!OrderEntity.PaymentStatus.paid.equals(orderEntity.getPaymentStatus())){
+            orderEntity.setPaymentStatus(OrderEntity.PaymentStatus.paid);
+            transactionService.createBuyerTransaction(orderEntity);
+        }
+        orderEntity.setRefundDeadline(LocalDateTime.now().plusDays(7));
+        orderRepository.save(orderEntity);
+
+        return ResponseEntity.ok().build();
+    }
     @GetMapping("/all-order/ship")
     public ResponseEntity<?> allOrderForShipper() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        if (authentication == null || !authentication.isAuthenticated()) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: No authentication provided.");
-//        }
-//
-//        String username = authentication.getName();
-//        String userRole = userService.getUserRoleByUsername(username);
-//
-//        if (!userRole.equals("user")) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Role - " + userRole);
-//        }
-
         // Lấy tất cả các đơn hàng có trạng thái và phương thức thanh toán mong muốn
         List<OrderEntity> orders = orderRepository.findByOrderStatusIn(
                 List.of(OrderEntity.OrderStatus.shipping, OrderEntity.OrderStatus.received)

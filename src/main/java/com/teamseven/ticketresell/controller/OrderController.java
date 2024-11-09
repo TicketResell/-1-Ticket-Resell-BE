@@ -3,7 +3,6 @@ package com.teamseven.ticketresell.controller;
 import com.teamseven.ticketresell.converter.OrderConverter;
 import com.teamseven.ticketresell.dto.OrderDTO;
 import com.teamseven.ticketresell.entity.OrderEntity;
-import com.teamseven.ticketresell.entity.TicketEntity;
 import com.teamseven.ticketresell.repository.OrderRepository;
 import com.teamseven.ticketresell.service.impl.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
