@@ -182,7 +182,7 @@ public class StaffController {
             }
         }
 
-        return ResponseEntity.ok(finale.stream().map(reportConverter::toDTO).toList());
+        return ResponseEntity.ok(finale);
     }
 
         @GetMapping("/get-all-orders")
