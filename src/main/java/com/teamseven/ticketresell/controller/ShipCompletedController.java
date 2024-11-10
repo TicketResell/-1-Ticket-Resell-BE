@@ -135,9 +135,8 @@ public class ShipCompletedController {
     }
     @GetMapping("/all-order/ship")
     public ResponseEntity<?> allOrderForShipper() {
-        // Lấy tất cả các đơn hàng có trạng thái và phương thức thanh toán mong muốn
         List<OrderEntity> orders = orderRepository.findByOrderStatusIn(
-                List.of(OrderEntity.OrderStatus.shipping, OrderEntity.OrderStatus.received)
+                List.of(OrderEntity.OrderStatus.shipping, OrderEntity.OrderStatus.received,OrderEntity.OrderStatus.orderbombing)
         );
         return ResponseEntity.ok(orders);
     }
