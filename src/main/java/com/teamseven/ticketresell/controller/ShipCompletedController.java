@@ -166,6 +166,24 @@ public class ShipCompletedController {
         );
         return ResponseEntity.ok(count);
     }
+    @GetMapping("/revenue-shipper")
+    public ResponseEntity<?> revenueReceivedStatus() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: No authentication provided.");
+        }
+
+        String username = authentication.getName();
+        String userRole = userService.getUserRoleByUsername(username);
+
+        if (!userRole.equals("shipper")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized: Role - " + userRole);
+        }
+        long count = orderRepository.countByOrderStatusIn(List.of(OrderEntity.OrderStatus.received,OrderEntity.OrderStatus.completed,OrderEntity.OrderStatus.orderbombing,OrderEntity.OrderStatus.cancelled));
+        long revenue = count * 15000;
+        return ResponseEntity.ok(revenue);
+    }
     @GetMapping("/success-rate")
     public ResponseEntity<?> getDeliverySuccessRate() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

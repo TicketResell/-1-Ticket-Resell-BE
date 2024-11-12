@@ -62,7 +62,7 @@ public class TransactionService {
     // Tạo giao dịch expense sàn trả tiền cho seller có tính serviefee -expense
     public TransactionEntity createSellerTransaction(OrderEntity order) {
         double serviceFee = order.getTotalAmount() * order.getServiceFee(); // Tính phí dịch vụ
-        double sellerAmount = order.getTotalAmount() - serviceFee;
+        double sellerAmount = (order.getTotalAmount() - 15000)- serviceFee;
         return createTransaction(order, sellerAmount, TransactionEntity.TransactionType.Expense);
     }
     // Tạo giao dịch buyer trả tiền cho sàn - income
@@ -71,7 +71,8 @@ public class TransactionService {
     }
     // Tạo giao dịch refund cho buyer khi hủy đơn hàng
     public TransactionEntity createRefundTransaction(OrderEntity order) {
-        double refundAmount = order.getTotalAmount(); // Hoàn trả toàn bộ số tiền đã thanh toán
+        double refundAmount = order.getTotalAmount();
+        refundAmount = refundAmount - 15000;// Hoàn trả toàn bộ số tiền đã thanh toán
         return createTransaction(order, refundAmount, TransactionEntity.TransactionType.Refund);
     }
 }
