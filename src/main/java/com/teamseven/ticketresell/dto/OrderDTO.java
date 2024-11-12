@@ -1,5 +1,7 @@
 package com.teamseven.ticketresell.dto;
 
+import java.time.LocalDate;
+
 public class OrderDTO {
     private Long id;
     private Long buyerId;
@@ -18,6 +20,7 @@ public class OrderDTO {
     private String orderStatus;
     private String orderMethod;
     private String shippingImg;
+    private LocalDate createdDate;
 
     // Getters và Setters
     public Long getId() {
@@ -132,6 +135,14 @@ public class OrderDTO {
 
     public void setShippingImg(String shippingImg) {
         this.shippingImg = shippingImg;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
     }
 }
 

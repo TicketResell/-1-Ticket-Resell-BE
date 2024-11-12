@@ -31,6 +31,7 @@ public class OrderConverter {
         orderDTO.setTicketId(orderEntity.getTicket().getId());
         orderDTO.setQuantity(orderEntity.getQuantity());
         orderDTO.setTotalAmount(orderEntity.getTotalAmount());
+        orderDTO.setCreatedDate(orderEntity.getCreatedDate().toLocalDate());
         orderDTO.setServiceFee(orderEntity.getServiceFee());
         orderDTO.setOrderMethod(orderEntity.getOrderMethod().name()); // Lấy tên enum
         orderDTO.setOrderStatus(orderEntity.getOrderStatus().name()); // Lấy tên enum

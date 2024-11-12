@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,12 +81,14 @@ public class OrderService {
     public List<OrderDTO> getOrdersBySeller(Long sellerId) {
         List<OrderEntity> orders = orderRepository.findBySeller_Id(sellerId);
         return orders.stream()
+                .sorted(Comparator.comparing(OrderEntity::getCreatedDate).reversed())
                 .map(orderConverter::toDTO)
                 .collect(Collectors.toList());
     }
     public List<OrderDTO> getOrdersByBuyer(Long buyerId) {
         List<OrderEntity> orders = orderRepository.findByBuyer_Id(buyerId);
         return orders.stream()
+                .sorted(Comparator.comparing(OrderEntity::getCreatedDate).reversed()) // Sắp xếp theo createdDate mới nhất
                 .map(orderConverter::toDTO)
                 .collect(Collectors.toList());
     }
