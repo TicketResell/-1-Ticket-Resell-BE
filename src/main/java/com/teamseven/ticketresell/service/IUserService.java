@@ -21,6 +21,7 @@ public interface IUserService {
     void verifyEmail(String email);
     UserDTO viewProfile(String username, String currentUser);
     UserDTO editProfile(String username, UserDTO userDTO);
+    UserDTO editBuyProfile(String username, UserDTO userDTO);
     JwtResponse loginWithGoogle(String idTokenString);
     String getUserNameByID(Long id);
     String getFullNameByID(Long id);

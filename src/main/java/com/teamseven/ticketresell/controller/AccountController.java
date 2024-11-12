@@ -237,6 +237,16 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
+    @PutMapping("/{username}")
+    public ResponseEntity<?> editPrdofile(@PathVariable String username,
+                                         @RequestBody UserDTO userDTO) {
+        try {
+            UserDTO updatedUserDTO = userService.editBuyProfile(username, userDTO);
+            return ResponseEntity.ok(updatedUserDTO);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+    }
     // Update Agency
     @PutMapping("/agency/{userId}")
     public ResponseEntity<?> editAgency(@PathVariable Long userId) {
@@ -255,7 +265,6 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
         }
     }
-
 
     // Login with Google Oauth
         @PostMapping("/login-google")

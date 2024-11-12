@@ -200,6 +200,23 @@ public class UserService implements IUserService {
         // Chuyển đổi và trả về DTO của người dùng đã cập nhật
         return accountConverter.toDTO(existingUser);
     }
+    @Override
+    public UserDTO editBuyProfile(String username, UserDTO userDTO) {
+        UserEntity existingUser = userRepository.findByUsername(username);
+        if (existingUser == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        // Cập nhật thông tin cho existingUser
+        existingUser.setEmail(userDTO.getEmail());
+        existingUser.setPhone(userDTO.getPhone());
+        existingUser.setAddress(userDTO.getAddress());
+        existingUser.setFullname(userDTO.getFullname());
+        userRepository.save(existingUser);
+
+        // Chuyển đổi và trả về DTO của người dùng đã cập nhật
+        return accountConverter.toDTO(existingUser);
+    }
 
 
     @Override
