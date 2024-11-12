@@ -236,10 +236,11 @@ public class ScheduledTaskService {
                     }
                     //xin lỗi
                     String body2 = "Dear " + order.getSeller().getFullname() + ",\n\n" +
-                            "We regret to inform you that your order has been canceled because the buyer did not recejved the ticket on time.\n\n" +
+                            "We regret to inform you that your order has been canceled because the buyer did not received the ticket on time.\n\n" +
                             "We will resend your ticket back to you as soon as possible\n\n" +
                             "We apologize for the inconvenience this may have caused and appreciate your understanding.\n\n" +
                             "If you have any questions or need assistance, please do not hesitate to contact our support team.\n\n" +
+                            "Ticket name: " + order.getTicket().getEventTitle() + "\n\n" +
                             "Best regards,\n" +
                             "The TicketResell Team";
                     emailService.sendEmail(order.getSeller().getEmail(), subject, body2);
