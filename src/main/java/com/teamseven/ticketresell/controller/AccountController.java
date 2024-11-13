@@ -97,7 +97,7 @@ public class AccountController {
         }
 
         // gửi email xác thực
-        String verificationLink = "http://localhost:8084/api/accounts/reset?email=" + email;
+        String verificationLink = "http://localhost:3000/forgot-password/?email=" + email;
         String subject = "Reset Password";
         String body = "Please click the link below to reset your password:\n" + verificationLink;
 

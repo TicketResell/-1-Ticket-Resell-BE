@@ -51,6 +51,7 @@ public class TicketService {
             ticket.setPrice(ticketDetails.getPrice());
             ticket.setEventTitle(ticketDetails.getEventTitle());
             ticket.setEventDate(ticketDetails.getEventDate());
+            ticket.setTicketDetails(ticketDetails.getTicketDetails());
             ticket.setLocation(ticketDetails.getLocation());
             ticket.setTicketType(ticketDetails.getTicketType());
             ticket.setImageUrls(ticketDetails.getImageUrls());
