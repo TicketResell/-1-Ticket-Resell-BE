@@ -1,3 +1,27 @@
+# TicketResell Platform
+
+## Description
+TicketResell is a peer-to-peer ticket reselling platform designed for various ticket types, including concert tickets, bus tickets, and train tickets. The platform provides users with the ability to:
+
+- **List their tickets for sale**: Easily upload and manage ticket listings.
+- **Make secure online payments**: Seamless and safe payment processing.
+- **Enjoy a trustworthy and secure environment**: Built with user trust and security in mind.
+
+## Tech Stack
+The project is built using the following technologies:
+
+- **Java**: Core programming language for robust backend development.
+- **Spring Boot**: Framework for creating scalable and maintainable backend systems.
+- **Hibernate**: ORM tool for seamless database interaction.
+- **MySQL**: Database management system for storing ticket and user data.
+- **Swagger**: API documentation tool for clear and interactive API exploration.
+- **Online Payment Methods**: Integrated secure payment processing for transactions.
+- **WebSocket**: Enables real-time communication between the client and server.
+- **AWS RDS**: Managed relational database service for scalability and reliability.
+- **AWS EC2**: Virtual server hosting for deploying the application.
+
+
+
 #NEW UPDATE 2024-10-17 @cuong
 1. Update order payment-status api
 2. Create a new transaction but not enough fields
